@@ -1,0 +1,135 @@
+$base-color: #121212;
+$section: #ebebeb;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Oxygen", sans-serif;
+}
+
+html {
+  background-color: $base-color;
+}
+
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+
+.dash-layout {
+  color: $section;
+  background-color: $base-color;
+  height: 100vh;
+
+  .header {
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    padding: 15px;
+    border-bottom: 1px solid $section;
+
+    .search-container {
+      position: absolute;
+      left: 50%;
+      top: 20px;
+
+      input {
+        border: 2px solid $section;
+        padding: 2px;
+        border-radius: 4px;
+      }
+      // input:active {
+      //   border: 4px solid $section; dont work, use the inside version of border
+      // }
+    }
+    .right-container {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      height: 100%;
+      gap: 20px;
+    }
+  }
+
+  .layout-wrapper {
+    .sidebar {
+      position: fixed;
+      top: 70px;
+      height: calc(100% - 70px);
+      min-width: 130px;
+      width: 18%;
+      border-right: 1px solid $section;
+
+      .sidebar-content {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+      }
+    }
+
+    .feed {
+      position: absolute;
+      top: 90px;
+      left: 100px;
+      width: calc(100% - 100px); //Need to fix
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2em;
+
+      .post-feed {
+        height: 400px;
+        width: 700px;
+        min-width: 500px;
+        display: flex;
+        flex-direction: column;
+        .post-header {
+          display: flex;
+          flex-basis: 18%;
+          padding: 10px;
+          justify-content: space-between;
+          align-items: center;
+          .post-tags {
+            display: flex;
+            gap: 5px;
+          }
+        }
+        .post-body {
+          flex-basis: 50%;
+          border-top: 1px solid $section;
+          border-bottom: 1px solid $section;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .waveform {
+          }
+        }
+        .post-footer {
+          flex-basis: 35%;
+          padding: 10px;
+        }
+      }
+    }
+  }
+}
+
+@keyframes color-animation {
+  from {
+    border-color: var(--gradient-yellow);
+  }
+  25% {
+    border-color: var(--gradient-orange);
+  }
+  50% {
+    border-color: var(--gradient-pink);
+  }
+  75% {
+    border-color: var(--gradient-lavender);
+  }
+  to {
+    border-color: var(--gradient-purple);
+  }
+}
