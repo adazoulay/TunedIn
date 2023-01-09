@@ -4,10 +4,9 @@ import Post from "./Post";
 const Feed = () => {
   const { data: posts, isLoading, isSuccess, isError, error } = useGetPostsQuery();
 
-  console.log(posts);
-
   let content;
 
+  console.log(posts);
   if (isLoading) content = <p>Loading...</p>;
 
   if (isError) {
@@ -16,7 +15,6 @@ const Feed = () => {
 
   if (isSuccess) {
     const { ids } = posts;
-    console.log("Ids", ids);
     content = ids?.length ? ids.map((postId) => <Post key={postId} postId={postId} />) : null;
   }
 

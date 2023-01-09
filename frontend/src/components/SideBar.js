@@ -4,8 +4,8 @@ const SideBar = () => {
   return (
     <div className='sidebar'>
       <div className='sidebar-content'>
-        <Link to=''>Following</Link>
-        <Link to=''>Recommended</Link>
+        <Link to='/feed'>Home</Link>
+        <Link to='/Hehe'>Recommended</Link>
         <Link to=''>Popular Tags</Link>
         <Link to=''>Button 4</Link>
         <Link to=''>Button 5</Link>

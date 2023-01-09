@@ -1,12 +1,16 @@
+import { Link } from "react-router-dom";
+
 const Header = () => {
   return (
-    <div className="header">
-      <div className="search-container">
-        <input type="text" placeholder="Search" />
+    <div className='header'>
+      <div className='search-container'>
+        <input type='text' placeholder='Search' />
       </div>
-      <div className="right-container">
+      <div className='right-container'>
         <button>Upload</button>
-        <img src="profile-picture.png" alt="Profile Picture" />
+        <Link to='/user'>
+          <img src='profile-picture.png' alt='Profile Picture' />
+        </Link>
       </div>
     </div>
   );

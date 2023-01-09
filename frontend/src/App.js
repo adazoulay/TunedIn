@@ -4,7 +4,7 @@ import Public from "./components/Public";
 import Login from "./Features/Auth/Login";
 import DashLayout from "./components/DashLayout";
 import Feed from "./Features/posts/Feed";
-import User from "./Features/users/User";
+import UserPage from "./Features/users/UserPage";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           <Route index element={<Feed />} />
         </Route>
         <Route path='user' element={<DashLayout />}>
-          <Route index element={<User />} />
+          <Route index element={<UserPage />} />
         </Route>
       </Route>
     </Routes>

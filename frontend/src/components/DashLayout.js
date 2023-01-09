@@ -7,8 +7,8 @@ const DashLayout = () => {
     <div className='dash-layout'>
       <Header />
       <div className='layout-wrapper'>
-        <SideBar className='grid-item grid-item-1' />
-        <Outlet className='grid-item grid-item-2' />
+        <SideBar />
+        <Outlet />
       </div>
     </div>
   );

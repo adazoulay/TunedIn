@@ -108,6 +108,7 @@ const getPost = async (req, res, next) => {
     if (!post) {
       return res.status(400).json({ message: "Post not found" });
     }
+
     res.status(200).json(post);
   } catch (err) {
     next(err);
@@ -132,7 +133,7 @@ const addView = async (req, res, next) => {
 const likePost = async (req, res, next) => {
   const UserId = req.user.id;
   if (!UserId) {
-    return res.status(400).json({ message: "You must be looged in to like a post" });
+    return res.status(400).json({ message: "You must be logged in to like a post" });
   }
   const postId = req.params.id;
   try {
@@ -195,6 +196,20 @@ const searchPost = async (req, res, next) => {
   }
 };
 
+const getComments = async (req, res, next) => {
+  const postId = req.params.postId;
+  try {
+    const post = await Post.findById(postId).populate("comments").exec();
+    if (!post) {
+      return res.status(400).json({ message: "Post not found" });
+    }
+    const { comments } = post;
+    res.status(200).json(comments);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAllPosts,
   createNewPost,
@@ -208,4 +223,5 @@ module.exports = {
   getSub,
   getByTag,
   searchPost,
+  getComments,
 };

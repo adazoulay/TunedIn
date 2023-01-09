@@ -28,9 +28,9 @@ app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/", require("./routes/root")); //root page
 app.use("/users", require("./routes/userRoutes"));
 app.use("/auth", require("./routes/authRoutes"));
-app.use("/post", require("./routes/postRoutes"));
-app.use("/tag", require("./routes/tagRoutes"));
-app.use("/comment", require("./routes/commentRoutes"));
+app.use("/posts", require("./routes/postRoutes"));
+app.use("/tags", require("./routes/tagRoutes"));
+app.use("/comments", require("./routes/commentRoutes"));
 
 app.all("*", (req, res) => {
   res.status(404);

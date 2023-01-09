@@ -1,12 +1,12 @@
 import TimeAgo from "./TimeAgo";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { selectPostById } from "./postsApiSlice";
 
 import AnimatedBorder from "./AnimatedBorder";
 import SoundBar from "./SoundBar";
-import Tag from "../tags/Tag";
-import Comment from "../comments/Comment";
-import { selectPostById } from "./postsApiSlice";
+import TagGroup from "../tags/TagGroup";
+import CommentSection from "../comments/CommentSection";
 
 // ! TODO import ReactionButtons from "./ReactionButtons";
 // ! TODO import PostAuthor from "./PostAuthor";
@@ -14,33 +14,35 @@ import { selectPostById } from "./postsApiSlice";
 
 const Post = ({ postId }) => {
   const post = useSelector((state) => selectPostById(state, postId));
-  console.log("post", post);
-
-  // let comments = post?.comments.length
-  //   ? comments.map((commentId) => <div key={commentId}> commentId </div>)
-  //   : null;
 
   return (
     <AnimatedBorder colors={["red"]}>
       <article className='post-feed'>
         <div className='post-header'>
-          <h2>{post.title}</h2>
-          <p className='postCredit'>
-            <Link to={`post/${post.id}`}>View Post</Link>
-            {/*<PostAuthor userId={post.userId} />*/}
-          </p>
+          <Link to={`post/${post.id}`}>
+            <h2>{post.title}</h2>
+          </Link>
+          {/*<PostAuthor userId={post.userId} />*/}
           <div className='post-tags'>
-            <Tag tag={"tag"} />
+            <TagGroup />
           </div>
         </div>
         <div className='post-body'>
           <SoundBar mp3={"MP3"} />
         </div>
         <div className='post-footer'>
-          <p className='description'>{post.desc.substring(0, 75)}</p>{" "}
+          <div className='description'>
+            <b>Description : </b>
+            {/* Add Username through virtual mongoose */}
+            <p>{post.desc.substring(0, 75)}</p>
+          </div>
           {/* If post longer than 75 add ... */}
-          <Comment />
-          <TimeAgo timestamp={post.createdAt} />
+          <div className='comment-section'>
+            {post.comments.length ? <CommentSection postId={postId} /> : null}
+          </div>
+          <div className='timestamp'>
+            <TimeAgo timestamp={post.createdAt} />
+          </div>
           {/*<ReactionButtons post={post} />*/}
         </div>
       </article>

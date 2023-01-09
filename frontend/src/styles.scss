@@ -59,6 +59,7 @@ a {
       height: calc(100% - 70px);
       min-width: 130px;
       width: 18%;
+      left: 0;
       border-right: 1px solid $section;
 
       .sidebar-content {
@@ -73,8 +74,8 @@ a {
     .feed {
       position: absolute;
       top: 90px;
-      left: 100px;
-      width: calc(100% - 100px); //Need to fix
+      left: 18%;
+      width: calc(100% - 18%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -104,16 +105,93 @@ a {
           display: flex;
           align-items: center;
           justify-content: center;
-          .waveform {
-          }
         }
         .post-footer {
           flex-basis: 35%;
           padding: 10px;
+          position: relative;
+
+          .description {
+            display: flex;
+          }
+
+          .comment-section {
+            padding-top: 3px;
+          }
+
+          .timestamp {
+            position: absolute;
+            right: 2%;
+            bottom: 5%;
+          }
         }
       }
     }
+
+    .user-page {
+      position: absolute;
+      top: 90px;
+      left: 18%;
+      width: calc(100% - 18%);
+      display: flex;
+      flex-direction: column;
+
+      .user-header {
+        display: flex;
+        border-bottom: 1px solid $section;
+        width: 100%;
+        height: 100px;
+        flex-direction: column;
+
+        .user-info {
+          display: flex;
+          width: 100%;
+          justify-content: space-evenly;
+
+          .user-page-profile-pic {
+            width: 80px;
+            height: 80px;
+            background-color: blue;
+            border-radius: 50%;
+          }
+
+          .username {
+            font-size: 2em;
+          }
+          .follow-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 160px;
+            height: 50px;
+            background-color: blue;
+            border-radius: 10px;
+            border: none;
+          }
+        }
+        .user-spotlight {
+          display: flex;
+        }
+      }
+      .user-body {
+      }
+    }
   }
+}
+
+.tag {
+  font-size: 0.9em;
+  width: 72px;
+  height: 24px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag-group {
+  display: flex;
+  gap: 0.5em;
 }
 
 @keyframes color-animation {

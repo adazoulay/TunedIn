@@ -5,8 +5,9 @@ const verifyJWT = require("../middleware/verifyJWT");
 
 router.get("/", commentController.getAllComments); //Done
 router.post("/:id", verifyJWT, commentController.createNewComment); //Done
-router.put("/:id", verifyJWT, commentController.updateComment);
-router.delete("/:id", verifyJWT, commentController.deleteComment);
+router.put("/:id", verifyJWT, commentController.updateComment); //Done
+router.delete("/:id", verifyJWT, commentController.deleteComment); //Done
 router.get("/find/:id", commentController.getComment); //Done
+router.get("/post/:id", commentController.getCommentsByPostId);
 
 module.exports = router;
