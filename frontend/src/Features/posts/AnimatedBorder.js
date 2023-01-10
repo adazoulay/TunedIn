@@ -1,30 +1,33 @@
-import React, { useState, useEffect } from "react";
-import "../../styles.scss";
+import React, { useEffect, useState } from "react";
 
-const AnimatedBorder = ({ colors, children }) => {
-  const [currentColorIndex, setCurrentColorIndex] = useState(0);
+function AnimatedBorder({ children, colors }) {
+  const [borderColor, setBorderColor] = useState(["white", "gray"]);
 
+  console.log("AnimatedBorder");
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentColorIndex((prevColorIndex) => {
-        const newColorIndex = prevColorIndex + 1;
-        if (newColorIndex >= colors.length) {
-          return 0;
-        }
-        return newColorIndex;
-      });
-    }, 1000);
-
-    return () => clearInterval(intervalId);
+    let colorsCopy = [...colors];
+    if (colorsCopy.length === 1) {
+      colorsCopy.push("white", colors[0]);
+    } else if (colorsCopy.length <= 5) {
+      for (let i = Math.floor(colors.length / 2); i >= 0; i--) {
+        colorsCopy.push(colors[i]);
+      }
+    }
+    setBorderColor(colorsCopy);
   }, [colors]);
 
-  const style = {
-    border: `2px solid ${colors[currentColorIndex]}`,
-    borderRadius: `15px`,
-    animation: "color-animation 5s linear infinite",
-  };
-
-  return <div style={style}>{children}</div>;
-};
+  return (
+    <div
+      style={{
+        "--angle": "0deg",
+        display: "inline-block",
+        border: "1.5px solid",
+        borderImage: `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
+        animation: "10s rotate linear infinite",
+      }}>
+      {children}
+    </div>
+  );
+}
 
 export default AnimatedBorder;

@@ -19,6 +19,9 @@ const UserSchema = new mongoose.Schema(
     img: {
       type: String,
     },
+    desc: {
+      type: String,
+    },
     following: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -35,6 +38,12 @@ const UserSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Post",
+      },
+    ],
+    tags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tag",
       },
     ],
     saved: [

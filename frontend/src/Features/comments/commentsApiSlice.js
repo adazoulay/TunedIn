@@ -2,7 +2,7 @@ import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
 
 const commentsAdapter = createEntityAdapter({
-  selectId: (comment) => comment._id, // Extract the _id field as the unique identifier
+  selectId: (comment) => comment._id,
   sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
 });
 
@@ -72,12 +72,11 @@ export const selectCommentsResult = extendedApiSlice.endpoints.getComments.selec
 
 const selectCommentsData = createSelector(
   selectCommentsResult,
-  (commentsResult) => commentsResult.data // normalized state object with ids & entities
+  (commentsResult) => commentsResult.data
 );
 
 export const {
   selectAll: selectAllComments,
   selectById: selectCommentById,
   selectIds: selectCommentIds,
-  // Pass in a selector that returns the comments slice of state
 } = commentsAdapter.getSelectors((state) => selectCommentsData(state) ?? initialState);

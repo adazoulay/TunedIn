@@ -3,7 +3,6 @@ import { apiSlice } from "../../app/api/apiSlice";
 
 const tagsAdapter = createEntityAdapter({
   selectId: (tag) => tag._id, // Extract the _id field as the unique identifier
-  sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
 });
 
 const initialState = tagsAdapter.getInitialState();
@@ -24,6 +23,20 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       ],
     }),
     getTagsByPostId: builder.query({
+      query: (id) => ({
+        url: `/tags/post/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (responseData) => {
+        const loadedTags = responseData.map((post) => {
+          return post;
+        });
+        return tagsAdapter.setAll(initialState, loadedTags);
+      },
+      providesTags: (result, error, arg) => [...result.ids.map((id) => ({ type: "Tag", id }))],
+    }),
+    getTagsByUserId: builder.query({
+      //! TODO For profile page / reccomendations
       query: (id) => ({
         url: `/tags/post/${id}`,
         method: "GET",
@@ -68,14 +81,10 @@ export const {
 
 export const selectTagsResult = extendedApiSlice.endpoints.getTags.select();
 
-const selectTagsData = createSelector(
-  selectTagsResult,
-  (tagsResult) => tagsResult.data // normalized state object with ids & entities
-);
+const selectTagsData = createSelector(selectTagsResult, (tagsResult) => tagsResult.data);
 
 export const {
   selectAll: selectAllTags,
   selectById: selectTagById,
   selectIds: selectTagIds,
-  // Pass in a selector that returns the tags slice of state
 } = tagsAdapter.getSelectors((state) => selectTagsData(state) ?? initialState);

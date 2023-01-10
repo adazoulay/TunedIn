@@ -6,7 +6,6 @@ const Feed = () => {
 
   let content;
 
-  console.log(posts);
   if (isLoading) content = <p>Loading...</p>;
 
   if (isError) {

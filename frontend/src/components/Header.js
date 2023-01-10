@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
+import SearchBar from "./SearchBar";
 
 const Header = () => {
   return (
     <div className='header'>
       <div className='search-container'>
-        <input type='text' placeholder='Search' />
+        {/* <input type='text' placeholder='Search' /> */}
+        <SearchBar />
       </div>
       <div className='right-container'>
         <button>Upload</button>

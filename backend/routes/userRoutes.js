@@ -14,6 +14,8 @@ router
 router.get("/find/:id", userController.getUser);
 router.put("/follow/:id", verifyJWT, userController.follow);
 router.put("/unFollow/:id", verifyJWT, userController.unFollow);
+router.put("/followTag/:id", verifyJWT, userController.followTag);
+router.put("/unFollowTag/:id", verifyJWT, userController.unFollowTag);
 
 module.exports = router;
 

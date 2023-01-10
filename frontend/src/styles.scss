@@ -29,20 +29,125 @@ a {
     padding: 15px;
     border-bottom: 1px solid $section;
 
+    //! SEARCH BAR
     .search-container {
+      //! Not alligned
       position: absolute;
       left: 50%;
       top: 20px;
 
-      input {
-        border: 2px solid $section;
-        padding: 2px;
-        border-radius: 4px;
+      .search-form {
+        position: relative;
+        width: 100%;
+        height: 35px;
+        border-radius: 10px;
+        background: $section;
+        display: flex;
+
+        .search-input {
+          flex: 1;
+          font-size: 14px;
+          background: none;
+          color: #5a6674;
+          border: none;
+          appearance: none;
+          outline: none;
+
+          &::-webkit-search-cancel-button {
+            appearance: none;
+          }
+        }
+
+        .search-button {
+          height: 40px;
+          width: 40px;
+          border: none;
+          background: none;
+          outline: none !important;
+          cursor: pointer;
+
+          & svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        .filters {
+          display: flex;
+          flex: 30%;
+          height: 100%;
+          align-items: center;
+          justify-content: flex-end;
+          margin-right: 10px;
+
+          .filter {
+            position: relative;
+            display: inline-block;
+            margin: 0 4px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+
+            input {
+              position: absolute;
+              top: 0;
+              left: 0;
+              opacity: 0.01;
+              cursor: pointer;
+            }
+
+            span {
+              position: absolute;
+              display: block;
+              text-align: center;
+              left: 50%;
+              transform: translateX(-50%);
+              opacity: 0;
+              background: #929aa3;
+              color: #fff;
+              font-size: 9px;
+              letter-spacing: 1px;
+              line-height: 1;
+              text-transform: uppercase;
+              padding: 4px 7px;
+              border-radius: 12px;
+              top: -18px;
+              transition: all 0.2s ease-in-out;
+
+              &::after {
+                content: "";
+                position: absolute;
+                bottom: -3px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-top: 4px solid #929aa3;
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                transition: all 0.2s ease-in-out;
+              }
+            }
+            &:hover span {
+              opacity: 1;
+              top: -21px;
+            }
+
+            svg {
+              height: 20px;
+              width: 20px;
+              opacity: 0.7;
+              transition: all 0.2s ease-in-out;
+              pointer-events: none;
+            }
+
+            &:hover svg {
+              opacity: 1;
+            }
+          }
+        }
       }
-      // input:active {
-      //   border: 4px solid $section; dont work, use the inside version of border
-      // }
     }
+
+    //! PROFILE AND UPLOAD
     .right-container {
       display: flex;
       flex-direction: row-reverse;
@@ -53,6 +158,7 @@ a {
   }
 
   .layout-wrapper {
+    //! SIDEBAR
     .sidebar {
       position: fixed;
       top: 70px;
@@ -71,6 +177,7 @@ a {
       }
     }
 
+    //! FEED
     .feed {
       position: absolute;
       top: 90px;
@@ -124,13 +231,20 @@ a {
             right: 2%;
             bottom: 5%;
           }
+
+          .likes {
+            position: absolute;
+            right: 5%;
+            bottom: 25%;
+          }
         }
       }
     }
 
+    //! USER PAGE
     .user-page {
       position: absolute;
-      top: 90px;
+      top: 70px;
       left: 18%;
       width: calc(100% - 18%);
       display: flex;
@@ -140,13 +254,15 @@ a {
         display: flex;
         border-bottom: 1px solid $section;
         width: 100%;
-        height: 100px;
+        height: 125px;
         flex-direction: column;
 
         .user-info {
           display: flex;
           width: 100%;
+          height: 100%;
           justify-content: space-evenly;
+          align-items: center;
 
           .user-page-profile-pic {
             width: 80px;
@@ -154,9 +270,24 @@ a {
             background-color: blue;
             border-radius: 50%;
           }
+          .name-desc {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            justify-content: space-around;
 
-          .username {
-            font-size: 2em;
+            .username {
+              font-size: 2em;
+            }
+            .user-desc {
+              max-width: 200px;
+            }
+          }
+          .social {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            justify-content: space-evenly;
           }
           .follow-btn {
             display: flex;
@@ -174,11 +305,30 @@ a {
         }
       }
       .user-body {
+        width: 100%;
+        position: absolute;
+        .feed {
+          position: relative;
+          top: 150px;
+          left: 18%;
+          width: calc(100% - 36%); //Janky
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2em;
+        }
+        // position: relative;
+        // width: calc(100% - 18%);
+        // display: flex;
+        // flex-direction: column;
+        // align-items: center;
+        // gap: 2em;
       }
     }
   }
 }
 
+//! TAGS
 .tag {
   font-size: 0.9em;
   width: 72px;
@@ -187,6 +337,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: $base-color;
 }
 
 .tag-group {
@@ -194,20 +345,15 @@ a {
   gap: 0.5em;
 }
 
-@keyframes color-animation {
-  from {
-    border-color: var(--gradient-yellow);
-  }
-  25% {
-    border-color: var(--gradient-orange);
-  }
-  50% {
-    border-color: var(--gradient-pink);
-  }
-  75% {
-    border-color: var(--gradient-lavender);
-  }
+//! BORDER ANIMATION
+@keyframes rotate {
   to {
-    border-color: var(--gradient-purple);
+    --angle: 360deg;
   }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
 }

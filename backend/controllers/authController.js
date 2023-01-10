@@ -9,9 +9,13 @@ const signup = async (req, res, next) => {
     return res.status(400).json({ message: "All fields are required" });
   }
   try {
-    const duplicate = await User.findOne({ username }).lean().exec();
-    if (duplicate) {
+    const duplicateUsername = await User.findOne({ username }).lean().exec();
+    if (duplicateUsername) {
       return res.status(409).json({ message: "Duplicate username" });
+    }
+    const duplicateEmail = await User.findOne({ email }).lean().exec();
+    if (duplicateEmail) {
+      return res.status(409).json({ message: "Duplicate email" });
     }
     const salt = bcrypt.genSaltSync(10);
     const hashedPwd = bcrypt.hashSync(req.body.password, salt);
@@ -19,9 +23,7 @@ const signup = async (req, res, next) => {
     const user = await User.create(userObject);
 
     if (user) {
-      return res
-        .status(201)
-        .json({ messsage: `New user: ${username} created` });
+      return res.status(201).json({ messsage: `New user: ${username} created` });
     } else {
       return res.status(400).json({ message: "Invalid user data recieved" });
     }

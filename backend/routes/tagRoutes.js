@@ -8,6 +8,7 @@ router.post("/", verifyJWT, tagController.createNewTag); //Done
 router.put("/:id", verifyJWT, tagController.updateTag); // Done
 router.delete("/:id", verifyJWT, tagController.deleteTag); // Done
 router.get("/find/:id", tagController.getTag); //Done
+router.get("/post/:id", tagController.getTagsByPostId); //Done
 
 module.exports = router;
 

@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const Tag = require("../models/Tag");
 const bcrypt = require("bcrypt");
 const { default: mongoose } = require("mongoose");
 
@@ -21,9 +22,13 @@ const createNewUser = async (req, res, next) => {
     return res.status(400).json({ message: "All fields are required" });
   }
   try {
-    const duplicate = await User.findOne({ username }).lean().exec();
-    if (duplicate) {
+    const duplicateUsername = await User.findOne({ username }).lean().exec();
+    if (duplicateUsername) {
       return res.status(409).json({ message: "Duplicate username" });
+    }
+    const duplicateEmail = await User.findOne({ email }).lean().exec();
+    if (duplicateEmail) {
+      return res.status(409).json({ message: "Duplicate email" });
     }
 
     const hashedPwd = await bcrypt.hash(password, 10);
@@ -54,7 +59,7 @@ const getUser = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const { id, username, password } = req.body;
+  const { id, username, password, desc } = req.body;
   if (!id || !username) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -73,6 +78,9 @@ const updateUser = async (req, res, next) => {
     user.username = username;
     if (password) {
       user.password = await bcrypt.hash(password, 10);
+    }
+    if (desc) {
+      user.desc = desc;
     }
     const updatedUser = await user.save();
     res.status(200).json({ message: `${updatedUser.username} updated` });
@@ -139,6 +147,38 @@ const unFollow = async (req, res, next) => {
     next(err);
   }
 };
+const followTag = async (req, res, next) => {
+  try {
+    const tag = await Tag.findById(req.params.id).lean();
+    if (!tag) {
+      return res.status(400).json("Tag does not exist");
+    }
+    await User.findByIdAndUpdate(req.user.id, {
+      $addToSet: { tags: req.params.id },
+    });
+    console.log(tag);
+    res.status(200).json(`You are now following: ${tag.name}`);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const unFollowTag = async (req, res, next) => {
+  if (req.user.id === req.params.id) {
+    return res.status(400).json("You can't unfollow yourself");
+  }
+  try {
+    await User.findByIdAndUpdate(req.user.id, {
+      $pull: { following: req.params.id },
+    });
+    const user = await User.findByIdAndUpdate(req.params.id, {
+      $pull: { followers: req.user.id },
+    });
+    res.status(200).json(`You are no longer following ${user.username}`);
+  } catch (err) {
+    next(err);
+  }
+};
 
 module.exports = {
   getAllUsers,
@@ -148,4 +188,6 @@ module.exports = {
   deleteUser,
   follow,
   unFollow,
+  followTag,
+  unFollowTag,
 };

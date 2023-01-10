@@ -7,6 +7,10 @@ const commentSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+    username: {
+      type: String,
+      required: true,
+    },
     desc: {
       type: String,
       required: true,

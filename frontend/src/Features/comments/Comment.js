@@ -1,11 +1,11 @@
 import React from "react";
 
 const Comment = ({ commentInfo }) => {
-  const { desc } = commentInfo;
+  const { username, desc } = commentInfo;
 
   return (
     <div>
-      <b>User : </b>
+      <b>{username} : </b>
       {desc}
     </div>
   );

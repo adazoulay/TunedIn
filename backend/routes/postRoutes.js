@@ -10,7 +10,7 @@ router.delete("/:id", verifyJWT, postController.deletePost); //!Fix
 router.get("/find/:id", postController.getPost); //Done
 router.put("/view/:id", postController.addView); //Done
 router.put("/like/:id", verifyJWT, postController.likePost); //Done
-router.get("/:postId/comments", postController.getComments);
+router.get("/:postId/comments", postController.getComments); //? Maybe don't need
 
 //! Need to test
 router.get("/trend", postController.getRandom);

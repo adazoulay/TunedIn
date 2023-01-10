@@ -16,5 +16,6 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "no-unused-vars": "off",
     "react/prop-types": "off",
+    "no-dupe-keys": "off",
   },
 };

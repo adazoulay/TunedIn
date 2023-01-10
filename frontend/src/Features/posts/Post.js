@@ -7,6 +7,7 @@ import AnimatedBorder from "./AnimatedBorder";
 import SoundBar from "./SoundBar";
 import TagGroup from "../tags/TagGroup";
 import CommentSection from "../comments/CommentSection";
+import { useEffect, useState } from "react";
 
 // ! TODO import ReactionButtons from "./ReactionButtons";
 // ! TODO import PostAuthor from "./PostAuthor";
@@ -15,8 +16,16 @@ import CommentSection from "../comments/CommentSection";
 const Post = ({ postId }) => {
   const post = useSelector((state) => selectPostById(state, postId));
 
+  const [colors, setColors] = useState([]);
+
+  function handleColorsFetched(fetchedColors) {
+    setColors(fetchedColors);
+  }
+
+  console.log("Post");
+
   return (
-    <AnimatedBorder colors={["red"]}>
+    <AnimatedBorder colors={colors}>
       <article className='post-feed'>
         <div className='post-header'>
           <Link to={`post/${post.id}`}>
@@ -24,7 +33,7 @@ const Post = ({ postId }) => {
           </Link>
           {/*<PostAuthor userId={post.userId} />*/}
           <div className='post-tags'>
-            <TagGroup />
+            <TagGroup postId={postId} onColorsFetched={handleColorsFetched} />
           </div>
         </div>
         <div className='post-body'>
@@ -43,7 +52,7 @@ const Post = ({ postId }) => {
           <div className='timestamp'>
             <TimeAgo timestamp={post.createdAt} />
           </div>
-          {/*<ReactionButtons post={post} />*/}
+          <div className='likes'>Likes: {post.likes.length}</div>
         </div>
       </article>
     </AnimatedBorder>

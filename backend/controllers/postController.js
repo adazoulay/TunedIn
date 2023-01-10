@@ -182,6 +182,7 @@ const getSub = async (req, res, next) => {
     next(err);
   }
 };
+
 const getByTag = async (req, res, next) => {}; //! Implement Tag first
 
 const searchPost = async (req, res, next) => {

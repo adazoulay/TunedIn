@@ -6,6 +6,8 @@ import DashLayout from "./components/DashLayout";
 import Feed from "./Features/posts/Feed";
 import UserPage from "./Features/users/UserPage";
 
+const userId = "63bb65f49f39741850f597f9";
+
 function App() {
   return (
     <Routes>
@@ -16,7 +18,7 @@ function App() {
           <Route index element={<Feed />} />
         </Route>
         <Route path='user' element={<DashLayout />}>
-          <Route index element={<UserPage />} />
+          <Route index element={<UserPage userId={userId} />} />
         </Route>
       </Route>
     </Routes>

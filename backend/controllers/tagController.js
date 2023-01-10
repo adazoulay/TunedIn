@@ -110,10 +110,25 @@ const getTag = async (req, res, next) => {
   }
 };
 
+const getTagsByPostId = async (req, res, next) => {
+  const postId = req.params.id;
+  try {
+    const post = await Post.findById(postId).populate("tags").exec();
+    if (!post) {
+      return res.status(400).json({ message: "Post not found" });
+    }
+    const { tags } = post;
+    res.status(200).json(tags);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAllTags,
   createNewTag,
   updateTag,
   deleteTag,
   getTag,
+  getTagsByPostId,
 };

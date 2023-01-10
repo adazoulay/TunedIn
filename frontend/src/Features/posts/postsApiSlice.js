@@ -14,7 +14,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     getPosts: builder.query({
       query: () => "/posts",
       transformResponse: (responseData) => {
-        console.log("POST API SLICE: Post: ", responseData);
         return postsAdapter.setAll(initialState, responseData);
       },
       providesTags: (result, error, arg) => [
@@ -78,12 +77,8 @@ export const {
 
 export const selectPostsResult = extendedApiSlice.endpoints.getPosts.select();
 
-const selectPostsData = createSelector(
-  selectPostsResult,
-  (postsResult) => postsResult.data // normalized state object with ids & entities
-);
+const selectPostsData = createSelector(selectPostsResult, (postsResult) => postsResult.data);
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllPosts,
   selectById: selectPostById,

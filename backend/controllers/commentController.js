@@ -35,11 +35,12 @@ const createNewComment = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({ message: "You must be logged in to post" });
     }
+    const username = user.username;
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(400).json({ message: "Post not found" });
     }
-    const comment = await Comment.create({ userId, desc });
+    const comment = await Comment.create({ userId, username, desc });
     await post.update({ $addToSet: { comments: comment._id } });
     return res.status(201).json({ message: `${user.username} commented ${post.title}` });
   } catch (err) {
