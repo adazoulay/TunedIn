@@ -1,5 +1,6 @@
 import Comment from "./Comment";
 import { useGetCommentsByPostIdQuery } from "./commentsApiSlice";
+import React, { memo } from "react";
 
 const CommentSection = ({ postId }) => {
   const {
@@ -29,4 +30,4 @@ const CommentSection = ({ postId }) => {
   return <div className='comment-section'>{content}</div>;
 };
 
-export default CommentSection;
+export default memo(CommentSection); //! Might be problematic when user adds comments or likes comments. Will it rerender?

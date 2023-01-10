@@ -7,7 +7,7 @@ import AnimatedBorder from "./AnimatedBorder";
 import SoundBar from "./SoundBar";
 import TagGroup from "../tags/TagGroup";
 import CommentSection from "../comments/CommentSection";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // ! TODO import ReactionButtons from "./ReactionButtons";
 // ! TODO import PostAuthor from "./PostAuthor";
@@ -21,8 +21,6 @@ const Post = ({ postId }) => {
   function handleColorsFetched(fetchedColors) {
     setColors(fetchedColors);
   }
-
-  console.log("Post");
 
   return (
     <AnimatedBorder colors={colors}>

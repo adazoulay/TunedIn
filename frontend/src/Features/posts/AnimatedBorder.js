@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 
-function AnimatedBorder({ children, colors }) {
+const AnimatedBorder = ({ children, colors }) => {
   const [borderColor, setBorderColor] = useState(["white", "gray"]);
 
-  console.log("AnimatedBorder");
   useEffect(() => {
     let colorsCopy = [...colors];
     if (colorsCopy.length === 1) {
@@ -28,6 +27,6 @@ function AnimatedBorder({ children, colors }) {
       {children}
     </div>
   );
-}
+};
 
-export default AnimatedBorder;
+export default memo(AnimatedBorder);

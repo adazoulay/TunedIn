@@ -1,22 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, memo } from "react";
 import Tag from "./Tag";
 import { useGetTagsByPostIdQuery } from "./tagsApiSlice";
 
 const TagGroup = ({ postId, onColorsFetched }) => {
-  //! Rerending too many times. Try to fix
   //! Todo tmrw. Optional props to pass either userId or postId
-  //! Maybe abstract out useGetTagsByPostIdQuery and pass tags directly instead
-
-  console.log("Tag Group");
 
   const { data: tags, isLoading, isSuccess, isError, error } = useGetTagsByPostIdQuery(postId);
 
   let content;
-  let colors = ["white", "gray"];
+  let colors;
 
   useEffect(() => {
-    onColorsFetched(colors);
-    console.log("USE EFFECT TRIGGERED");
+    if (colors) {
+      onColorsFetched(colors);
+    }
   }, [isSuccess]);
 
   if (isLoading) content = <p>Loading...</p>;
@@ -36,4 +33,6 @@ const TagGroup = ({ postId, onColorsFetched }) => {
   return <div className='tag-group'>{content}</div>;
 };
 
-export default TagGroup;
+export default memo(TagGroup, (prevProps, nextProps) => {
+  return prevProps.postId === nextProps.postId;
+});
