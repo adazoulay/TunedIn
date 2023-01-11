@@ -12,13 +12,14 @@ router.put("/view/:id", postController.addView); //Done
 router.put("/like/:id", verifyJWT, postController.likePost); //Done
 router.get("/:postId/comments", postController.getComments); //? Maybe don't need
 
-//! Need to test
+//! Home Feed Types
 router.get("/trend", postController.getRandom);
 router.get("/random", postController.getTrend);
 router.get("/sub", verifyJWT, postController.getSub);
-router.get("/tags", postController.getByTag);
 router.get("/search", postController.searchPost);
 
-module.exports = router;
+//! Get Post By
+router.get("/user/:id", postController.getPostByUserId);
+router.get("/tag/:id", postController.getPostByTagId); //TODO when Tagpage done
 
-//TODO Comment a post
+module.exports = router;

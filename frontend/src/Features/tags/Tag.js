@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Tag = ({ tagInfo }) => {
-  const { color, name, id } = tagInfo;
+const Tag = ({ tagInfo, tagId }) => {
+  const { color, name } = tagInfo;
 
   return (
-    <Link to={`/tag/${id}`}>
+    <Link to={`/tag/${tagId}`}>
       <div className='tag' style={{ background: color }}>
         {name}
       </div>

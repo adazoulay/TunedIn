@@ -1,16 +1,16 @@
 import Feed from "../posts/Feed";
 import { useGetUserQuery } from "./usersApiSlice";
+import { useGetTagsByUserIdQuery } from "../tags/tagsApiSlice";
 import TagGroup from "../tags/TagGroup";
 const UserPage = ({ userId }) => {
-  const { data: user, isLoading, isSuccess, isError, error } = useGetUserQuery(userId);
+  const { data: userData, isSuccess } = useGetUserQuery(userId);
+  const { data: tags, isSuccess: isSuccessTags } = useGetTagsByUserIdQuery(userId);
 
-  //! Todo: add userDescription to schema
-
-  let content;
+  let user;
 
   if (isSuccess) {
-    const { ids, entities } = user;
-    content = ids?.length ? entities[ids[0]] : null;
+    const { ids, entities } = userData;
+    user = ids?.length ? entities[ids[0]] : null;
   }
 
   return (
@@ -23,23 +23,26 @@ const UserPage = ({ userId }) => {
             alt='Profile Picture'
           />
           <div className='name-desc'>
-            <div className='username'>{content?.username}</div>
-            <div className='user-desc'>{content?.desc}</div>
+            <div className='username'>{user?.username}</div>
+            <div className='user-desc'>{user?.desc}</div>
           </div>
           <div className='social'>
-            <div>Followers : {content?.followers.length}</div>
-            <div>Following : {content?.following.length}</div>
+            <div>Followers : {user?.followers.length}</div>
+            <div>Following : {user?.following.length}</div>
           </div>
           <button className='follow-btn'>Follow</button>
         </div>
         <div className='user-spotlight'>
-          <div>Top Tags:</div>
+          <div className='tag-spotlight'>
+            Top Tags:
+            <TagGroup tags={tags} containerType={"USER"} />
+            {/* Optional params... */}
+          </div>
           <div>Spotlight</div> {/*From saved posts*/}
         </div>
       </div>
       <div className='user-body'>
-        <Feed />
-        {/* Pass some props to feed based on context? Maybe create merged playlist like on spotify? */}
+        <Feed type='USER' source={userId} />
       </div>
     </div>
   );

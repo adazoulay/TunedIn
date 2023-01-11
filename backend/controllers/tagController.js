@@ -1,5 +1,6 @@
 const Post = require("../models/Post");
 const Tag = require("../models/Tag");
+const User = require("../models/User");
 
 const getAllTags = async (req, res, next) => {
   try {
@@ -124,6 +125,20 @@ const getTagsByPostId = async (req, res, next) => {
   }
 };
 
+const getTagsByUserId = async (req, res, next) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId).populate("tags").exec();
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const { tags } = user;
+    res.status(200).json(tags);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAllTags,
   createNewTag,
@@ -131,4 +146,5 @@ module.exports = {
   deleteTag,
   getTag,
   getTagsByPostId,
+  getTagsByUserId,
 };

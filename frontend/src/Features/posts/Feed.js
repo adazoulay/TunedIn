@@ -1,18 +1,30 @@
 import { useGetPostsQuery } from "./postsApiSlice";
+import { useGetPostsByUserIdQuery } from "./postsApiSlice";
+import { useGetPostsByTagIdQuery } from "./postsApiSlice";
+import React from "react";
+
 import Post from "./Post";
 
-const Feed = () => {
-  const { data: posts, isLoading, isSuccess, isError, error } = useGetPostsQuery();
+const Feed = ({ type, source }) => {
+  let feedData;
+
+  if (type === "HOME") {
+    feedData = useGetPostsQuery();
+  } else if (type === "USER") {
+    feedData = useGetPostsByUserIdQuery(source);
+  } else if (type === "TAG") {
+    feedData = useGetPostsByTagIdQuery(source);
+  }
+
+  const { data: posts, isLoading, isSuccess, isError, error } = feedData;
 
   let content;
 
-  if (isLoading) content = <p>Loading...</p>;
-
-  if (isError) {
+  if (isLoading) {
+    content = <p>Loading...</p>;
+  } else if (isError) {
     content = <p className='errmsg'>{error?.data?.message}</p>;
-  }
-
-  if (isSuccess) {
+  } else if (isSuccess) {
     const { ids } = posts;
     content = ids?.length ? ids.map((postId) => <Post key={postId} postId={postId} />) : null;
   }
@@ -20,4 +32,6 @@ const Feed = () => {
   return <div className='feed'>{content}</div>;
 };
 
-export default Feed;
+export default React.memo(Feed, (prevProps, nextProps) => {
+  return prevProps.source === nextProps.source && prevProps.type === prevProps.type;
+});

@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
 const Tag = require("../models/Tag");
+const fuzzyset = require("fuzzyset.js");
 
 const getAllPosts = async (req, res, next) => {
   try {
@@ -176,22 +177,7 @@ const getSub = async (req, res, next) => {
         return await Video.find({ userId });
       })
     );
-
     res.status(200).json(list.flat().sort((a, b) => b.createdAt - a.createdAt));
-  } catch (err) {
-    next(err);
-  }
-};
-
-const getByTag = async (req, res, next) => {}; //! Implement Tag first
-
-const searchPost = async (req, res, next) => {
-  const query = req.query.q;
-  try {
-    const posts = await Post.find({
-      title: { $regex: query, $options: "i" },
-    }).limit(40);
-    res.status(200).json(posts);
   } catch (err) {
     next(err);
   }
@@ -211,6 +197,53 @@ const getComments = async (req, res, next) => {
   }
 };
 
+const getPostByUserId = async (req, res, next) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId).populate("posts").exec();
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const { posts } = user;
+    res.status(200).json(posts);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getPostByTagId = async (req, res, next) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId).populate("posts").exec();
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const { posts } = user;
+    res.status(200).json(posts);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const searchPost = async (req, res, next) => {
+  const query = req.query.q;
+  try {
+    const posts = await Post.find();
+    let dataSet = posts.map((post) => post.title);
+    const fuzzy = fuzzyset(dataSet);
+    const results = fuzzy.get(query);
+    if (!results) {
+      res.status(200).json([]);
+    }
+    let finalResults = results.map((result) => {
+      return posts.find((post) => post.title === result[1]);
+    });
+    res.status(200).json(finalResults);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAllPosts,
   createNewPost,
@@ -222,7 +255,8 @@ module.exports = {
   getRandom,
   getTrend,
   getSub,
-  getByTag,
   searchPost,
   getComments,
+  getPostByUserId,
+  getPostByTagId,
 };

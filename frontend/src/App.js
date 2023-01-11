@@ -15,7 +15,7 @@ function App() {
         <Route index element={<Public />} />
         <Route path='login' element={<Login />} />
         <Route path='feed' element={<DashLayout />}>
-          <Route index element={<Feed />} />
+          <Route index element={<Feed type='HOME' />} />
         </Route>
         <Route path='user' element={<DashLayout />}>
           <Route index element={<UserPage userId={userId} />} />

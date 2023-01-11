@@ -9,6 +9,7 @@ router.put("/:id", verifyJWT, tagController.updateTag); // Done
 router.delete("/:id", verifyJWT, tagController.deleteTag); // Done
 router.get("/find/:id", tagController.getTag); //Done
 router.get("/post/:id", tagController.getTagsByPostId); //Done
+router.get("/user/:id", tagController.getTagsByUserId); //Done
 
 module.exports = router;
 

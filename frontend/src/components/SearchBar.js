@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useSearchPostQuery } from "../Features/posts/postsApiSlice";
 
+//Searching by tags should also dislpay posts with the tags. See lamadev Query tuto on youtube tuto
 const SearchBar = () => {
+  //! Cosmetic
   const [selectedFilter, setSelectedFilter] = useState(null);
-  const [searchText, setSearchText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const searchBarRef = useRef(null);
 
@@ -27,6 +30,45 @@ const SearchBar = () => {
     };
   });
 
+  //! Search
+
+  const [searchText, setSearchText] = useState("");
+  const [skip, setSkip] = useState(true);
+
+  const handleInputChange = (event) => {
+    setSearchText(() => event.target.value);
+    if (searchText.length) {
+      setSkip(() => false);
+    } else {
+      setSkip(() => true);
+    }
+  };
+
+  let fetchedResults;
+
+  if (selectedFilter === "type-post") {
+    fetchedResults = useSearchPostQuery(searchText, { skip });
+  } else {
+    fetchedResults = useSearchPostQuery(searchText, { skip });
+  }
+
+  const { data: searchResults, isSuccess } = fetchedResults;
+
+  let content = null;
+
+  if (isSuccess) {
+    const { ids, entities } = searchResults;
+    content = ids?.length
+      ? ids.map((resultId) => {
+          return (
+            <Link className='dataItem' key={resultId} to={`/post/${resultId}`}>
+              <p>{entities[resultId].title}</p>
+            </Link>
+          );
+        })
+      : null;
+  }
+
   return (
     <form
       ref={searchBarRef}
@@ -38,12 +80,13 @@ const SearchBar = () => {
           <path d='M.763.737.502.476A.268.268 0 1 0 .299.57H.3A.269.269 0 0 0 .476.503l.261.261A.02.02 0 0 0 .75.77C.76.77.769.762.769.751A.016.016 0 0 0 .763.738zM.069.3A.231.231 0 1 1 .3.531.231.231 0 0 1 .069.3z' />
         </svg>
       </button>
+      {/* SEARCH INPUT -----  */}
       <input
         type='search'
         value={searchText}
         placeholder='Search'
         className='search-input'
-        onChange={(event) => setSearchText(event.target.value)}
+        onChange={handleInputChange}
       />
       <div className='filters'>
         <button
@@ -108,6 +151,7 @@ const SearchBar = () => {
           <span>User</span>
         </button>
       </div>
+      <div className='dataResult'>{isSuccess && content}</div>
     </form>
   );
 };

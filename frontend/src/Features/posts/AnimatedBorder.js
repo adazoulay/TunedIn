@@ -1,18 +1,20 @@
 import React, { useEffect, useState, memo } from "react";
 
 const AnimatedBorder = ({ children, colors }) => {
-  const [borderColor, setBorderColor] = useState(["white", "gray"]);
+  const [borderColor, setBorderColor] = useState(["white", "gray", "white"]);
 
   useEffect(() => {
-    let colorsCopy = [...colors];
-    if (colorsCopy.length === 1) {
-      colorsCopy.push("white", colors[0]);
-    } else if (colorsCopy.length <= 5) {
-      for (let i = Math.floor(colors.length / 2); i >= 0; i--) {
-        colorsCopy.push(colors[i]);
+    if (colors) {
+      let colorsCopy = [...colors];
+      if (colorsCopy.length === 1) {
+        colorsCopy.push("white", colors[0]);
+      } else if (colorsCopy.length <= 5) {
+        for (let i = Math.floor(colors.length / 2); i >= 0; i--) {
+          colorsCopy.push(colors[i]);
+        }
       }
+      setBorderColor(colorsCopy);
     }
-    setBorderColor(colorsCopy);
   }, [colors]);
 
   return (
@@ -29,4 +31,6 @@ const AnimatedBorder = ({ children, colors }) => {
   );
 };
 
-export default memo(AnimatedBorder);
+export default memo(AnimatedBorder, (prevPros, nextProps) => {
+  return JSON.stringify(prevPros.colors) === JSON.stringify(nextProps.colors);
+});

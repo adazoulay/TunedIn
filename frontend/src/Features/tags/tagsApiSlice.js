@@ -28,22 +28,21 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (responseData) => {
-        const loadedTags = responseData.map((post) => {
-          return post;
+        const loadedTags = responseData.map((tag) => {
+          return tag;
         });
         return tagsAdapter.setAll(initialState, loadedTags);
       },
       providesTags: (result, error, arg) => [...result.ids.map((id) => ({ type: "Tag", id }))],
     }),
     getTagsByUserId: builder.query({
-      //! TODO For profile page / reccomendations
       query: (id) => ({
-        url: `/tags/post/${id}`,
+        url: `/tags/user/${id}`,
         method: "GET",
       }),
       transformResponse: (responseData) => {
-        const loadedTags = responseData.map((post) => {
-          return post;
+        const loadedTags = responseData.map((tag) => {
+          return tag;
         });
         return tagsAdapter.setAll(initialState, loadedTags);
       },
@@ -75,6 +74,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetTagsQuery,
   useGetTagsByPostIdQuery,
+  useGetTagsByUserIdQuery,
   useAddNewTagMutation,
   useDeleteTagMutation,
 } = extendedApiSlice;

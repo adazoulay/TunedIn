@@ -59,7 +59,7 @@ const getUser = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const { id, username, password, desc } = req.body;
+  const { id, username, password, desc, tags } = req.body;
   if (!id || !username) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -81,6 +81,9 @@ const updateUser = async (req, res, next) => {
     }
     if (desc) {
       user.desc = desc;
+    }
+    if (tags) {
+      user.tags = tags;
     }
     const updatedUser = await user.save();
     res.status(200).json({ message: `${updatedUser.username} updated` });

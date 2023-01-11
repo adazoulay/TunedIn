@@ -1,37 +1,45 @@
 import TimeAgo from "./TimeAgo";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectPostById } from "./postsApiSlice";
 
 import AnimatedBorder from "./AnimatedBorder";
 import SoundBar from "./SoundBar";
 import TagGroup from "../tags/TagGroup";
 import CommentSection from "../comments/CommentSection";
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
+import { useGetPostsQuery } from "./postsApiSlice";
 
 // ! TODO import ReactionButtons from "./ReactionButtons";
 // ! TODO import PostAuthor from "./PostAuthor";
 // ! TODO Body content soundbar
 
+//! Some posts don't load on reload
+
 const Post = ({ postId }) => {
-  const post = useSelector((state) => selectPostById(state, postId));
+  const { data: tags, isSuccess: isSuccessTags } = useGetTagsByPostIdQuery(postId);
 
-  const [colors, setColors] = useState([]);
-
-  function handleColorsFetched(fetchedColors) {
-    setColors(fetchedColors);
+  let colors;
+  if (isSuccessTags) {
+    const { ids, entities } = tags;
+    colors = ids.map((id) => entities[id].color);
   }
+
+  const { post } = useGetPostsQuery("getPosts", {
+    selectFromResult: ({ data }) => ({
+      post: data?.entities[postId],
+    }),
+  });
 
   return (
     <AnimatedBorder colors={colors}>
       <article className='post-feed'>
         <div className='post-header'>
-          <Link to={`post/${post.id}`}>
-            <h2>{post.title}</h2>
+          <Link to={`/post/${postId}`}>
+            <h2>{post?.title}</h2>
           </Link>
-          {/*<PostAuthor userId={post.userId} />*/}
+          {/*<PostAuthor userId={post?.userId} />*/}
           <div className='post-tags'>
-            <TagGroup postId={postId} onColorsFetched={handleColorsFetched} />
+            {isSuccessTags ? <TagGroup tags={tags} containerType={"POST"} /> : null}
           </div>
         </div>
         <div className='post-body'>
@@ -41,16 +49,15 @@ const Post = ({ postId }) => {
           <div className='description'>
             <b>Description : </b>
             {/* Add Username through virtual mongoose */}
-            <p>{post.desc.substring(0, 75)}</p>
+            <p>{post?.desc.substring(0, 75)}</p>
           </div>
-          {/* If post longer than 75 add ... */}
           <div className='comment-section'>
-            {post.comments.length ? <CommentSection postId={postId} /> : null}
+            {post?.comments.length ? <CommentSection postId={postId} /> : null}
           </div>
           <div className='timestamp'>
-            <TimeAgo timestamp={post.createdAt} />
+            <TimeAgo timestamp={post?.createdAt} />
           </div>
-          <div className='likes'>Likes: {post.likes.length}</div>
+          <div className='likes'>Likes: {post?.likes.length}</div>
         </div>
       </article>
     </AnimatedBorder>
