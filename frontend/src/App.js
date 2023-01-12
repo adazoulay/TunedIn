@@ -5,8 +5,7 @@ import Login from "./Features/Auth/Login";
 import DashLayout from "./components/DashLayout";
 import Feed from "./Features/posts/Feed";
 import UserPage from "./Features/users/UserPage";
-
-const userId = "63bb65f49f39741850f597f9";
+import TagPage from "./Features/tags/TagPage";
 
 function App() {
   return (
@@ -18,7 +17,10 @@ function App() {
           <Route index element={<Feed type='HOME' />} />
         </Route>
         <Route path='user' element={<DashLayout />}>
-          <Route index element={<UserPage userId={userId} />} />
+          <Route path=':id' element={<UserPage />} />
+        </Route>
+        <Route path='tag' element={<DashLayout />}>
+          <Route path=':id' element={<TagPage />} />
         </Route>
       </Route>
     </Routes>

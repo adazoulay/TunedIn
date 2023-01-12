@@ -212,13 +212,13 @@ const getPostByUserId = async (req, res, next) => {
 };
 
 const getPostByTagId = async (req, res, next) => {
-  const userId = req.params.id;
+  const tagId = req.params.id;
   try {
-    const user = await User.findById(userId).populate("posts").exec();
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
+    const tag = await Tag.findById(tagId).populate("posts").exec();
+    if (!tag) {
+      return res.status(400).json({ message: "Tag not found" });
     }
-    const { posts } = user;
+    const { posts } = tag;
     res.status(200).json(posts);
   } catch (err) {
     next(err);
@@ -232,8 +232,8 @@ const searchPost = async (req, res, next) => {
     let dataSet = posts.map((post) => post.title);
     const fuzzy = fuzzyset(dataSet);
     const results = fuzzy.get(query);
-    if (!results) {
-      res.status(200).json([]);
+    if (!results || !results.length) {
+      return res.status(200).json([]);
     }
     let finalResults = results.map((result) => {
       return posts.find((post) => post.title === result[1]);

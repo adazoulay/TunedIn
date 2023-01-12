@@ -42,7 +42,7 @@ a {
         position: relative;
         width: 100%;
         height: 35px;
-        border-radius: 10px;
+        border-radius: 5px;
         background: $section;
         display: flex;
 
@@ -174,10 +174,6 @@ a {
           margin-left: 10px;
         }
 
-        a {
-          text-decoration: none;
-        }
-
         a:hover {
           background-color: lightgrey;
         }
@@ -191,6 +187,12 @@ a {
       align-items: center;
       height: 100%;
       gap: 20px;
+
+      .pic-small {
+        max-width: 56px;
+        max-height: 56px;
+        border-radius: 20%;
+      }
     }
   }
 
@@ -211,6 +213,14 @@ a {
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
+
+        .sidebar-row {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          gap: 1em;
+        }
       }
     }
 
@@ -224,6 +234,7 @@ a {
       flex-direction: column;
       align-items: center;
       gap: 2em;
+      padding-bottom: 2em;
 
       .post-feed {
         height: 400px;
@@ -259,6 +270,14 @@ a {
             display: flex;
           }
 
+          .divider {
+            margin-left: -10px;
+            margin-right: -10px;
+            margin-top: 10px;
+            opacity: 10%;
+            background-color: $section;
+          }
+
           .comment-section {
             padding-top: 3px;
           }
@@ -278,8 +297,8 @@ a {
       }
     }
 
-    //! USER PAGE
-    .user-page {
+    //! USER / TAG PAGE
+    .content-page {
       position: absolute;
       top: 70px;
       left: 18%;
@@ -287,12 +306,13 @@ a {
       display: flex;
       flex-direction: column;
 
-      .user-header {
+      .content-header {
         display: flex;
         border-bottom: 1px solid $section;
         width: 100%;
         height: fit-content;
         flex-direction: column;
+        padding: 20px;
 
         .user-info {
           display: flex;
@@ -300,13 +320,12 @@ a {
           height: 100%;
           justify-content: space-evenly;
           align-items: center;
-          padding: 20px;
 
           .user-page-profile-pic {
             width: 80px;
             height: 80px;
             background-color: purple;
-            border-radius: 50%;
+            border-radius: 20%;
           }
           .name-desc {
             display: flex;
@@ -329,18 +348,6 @@ a {
             justify-content: space-evenly;
             gap: 0.5em;
           }
-          .follow-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 160px;
-            height: 50px;
-            background-color: #4d95f6;
-            color: $section;
-            font-weight: bold;
-            border-radius: 10px;
-            border: none;
-          }
         }
         .user-spotlight {
           margin: 20px;
@@ -353,8 +360,17 @@ a {
             font-weight: bold;
           }
         }
+
+        .tag-info {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 2em;
+        }
       }
-      .user-body {
+      .content-body {
         position: absolute;
         width: 100%;
         top: 120px;
@@ -374,6 +390,20 @@ a {
         // align-items: center;
         // gap: 2em;
       }
+      .follow-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 160px;
+        height: 50px;
+        background-color: #4673f3;
+        color: $section;
+        font-weight: bold;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 10px;
+        border: none;
+      }
     }
   }
 }
@@ -390,6 +420,18 @@ a {
   width: 72px;
   height: 24px;
   border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $base-color;
+}
+
+.tag-large {
+  font-size: calc(0.9em * 2);
+  font-weight: bold;
+  width: calc(72px * 2.5);
+  height: calc(24px * 2.5);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;

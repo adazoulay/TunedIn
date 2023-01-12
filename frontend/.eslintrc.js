@@ -17,5 +17,6 @@ module.exports = {
     "no-unused-vars": "off",
     "react/prop-types": "off",
     "no-dupe-keys": "off",
+    "no-undef": "off",
   },
 };

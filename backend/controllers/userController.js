@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const Tag = require("../models/Tag");
 const bcrypt = require("bcrypt");
+const fuzzyset = require("fuzzyset.js");
 const { default: mongoose } = require("mongoose");
 
 const getAllUsers = async (req, res, next) => {
@@ -183,6 +184,40 @@ const unFollowTag = async (req, res, next) => {
   }
 };
 
+//! Not tested, maybe not needed
+const getUserByPostId = async (req, res, next) => {
+  const postId = req.params.id;
+  try {
+    const post = await Post.findById(postId).populate("userId").exec();
+    if (!post) {
+      return res.status(400).json({ message: "Post not found" });
+    }
+    const { tags } = post;
+    res.status(200).json(tags);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const searchUser = async (req, res, next) => {
+  const query = req.query.q;
+  try {
+    const users = await User.find();
+    let dataSet = users.map((user) => user.username);
+    const fuzzy = fuzzyset(dataSet);
+    const results = fuzzy.get(query);
+    if (!results || !results.length) {
+      return res.status(200).json([]);
+    }
+    let finalResults = results.map((result) => {
+      return users.find((user) => user.username === result[1]);
+    });
+    res.status(200).json(finalResults);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAllUsers,
   createNewUser,
@@ -193,4 +228,6 @@ module.exports = {
   unFollow,
   followTag,
   unFollowTag,
+  getUserByPostId,
+  searchUser,
 };

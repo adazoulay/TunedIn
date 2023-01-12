@@ -1,12 +1,7 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-const SoundBar = ({ mp3 }) => {
-  return (
-    <div className='waveform'>
-      <div>SoundBar</div>
-      <div>{mp3}</div>
-    </div>
-  );
+const Soundbar = () => {
+  return <div>{/* <audio src={song} preload='metadata'></audio> */}</div>;
 };
 
-export default SoundBar;
+export default Soundbar;

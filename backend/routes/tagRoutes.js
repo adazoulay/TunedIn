@@ -10,6 +10,7 @@ router.delete("/:id", verifyJWT, tagController.deleteTag); // Done
 router.get("/find/:id", tagController.getTag); //Done
 router.get("/post/:id", tagController.getTagsByPostId); //Done
 router.get("/user/:id", tagController.getTagsByUserId); //Done
+router.get("/search", tagController.searchTag);
 
 module.exports = router;
 

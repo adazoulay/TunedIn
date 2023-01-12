@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSearchPostQuery } from "../Features/posts/postsApiSlice";
+import { useSearchTagQuery } from "../Features/tags/tagsApiSlice";
+import { useSearchUserQuery } from "../Features/users/usersApiSlice";
 
 //Searching by tags should also dislpay posts with the tags. See lamadev Query tuto on youtube tuto
 const SearchBar = () => {
@@ -35,38 +37,64 @@ const SearchBar = () => {
   const [searchText, setSearchText] = useState("");
   const [skip, setSkip] = useState(true);
 
-  const handleInputChange = (event) => {
-    setSearchText(() => event.target.value);
-    if (searchText.length) {
-      setSkip(() => false);
-    } else {
-      setSkip(() => true);
-    }
-  };
-
   let fetchedResults;
 
   if (selectedFilter === "type-post") {
     fetchedResults = useSearchPostQuery(searchText, { skip });
+  } else if (selectedFilter === "type-tag") {
+    fetchedResults = useSearchTagQuery(searchText, { skip });
+  } else if (selectedFilter === "type-user") {
+    fetchedResults = useSearchUserQuery(searchText, { skip });
   } else {
     fetchedResults = useSearchPostQuery(searchText, { skip });
   }
 
-  const { data: searchResults, isSuccess } = fetchedResults;
+  const { data: searchResults, isSuccess, isLoading } = fetchedResults;
+
+  const handleInputChange = (event) => {
+    setSearchText(() => event.target.value);
+    if (!searchText.length || isLoading) {
+      setSkip(() => true);
+    } else {
+      setSkip(() => false);
+    }
+  };
 
   let content = null;
 
   if (isSuccess) {
     const { ids, entities } = searchResults;
-    content = ids?.length
-      ? ids.map((resultId) => {
-          return (
-            <Link className='dataItem' key={resultId} to={`/post/${resultId}`}>
-              <p>{entities[resultId].title}</p>
-            </Link>
-          );
-        })
-      : null;
+    if (selectedFilter === "type-tag") {
+      content = ids?.length
+        ? ids.map((resultId) => {
+            return (
+              <Link className='dataItem' key={resultId} to={`/tag/${resultId}`}>
+                <p>{entities[resultId].name}</p>
+              </Link>
+            );
+          })
+        : null;
+    } else if (selectedFilter === "type-user") {
+      content = ids?.length
+        ? ids.map((resultId) => {
+            return (
+              <Link className='dataItem' key={resultId} to={`/user/${resultId}`}>
+                <p>{entities[resultId].username}</p>
+              </Link>
+            );
+          })
+        : null;
+    } else {
+      content = ids?.length
+        ? ids.map((resultId) => {
+            return (
+              <Link className='dataItem' key={resultId} to={`/post/${resultId}`}>
+                <p>{entities[resultId].title}</p>
+              </Link>
+            );
+          })
+        : null;
+    }
   }
 
   return (

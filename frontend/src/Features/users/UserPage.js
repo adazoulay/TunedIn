@@ -2,7 +2,11 @@ import Feed from "../posts/Feed";
 import { useGetUserQuery } from "./usersApiSlice";
 import { useGetTagsByUserIdQuery } from "../tags/tagsApiSlice";
 import TagGroup from "../tags/TagGroup";
-const UserPage = ({ userId }) => {
+import ProfilePic from "../../resources/ProfilePic.png";
+import { useParams } from "react-router-dom";
+const UserPage = () => {
+  let { id: userId } = useParams();
+
   const { data: userData, isSuccess } = useGetUserQuery(userId);
   const { data: tags, isSuccess: isSuccessTags } = useGetTagsByUserIdQuery(userId);
 
@@ -14,12 +18,12 @@ const UserPage = ({ userId }) => {
   }
 
   return (
-    <div className='user-page'>
-      <div className='user-header'>
+    <div className='content-page'>
+      <div className='content-header'>
         <div className='user-info'>
           <img
             className='user-page-profile-pic'
-            src='profile-picture.png'
+            src={"ProfilePicture"}
             alt='Profile Picture'
           />
           <div className='name-desc'>
@@ -41,7 +45,7 @@ const UserPage = ({ userId }) => {
           <div>Spotlight</div> {/*From saved posts*/}
         </div>
       </div>
-      <div className='user-body'>
+      <div className='content-body'>
         <Feed type='USER' source={userId} />
       </div>
     </div>

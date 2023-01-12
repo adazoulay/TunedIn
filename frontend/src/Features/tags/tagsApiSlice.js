@@ -9,6 +9,7 @@ const initialState = tagsAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    //! GET TAGS
     getTags: builder.query({
       query: () => "/tags",
       transformResponse: (responseData) => {
@@ -16,6 +17,16 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           return tag;
         });
         return tagsAdapter.setAll(initialState, loadedTags);
+      },
+      providesTags: (result, error, arg) => [
+        { type: "Tag", id: "LIST" },
+        ...result.ids.map((id) => ({ type: "Tag", id })),
+      ],
+    }),
+    getTag: builder.query({
+      query: (id) => `/tags/find/${id}`,
+      transformResponse: (responseData) => {
+        return tagsAdapter.addOne(initialState, responseData);
       },
       providesTags: (result, error, arg) => [
         { type: "Tag", id: "LIST" },
@@ -48,6 +59,22 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, error, arg) => [...result.ids.map((id) => ({ type: "Tag", id }))],
     }),
+    searchTag: builder.query({
+      query: (str) => `/tags/search?q=${str}`,
+      keepUnusedDataFor: 5,
+      transformResponse: (responseData) => {
+        console.log(responseData);
+        if (!responseData) {
+          return;
+        }
+        const loadedTags = responseData.map((tag) => {
+          return tag;
+        });
+        return tagsAdapter.setAll(initialState, loadedTags);
+      },
+      providesTags: (result, error, arg) => [...result.ids.map((id) => ({ type: "Tag", id }))],
+    }),
+    //! MUTATE TAG
     addNewTag: builder.mutation({
       query: (initialTag) => ({
         url: "/tags",
@@ -73,8 +100,10 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetTagsQuery,
+  useGetTagQuery,
   useGetTagsByPostIdQuery,
   useGetTagsByUserIdQuery,
+  useSearchTagQuery,
   useAddNewTagMutation,
   useDeleteTagMutation,
 } = extendedApiSlice;

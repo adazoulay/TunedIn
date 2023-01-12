@@ -48,10 +48,26 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         } else return [{ type: "User", id: "LIST" }];
       },
     }),
+    searchUser: builder.query({
+      query: (str) => `/users/search?q=${str}`,
+      keepUnusedDataFor: 5,
+      transformResponse: (responseData) => {
+        if (!responseData) {
+          return;
+        }
+        const loadedUsers = responseData.map((user) => {
+          return user;
+        });
+        return usersAdapter.setAll(initialState, loadedUsers);
+      },
+      providesTags: (result, error, arg) => [
+        ...result.ids.map((id) => ({ type: "User", id })),
+      ],
+    }),
   }),
 });
 
-export const { useGetUsersQuery, useGetUserQuery } = usersApiSlice;
+export const { useGetUsersQuery, useGetUserQuery, useSearchUserQuery } = usersApiSlice;
 
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select();
 

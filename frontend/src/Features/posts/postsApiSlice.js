@@ -22,6 +22,19 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         ...result.ids.map((id) => ({ type: "Post", id })),
       ],
     }),
+    getPost: builder.query({
+      query: (id) => ({
+        url: `/posts/find/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (responseData) => {
+        return postsAdapter.setOne(initialState, responseData);
+      },
+      providesTags: (result, error, arg) => [
+        { type: "Post", id: "LIST" },
+        ...result.ids.map((id) => ({ type: "Post", id })),
+      ],
+    }),
     getPostsByUserId: builder.query({
       query: (id) => `/posts/user/${id}`,
       transformResponse: (responseData) => {
@@ -34,10 +47,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     getPostsByTagId: builder.query({
       query: (id) => `/posts/tag/${id}`,
       transformResponse: (responseData) => {
-        const loadedPosts = responseData.map((post) => {
-          return post;
-        });
-        return postsAdapter.setAll(initialState, loadedPosts);
+        return postsAdapter.setAll(initialState, responseData);
       },
       providesTags: (result, error, arg) => [
         ...result.ids.map((id) => ({ type: "Post", id })),
@@ -45,6 +55,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     searchPost: builder.query({
       query: (str) => `/posts/search?q=${str}`,
+      keepUnusedDataFor: 5,
       transformResponse: (responseData) => {
         if (!responseData) {
           return;
@@ -95,6 +106,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetPostsQuery,
+  useGetPostQuery,
   useGetPostsByUserIdQuery,
   useGetPostsByTagIdQuery,
   useSearchPostQuery,

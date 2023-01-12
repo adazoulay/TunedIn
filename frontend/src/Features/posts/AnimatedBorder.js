@@ -16,7 +16,7 @@ const AnimatedBorder = ({ children, colors }) => {
       setBorderColor(colorsCopy);
     }
   }, [colors]);
-
+  const renders = React.useRef(0);
   return (
     <div
       style={{
@@ -26,6 +26,7 @@ const AnimatedBorder = ({ children, colors }) => {
         borderImage: `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
         animation: "10s rotate linear infinite",
       }}>
+      <div>Border Renders: {renders.current++}</div>
       {children}
     </div>
   );

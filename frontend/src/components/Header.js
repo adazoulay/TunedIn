@@ -1,17 +1,24 @@
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 
+import ProfilePic from "../resources/ProfilePic.png";
+import { Plus } from "react-feather";
+
 const Header = () => {
+  const userId = "63bb65f49f39741850f597f9";
+
   return (
     <div className='header'>
       <div className='search-container'>
-        {/* <input type='text' placeholder='Search' /> */}
         <SearchBar />
       </div>
       <div className='right-container'>
-        <button>Upload</button>
-        <Link to='/user'>
-          <img src='profile-picture.png' alt='Profile Picture' />
+        <Link to={""}>
+          <Plus color='#ffffff' size='40' />
+        </Link>
+        <Link to={`/user/${userId}`}>
+          {/* Todo once UserPage done */}
+          <img src={ProfilePic} alt='Profile Picture' className='pic-small' />
         </Link>
       </div>
     </div>

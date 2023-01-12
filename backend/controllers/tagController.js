@@ -1,6 +1,7 @@
 const Post = require("../models/Post");
 const Tag = require("../models/Tag");
 const User = require("../models/User");
+const fuzzyset = require("fuzzyset.js");
 
 const getAllTags = async (req, res, next) => {
   try {
@@ -138,6 +139,24 @@ const getTagsByUserId = async (req, res, next) => {
     next(err);
   }
 };
+const searchTag = async (req, res, next) => {
+  const query = req.query.q;
+  try {
+    const tags = await Tag.find();
+    let dataSet = tags.map((tag) => tag.name);
+    const fuzzy = fuzzyset(dataSet);
+    const results = fuzzy.get(query);
+    if (!results || !results.length) {
+      return res.status(200).json([]);
+    }
+    let finalResults = results.map((result) => {
+      return tags.find((tag) => tag.name === result[1]);
+    });
+    res.status(200).json(finalResults);
+  } catch (err) {
+    next(err);
+  }
+};
 
 module.exports = {
   getAllTags,
@@ -147,4 +166,5 @@ module.exports = {
   getTag,
   getTagsByPostId,
   getTagsByUserId,
+  searchTag,
 };
