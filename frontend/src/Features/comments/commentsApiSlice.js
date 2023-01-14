@@ -29,10 +29,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (responseData) => {
-        const loadedComments = responseData.map((post) => {
-          return post;
-        });
-        return commentsAdapter.setAll(initialState, loadedComments);
+        return commentsAdapter.setAll(initialState, responseData);
       },
       providesTags: (result, error, arg) => [
         ...result.ids.map((id) => ({ type: "Comment", id })),

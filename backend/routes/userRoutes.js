@@ -17,7 +17,7 @@ router.put("/unFollow/:id", verifyJWT, userController.unFollow);
 router.put("/followTag/:id", verifyJWT, userController.followTag);
 router.put("/unFollowTag/:id", verifyJWT, userController.unFollowTag);
 
-router.get("/post/:id", verifyJWT, userController.getUserByPostId);
+router.get("/post/:id", userController.getUserByPostId);
 
 router.get("/search", userController.searchUser);
 

@@ -30,28 +30,21 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         return postsAdapter.setOne(initialState, responseData);
       },
-      providesTags: (result, error, arg) => [
-        { type: "Post", id: "LIST" },
-        ...result.ids.map((id) => ({ type: "Post", id })),
-      ],
+      providesTags: (result, error, id) => [{ type: "Posts", id }],
     }),
     getPostsByUserId: builder.query({
       query: (id) => `/posts/user/${id}`,
       transformResponse: (responseData) => {
         return postsAdapter.setAll(initialState, responseData);
       },
-      providesTags: (result, error, arg) => [
-        ...result.ids.map((id) => ({ type: "Post", id })),
-      ],
+      providesTags: (result, error, id) => [{ type: "Posts", id }],
     }),
     getPostsByTagId: builder.query({
       query: (id) => `/posts/tag/${id}`,
       transformResponse: (responseData) => {
         return postsAdapter.setAll(initialState, responseData);
       },
-      providesTags: (result, error, arg) => [
-        ...result.ids.map((id) => ({ type: "Post", id })),
-      ],
+      providesTags: (result, error, id) => [{ type: "Posts", id }],
     }),
     searchPost: builder.query({
       query: (str) => `/posts/search?q=${str}`,
@@ -101,6 +94,26 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
+    likePost: builder.mutation({
+      query: ({ id }) => ({
+        url: `/posts/like/${id}`,
+        method: "PUT",
+      }),
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          extendedApiSlice.util.updateQueryData("getPost", id, (draft) => {
+            const post = draft.entities[id];
+            console.log(post);
+            if (post) post.likes += 1;
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
@@ -113,6 +126,7 @@ export const {
   useAddNewPostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
+  useLikePostMutation,
 } = extendedApiSlice;
 
 export const selectPostsResult = extendedApiSlice.endpoints.getPosts.select();

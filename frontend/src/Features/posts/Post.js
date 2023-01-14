@@ -1,30 +1,31 @@
-import TimeAgo from "./TimeAgo";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
+import { useGetUserQuery } from "../users/usersApiSlice";
+import { useSelector } from "react-redux";
+import { selectPostById } from "./postsApiSlice";
+import { useLikePostMutation } from "./postsApiSlice";
 
 import AnimatedBorder from "./AnimatedBorder";
 import Soundbar from "./Soundbar";
 import TagGroup from "../tags/TagGroup";
 import CommentSection from "../comments/CommentSection";
-import React, { useEffect, useState } from "react";
-import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
-import { useGetPostQuery } from "./postsApiSlice";
-import { useGetUserQuery } from "../users/usersApiSlice";
+import TimeAgo from "./TimeAgo";
 
-// ! TODO import ReactionButtons from "./ReactionButtons";
-// ! TODO import PostAuthor from "./PostAuthor";
+import { Music } from "react-feather";
+
 // ! TODO Body content soundbar
-
 //TODO Can react with emotes during song. Plays to other users like insta live emotes
 
 const Post = ({ postId }) => {
   //! Post
-  const { data: postData, isSuccess: isSuccessPost } = useGetPostQuery(postId);
+  const post = useSelector((state) => selectPostById(state, postId));
+  const [updatePost, { isLoading }] = useLikePostMutation();
 
-  let post;
-  if (isSuccessPost) {
-    let { ids, entities } = postData;
-    post = entities[ids[0]];
-  }
+  const handleLikeClicked = () => {
+    console.log("liked");
+    updatePost({ id: postId });
+  };
 
   //! User
   const [userId, setUserId] = useState("");
@@ -33,12 +34,10 @@ const Post = ({ postId }) => {
   const { data: userData, isSuccess: isSuccessUser } = useGetUserQuery(userId, { skip });
   let user;
 
-  useEffect(() => {
-    if (isSuccessPost) {
-      setUserId(post.userId);
-      setSkip(false);
-    }
-  }, [isSuccessPost, isSuccessUser]);
+  if (post && post.userId !== userId) {
+    setUserId(post.userId);
+    setSkip(false);
+  }
 
   if (isSuccessUser) {
     let { ids, entities } = userData;
@@ -53,18 +52,12 @@ const Post = ({ postId }) => {
     colors = ids.map((id) => entities[id].color);
   }
 
-  const renders = React.useRef(0);
-
   return (
     <AnimatedBorder colors={colors}>
-      <div>Post Renders: {renders.current++}</div>
       <article className='post-feed'>
         <div className='post-header'>
           <Link to={`/user/${post?.userId}`}>
-            <h3>
-              {user?.username}
-              {`temp`}
-            </h3>
+            <h3>{user?.username}</h3>
           </Link>
           <Link to={`/post/${postId}`}>
             {/* TODO, post page, maybe not needed? */}
@@ -79,18 +72,21 @@ const Post = ({ postId }) => {
         </div>
         <div className='post-footer'>
           <div className='description'>
-            <p>{isSuccessPost && post?.desc.substring(0, 75)}</p>
+            <p>{post && post?.desc.substring(0, 75)}</p>
           </div>
           <hr className='divider' />
           <div className='comment-section'>
-            {isSuccessPost && post?.comments.length ? (
-              <CommentSection postId={postId} />
-            ) : null}
+            {post && post?.comments.length ? <CommentSection postId={postId} /> : null}
           </div>
           <div className='timestamp'>
             <TimeAgo timestamp={post?.createdAt} />
           </div>
-          <div className='likes'>Likes: {post?.likes.length}</div>
+          <div className='likes'>
+            <div className='like-icon' onClick={handleLikeClicked}>
+              <Music />
+            </div>
+            {post?.likes.length}
+          </div>
         </div>
       </article>
     </AnimatedBorder>

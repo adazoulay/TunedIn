@@ -1,5 +1,6 @@
 $base-color: #121212;
 $section: #ebebeb;
+$secondary: #383838;
 
 * {
   margin: 0;
@@ -10,6 +11,7 @@ $section: #ebebeb;
 
 html {
   background-color: $base-color;
+  color: $section;
 }
 
 a {
@@ -105,7 +107,7 @@ a {
               left: 50%;
               transform: translateX(-50%);
               opacity: 0;
-              background: #929aa3;
+              background: $secondary;
               color: #fff;
               font-size: 9px;
               letter-spacing: 1px;
@@ -149,11 +151,11 @@ a {
         .dataResult {
           position: absolute;
           top: 35px;
-          color: $base-color;
+          color: $secondary;
           margin-top: 5px;
           width: 286px;
           max-height: 200px;
-          background-color: $section;
+
           overflow: hidden;
           overflow-y: auto;
         }
@@ -168,14 +170,16 @@ a {
           display: flex;
           align-items: center;
           color: black;
+          background-color: rgb(56, 56, 56, 0.97);
         }
 
         .dataItem p {
           margin-left: 10px;
+          color: $section;
         }
 
-        a:hover {
-          background-color: lightgrey;
+        .dataItem:hover {
+          background-color: $base-color;
         }
       }
     }
@@ -192,6 +196,32 @@ a {
         max-width: 56px;
         max-height: 56px;
         border-radius: 20%;
+      }
+      //! Dropdown
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: rgb(18, 18, 18, 0.6);
+        max-width: fit-content;
+        z-index: 1;
+        padding: 12px 16px;
+        border: $section 1px solid;
+        border-radius: 6px;
+        cursor: pointer;
+        .dopdown-row {
+          display: flex;
+          align-items: center;
+        }
+      }
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+      .dropdown-content:hover {
+        background-color: rgb(18, 18, 18, 0.9);
       }
     }
   }
@@ -242,6 +272,7 @@ a {
         min-width: 500px;
         display: flex;
         flex-direction: column;
+
         .post-header {
           display: flex;
           flex-basis: 18%;
@@ -290,8 +321,14 @@ a {
 
           .likes {
             position: absolute;
-            right: 5%;
-            bottom: 25%;
+            right: 3%;
+            bottom: 30%;
+            display: flex;
+            gap: 0.5em;
+
+            .like-icon {
+              cursor: pointer;
+            }
           }
         }
       }
@@ -404,6 +441,66 @@ a {
         border-radius: 10px;
         border: none;
       }
+    }
+  }
+}
+
+.login-page {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2em;
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+
+    .login-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+
+      .form-label {
+        font-size: 17px;
+        font-weight: bold;
+        color: $section;
+        display: inline-block;
+        clear: left;
+        width: 250px;
+        text-align: right;
+      }
+
+      .form-input {
+        display: inline-block;
+        color: $base-color;
+        border: none;
+        border-radius: 3px;
+        font-size: 15px;
+        margin: 0;
+        outline: 0;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        background-color: $section;
+        color: $base-color;
+      }
+      .form-input:focus {
+        background: #d2d9dd; //Change
+      }
+    }
+
+    .login-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      height: 40px;
+      font-size: 18px;
+      background-color: green;
+      border: none;
     }
   }
 }

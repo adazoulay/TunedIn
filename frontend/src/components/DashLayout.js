@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import SideBar from "./SideBar";
@@ -14,4 +15,4 @@ const DashLayout = () => {
   );
 };
 
-export default DashLayout;
+export default memo(DashLayout);

@@ -5,7 +5,7 @@ const SideBar = () => {
   return (
     <div className='sidebar'>
       <div className='sidebar-content'>
-        <Link to='/feed'>
+        <Link to='/home'>
           <div className='sidebar-row'>
             <Home />
             Home

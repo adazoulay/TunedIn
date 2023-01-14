@@ -14,7 +14,6 @@ const TagPage = () => {
     tag = tagData.entities[tagData.ids[0]];
   }
 
-  console.log(tag);
   return (
     <div className='content-page'>
       <div className='content-header'>

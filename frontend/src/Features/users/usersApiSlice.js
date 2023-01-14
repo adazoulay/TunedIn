@@ -9,6 +9,7 @@ const usersAdapter = createEntityAdapter({
 const initialState = usersAdapter.getInitialState();
 
 export const usersApiSlice = apiSlice.injectEndpoints({
+  //! GET USER
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: () => "/users",
@@ -39,14 +40,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         return usersAdapter.setOne(initialState, responseData);
       },
-      providesTags: (result, error, arg) => {
-        if (result?.ids) {
-          return [
-            { type: "User", id: "LIST" },
-            ...result.ids.map((id) => ({ type: "User", id })),
-          ];
-        } else return [{ type: "User", id: "LIST" }];
-      },
+      providesTags: (result, error, id) => [{ type: "User", id }],
     }),
     searchUser: builder.query({
       query: (str) => `/users/search?q=${str}`,
@@ -64,10 +58,46 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         ...result.ids.map((id) => ({ type: "User", id })),
       ],
     }),
+    //! MUTATE USER
+    addNewUser: builder.mutation({
+      query: (initialUserData) => ({
+        url: "/users",
+        method: "POST",
+        body: {
+          ...initialUserData,
+        },
+      }),
+      invalidatesTags: [{ type: "User", id: "LIST" }],
+    }),
+    updateUser: builder.mutation({
+      query: (initialUserData) => ({
+        url: "/users",
+        method: "PATCH",
+        body: {
+          ...initialUserData,
+        },
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
+    }),
+    deleteUser: builder.mutation({
+      query: ({ id }) => ({
+        url: `/users`,
+        method: "DELETE",
+        body: { id },
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
+    }),
   }),
 });
 
-export const { useGetUsersQuery, useGetUserQuery, useSearchUserQuery } = usersApiSlice;
+export const {
+  useGetUsersQuery,
+  useGetUserQuery,
+  useSearchUserQuery,
+  useAddNewUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} = usersApiSlice;
 
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select();
 

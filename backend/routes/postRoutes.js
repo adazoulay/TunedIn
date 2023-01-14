@@ -20,6 +20,6 @@ router.get("/search", postController.searchPost);
 
 //! Get Post By
 router.get("/user/:id", postController.getPostByUserId);
-router.get("/tag/:id", postController.getPostByTagId); //TODO when Tagpage done
+router.get("/tag/:id", postController.getPostByTagId);
 
 module.exports = router;

@@ -28,10 +28,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         return tagsAdapter.addOne(initialState, responseData);
       },
-      providesTags: (result, error, arg) => [
-        { type: "Tag", id: "LIST" },
-        ...result.ids.map((id) => ({ type: "Tag", id })),
-      ],
+      providesTags: (result, error, id) => [{ type: "Tag", id }],
     }),
     getTagsByPostId: builder.query({
       query: (id) => ({

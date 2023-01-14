@@ -132,15 +132,15 @@ const addView = async (req, res, next) => {
 };
 
 const likePost = async (req, res, next) => {
-  const UserId = req.user.id;
-  if (!UserId) {
+  const userId = req.user.id;
+  console.log("HEHE", req.user.id);
+  if (!userId) {
     return res.status(400).json({ message: "You must be logged in to like a post" });
   }
   const postId = req.params.id;
   try {
     const post = await Post.findByIdAndUpdate(postId, {
-      $addToSet: { likes: UserId },
-      //$pull: { dislikes: id }, Check if liked is not pull
+      $addToSet: { likes: userId },
     });
     res.status(200).json(`${post.title} has been liked`);
   } catch (err) {

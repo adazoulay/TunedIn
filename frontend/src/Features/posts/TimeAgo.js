@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { parseISO, formatDistanceToNow } from "date-fns";
 
 const TimeAgo = ({ timestamp }) => {
@@ -14,4 +15,4 @@ const TimeAgo = ({ timestamp }) => {
     </span>
   );
 };
-export default TimeAgo;
+export default memo(TimeAgo);

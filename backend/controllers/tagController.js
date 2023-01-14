@@ -139,6 +139,7 @@ const getTagsByUserId = async (req, res, next) => {
     next(err);
   }
 };
+
 const searchTag = async (req, res, next) => {
   const query = req.query.q;
   try {
