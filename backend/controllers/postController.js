@@ -9,13 +9,23 @@ const getAllPosts = async (req, res, next) => {
     if (!posts?.length) {
       return res.status(400).json({ message: "No posts found" });
     }
-    const postWithUser = await Promise.all(
-      posts.map(async (post) => {
-        const user = await User.findById(post.userId).lean().exec();
-        return { ...post, username: user.username };
-      })
-    );
-    res.json(postWithUser);
+    res.json(posts);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getPost = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(400).json({ message: "Post not found" });
+    }
+    const user = await User.findById(post.userId).lean().exec();
+    //! Doesn't work for some reason, RTK query fails
+    //!const postWithUser = { ...post, username: user.username, userImg: user.img
+    res.status(200).json(post);
   } catch (err) {
     next(err);
   }
@@ -102,20 +112,6 @@ const deletePost = async (req, res, next) => {
   }
 };
 
-const getPost = async (req, res, next) => {
-  const id = req.params.id;
-  try {
-    const post = await Post.findById(id);
-    if (!post) {
-      return res.status(400).json({ message: "Post not found" });
-    }
-
-    res.status(200).json(post);
-  } catch (err) {
-    next(err);
-  }
-};
-
 const addView = async (req, res, next) => {
   const id = req.params.id;
   try {
@@ -133,7 +129,6 @@ const addView = async (req, res, next) => {
 
 const likePost = async (req, res, next) => {
   const userId = req.user.id;
-  console.log("HEHE", req.user.id);
   if (!userId) {
     return res.status(400).json({ message: "You must be logged in to like a post" });
   }
@@ -142,7 +137,24 @@ const likePost = async (req, res, next) => {
     const post = await Post.findByIdAndUpdate(postId, {
       $addToSet: { likes: userId },
     });
-    res.status(200).json(`${post.title} has been liked`);
+    console.log("Liked", post.likes);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const unLikePost = async (req, res, next) => {
+  const userId = req.user.id;
+  if (!userId) {
+    return res.status(400).json({ message: "You must be logged in to like a post" });
+  }
+  const postId = req.params.id;
+  try {
+    console.log("IN UNLIKED");
+    const post = await Post.findByIdAndUpdate(postId, {
+      $pull: { likes: userId },
+    });
+    console.log("Unliked", post.likes);
   } catch (err) {
     next(err);
   }
@@ -252,6 +264,7 @@ module.exports = {
   getPost,
   addView,
   likePost,
+  unLikePost,
   getRandom,
   getTrend,
   getSub,

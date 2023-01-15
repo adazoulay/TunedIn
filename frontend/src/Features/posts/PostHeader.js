@@ -1,33 +1,31 @@
-import React, { useState } from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
-import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
 import { useGetUserQuery } from "../users/usersApiSlice";
-import { useSelector } from "react-redux";
-import { selectPostById } from "./postsApiSlice";
-import { useLikePostMutation } from "./postsApiSlice";
-
-import AnimatedBorder from "./AnimatedBorder";
-import Soundbar from "./Soundbar";
+import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
 import TagGroup from "../tags/TagGroup";
-import CommentSection from "../comments/CommentSection";
-import TimeAgo from "./TimeAgo";
 
-import { Music } from "react-feather";
+const PostHeader = ({ postHeaderData }) => {
+  const { postId, userId, title } = postHeaderData;
 
-const PostHeader = () => {
-  //! User
-  const [userId, setUserId] = useState("");
-  const [skip, setSkip] = useState(true);
+  const { data: userData, isSuccess: isSuccessUser, isLoading } = useGetUserQuery(userId);
 
-  const { data: userData, isSuccess: isSuccessUser } = useGetUserQuery(userId, { skip });
-  let user;
-
-  if (post && post.userId !== userId) {
-    setUserId(post.userId);
-    setSkip(false);
+  let userContent;
+  if (isSuccessUser) {
+    let { ids, entities } = userData;
+    let user = entities[ids[0]];
+    userContent = <h3>{user.username}</h3>;
   }
 
-  return <div>PostHeader</div>;
+  if (isLoading) return <p>Loading...</p>;
+
+  return (
+    <>
+      <Link to={`/user/${userId}`}>{userContent}</Link>
+      <Link to={`/post/${postId}`}>
+        <h2>{title}</h2>
+      </Link>
+    </>
+  );
 };
 
-export default PostHeader;
+export default memo(PostHeader);

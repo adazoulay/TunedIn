@@ -1,6 +1,7 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
-import { sub } from "date-fns";
 import { apiSlice } from "../../app/api/apiSlice";
+import { current } from "@reduxjs/toolkit";
+import useAuth from "../../hooks/useAuth";
 
 const postsAdapter = createEntityAdapter({
   selectId: (post) => post._id, // Extract the _id field as the unique identifier
@@ -17,10 +18,14 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         return postsAdapter.setAll(initialState, responseData);
       },
-      providesTags: (result, error, arg) => [
-        { type: "Post", id: "LIST" },
-        ...result.ids.map((id) => ({ type: "Post", id })),
-      ],
+      providesTags: (result, error, arg) => {
+        if (result?.ids) {
+          return [
+            { type: "Note", id: "LIST" },
+            ...result.ids.map((id) => ({ type: "Note", id })),
+          ];
+        } else return [{ type: "Note", id: "LIST" }];
+      },
     }),
     getPost: builder.query({
       query: (id) => ({
@@ -30,7 +35,9 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         return postsAdapter.setOne(initialState, responseData);
       },
-      providesTags: (result, error, id) => [{ type: "Posts", id }],
+      providesTags: (result, error, arg) => [
+        ...result.ids.map((id) => ({ type: "Post", id })),
+      ],
     }),
     getPostsByUserId: builder.query({
       query: (id) => `/posts/user/${id}`,
@@ -64,13 +71,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     //! MUTATE POST
     addNewPost: builder.mutation({
-      query: (initialPost) => ({
+      query: (postData) => ({
         url: "/posts",
         method: "POST",
         body: {
-          ...initialPost,
-          userId: Number(initialPost.userId),
-          date: new Date().toISOString(),
+          ...postData,
         },
       }),
       invalidatesTags: [{ type: "Post", id: "LIST" }],
@@ -81,7 +86,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: {
           ...initialPost,
-          date: new Date().toISOString(),
         },
       }),
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
@@ -95,16 +99,19 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
     likePost: builder.mutation({
-      query: ({ id }) => ({
+      query: ({ id, userId }) => ({
+        //! LIKE
         url: `/posts/like/${id}`,
         method: "PUT",
       }),
-      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ id, userId }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           extendedApiSlice.util.updateQueryData("getPost", id, (draft) => {
-            const post = draft.entities[id];
-            console.log(post);
-            if (post) post.likes += 1;
+            const post = current(draft).entities[id];
+            console.log("POST", post);
+            if (post && !post.likes.includes(userId)) {
+              post.likes.push(userId);
+            }
           })
         );
         try {
@@ -113,6 +120,31 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           patchResult.undo();
         }
       },
+      invalidatesTags: (result, error, id) => [{ type: "Post", id }],
+    }),
+    unLikePost: builder.mutation({
+      query: ({ id, userId }) => ({
+        //! DISLIKE
+        url: `/posts/unlike/${id}`,
+        method: "PUT",
+      }),
+      async onQueryStarted({ id, userId }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          extendedApiSlice.util.updateQueryData("getPosts", null, (draft) => {
+            const post = current(draft).entities[id];
+            console.log("POST", post);
+            if (post && post.likes.includes(userId)) {
+              post.likes = post.likes.filter((id) => id !== userId);
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: (result, error, id) => [{ type: "Post", id }],
     }),
   }),
 });
@@ -127,6 +159,7 @@ export const {
   useUpdatePostMutation,
   useDeletePostMutation,
   useLikePostMutation,
+  useUnLikePostMutation,
 } = extendedApiSlice;
 
 export const selectPostsResult = extendedApiSlice.endpoints.getPosts.select();

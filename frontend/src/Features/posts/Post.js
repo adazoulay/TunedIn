@@ -1,68 +1,75 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
 import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
-import { useGetUserQuery } from "../users/usersApiSlice";
-import { useSelector } from "react-redux";
-import { selectPostById } from "./postsApiSlice";
-import { useLikePostMutation } from "./postsApiSlice";
-
 import AnimatedBorder from "./AnimatedBorder";
 import Soundbar from "./Soundbar";
 import TagGroup from "../tags/TagGroup";
-import CommentSection from "../comments/CommentSection";
-import TimeAgo from "./TimeAgo";
-
-import { Music } from "react-feather";
+import PostHeader from "./PostHeader";
+import PostFooter from "./PostFooter";
+import { useGetPostQuery } from "./postsApiSlice";
+import { useGetPostsQuery } from "./postsApiSlice";
 
 // ! TODO Body content soundbar
 //TODO Can react with emotes during song. Plays to other users like insta live emotes
 
 const Post = ({ postId }) => {
   //! Post
-  const post = useSelector((state) => selectPostById(state, postId));
-  const [updatePost, { isLoading }] = useLikePostMutation();
+  // const {
+  //   data: postData,
+  //   isLoading: isLoadingPost,
+  //   isSuccess: isSuccessPost,
+  // } = useGetPostQuery(postId);
 
-  const handleLikeClicked = () => {
-    console.log("liked");
-    updatePost({ id: postId });
-  };
+  const { post } = useGetPostsQuery("getPosts", {
+    selectFromResult: ({ data }) => ({
+      post: data?.entities[postId],
+    }),
+  });
 
-  //! User
-  const [userId, setUserId] = useState("");
-  const [skip, setSkip] = useState(true);
+  const {
+    data: tags,
+    isLoading: isLoadingTags,
+    isSuccess: isSuccessTags,
+  } = useGetTagsByPostIdQuery(postId);
 
-  const { data: userData, isSuccess: isSuccessUser } = useGetUserQuery(userId, { skip });
-  let user;
-
-  if (post && post.userId !== userId) {
-    setUserId(post.userId);
-    setSkip(false);
-  }
-
-  if (isSuccessUser) {
-    let { ids, entities } = userData;
-    user = entities[ids[0]];
-  }
-
-  //! Tags / Colors
-  const { data: tags, isSuccess: isSuccessTags } = useGetTagsByPostIdQuery(postId);
+  // let post;
   let colors;
+  let headerContent;
+  let footerContent;
+
+  // if (isSuccessPost) {
+  //   const { ids, entities } = postData;
+  //   post = entities[ids[0]];
+  // }
+
   if (isSuccessTags) {
     const { ids, entities } = tags;
     colors = ids.map((id) => entities[id].color);
   }
 
+  // if (isSuccessPost && isSuccessTags) {
+  if (isSuccessTags) {
+    const postHeaderData = {
+      postId,
+      userId: post.userId,
+      title: post.title,
+    };
+    headerContent = <PostHeader postHeaderData={postHeaderData} />;
+    const postFooterData = {
+      postId,
+      desc: post.desc,
+      createdAt: post.createdAt,
+      likes: post.likes,
+    };
+    footerContent = <PostFooter postFooterData={postFooterData} />;
+  }
+
+  //! Footer
+
   return (
     <AnimatedBorder colors={colors}>
       <article className='post-feed'>
         <div className='post-header'>
-          <Link to={`/user/${post?.userId}`}>
-            <h3>{user?.username}</h3>
-          </Link>
-          <Link to={`/post/${postId}`}>
-            {/* TODO, post page, maybe not needed? */}
-            <h2>{post?.title}</h2>
-          </Link>
+          {headerContent}
           <div className='post-tags'>
             {isSuccessTags ? <TagGroup tags={tags} containerType={"POST"} /> : null}
           </div>
@@ -70,24 +77,7 @@ const Post = ({ postId }) => {
         <div className='post-body'>
           <Soundbar />
         </div>
-        <div className='post-footer'>
-          <div className='description'>
-            <p>{post && post?.desc.substring(0, 75)}</p>
-          </div>
-          <hr className='divider' />
-          <div className='comment-section'>
-            {post && post?.comments.length ? <CommentSection postId={postId} /> : null}
-          </div>
-          <div className='timestamp'>
-            <TimeAgo timestamp={post?.createdAt} />
-          </div>
-          <div className='likes'>
-            <div className='like-icon' onClick={handleLikeClicked}>
-              <Music />
-            </div>
-            {post?.likes.length}
-          </div>
-        </div>
+        <div className='post-footer'>{footerContent}</div>
       </article>
     </AnimatedBorder>
   );

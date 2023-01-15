@@ -36,10 +36,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (responseData) => {
-        const loadedTags = responseData.map((tag) => {
-          return tag;
-        });
-        return tagsAdapter.setAll(initialState, loadedTags);
+        return tagsAdapter.setAll(initialState, responseData);
       },
       providesTags: (result, error, arg) => [...result.ids.map((id) => ({ type: "Tag", id }))],
     }),

@@ -36,16 +36,26 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       ],
     }),
     addNewComment: builder.mutation({
-      query: (initialComment) => ({
-        url: "/comments",
+      query: ({ id, desc }) => ({
+        url: `/comments/${id}`,
         method: "POST",
         body: {
-          ...initialComment,
-          userId: Number(initialComment.userId),
-          date: new Date().toISOString(),
+          desc,
         },
       }),
-      invalidatesTags: [{ type: "Comment", id: "LIST" }],
+      async onQueryStarted({ id, desc }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          extendedApiSlice.util.updateQueryData("getCommentsByPostId", id, (draft) => {
+            Object.assign(draft, desc);
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: (result, error, arg) => [{ type: "Comment", id: arg.id }],
     }),
     deleteComment: builder.mutation({
       query: ({ id }) => ({

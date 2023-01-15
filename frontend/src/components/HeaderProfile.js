@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSendLogoutMutation } from "../Features/Auth/authApiSlice";
 import useAuth from "../hooks/useAuth";
@@ -27,7 +27,7 @@ const HeaderProfile = () => {
   if (userId) {
     content = (
       <>
-        <Link to={""}>
+        <Link to={"/post/new"}>
           <Plus color='#ffffff' size='40' />
         </Link>
         <div className='dropdown'>
@@ -49,4 +49,4 @@ const HeaderProfile = () => {
   return <>{content}</>;
 };
 
-export default HeaderProfile;
+export default memo(HeaderProfile);

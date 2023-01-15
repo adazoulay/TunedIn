@@ -53,17 +53,15 @@ const Signin = () => {
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleToggle = () => setPersist((prev) => !prev);
 
-  const errClass = errMsg ? "errmsg" : "offscreen";
-
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className='login-page'>
-      <p ref={errRef} className={errClass} aria-live='assertive'>
+    <div className='login-section'>
+      <p ref={errRef} className='' aria-live='assertive'>
         {errMsg}
       </p>
-      <form className='login-form' onSubmit={handleSubmit}>
-        <div className='login-row'>
+      <form className='wrapper-form' onSubmit={handleSubmit}>
+        <div className='form-row'>
           <label className='form-label' htmlFor='username'>
             Username:
           </label>
@@ -78,7 +76,7 @@ const Signin = () => {
             required
           />
         </div>
-        <div className='login-row'>
+        <div className='form-row'>
           <label className='form-label' htmlFor='password'>
             Password:
           </label>
@@ -91,17 +89,19 @@ const Signin = () => {
             required
           />
         </div>
-        <button className='login-button'>Sign In</button>
-        <label htmlFor='persist' className='persist-button'>
-          <input
-            type='checkbox'
-            className='form__checkbox'
-            id='persist'
-            onChange={handleToggle}
-            checked={persist}
-          />
-          Trust This Device
-        </label>
+        <div className='form-row'>
+          <button className='login-button'>Sign In</button>
+          <label htmlFor='persist' className='persist-button'>
+            <input
+              type='checkbox'
+              className=''
+              id='persist'
+              onChange={handleToggle}
+              checked={persist}
+            />
+            Trust This Device
+          </label>
+        </div>
       </form>
     </div>
   );

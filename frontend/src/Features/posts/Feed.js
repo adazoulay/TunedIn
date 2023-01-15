@@ -32,6 +32,7 @@ const Feed = ({ type, source }) => {
   return <div className='feed'>{content}</div>;
 };
 
-export default React.memo(Feed, (prevProps, nextProps) => {
-  return prevProps.source === nextProps.source && prevProps.type === prevProps.type;
-});
+// export default React.memo(Feed, (prevProps, nextProps) => {
+//   return prevProps.source === nextProps.source && prevProps.type === prevProps.type;
+// });
+export default Feed;

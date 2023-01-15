@@ -23,7 +23,9 @@ const CommentSection = ({ postId }) => {
     const { ids, entities } = comments;
 
     content = ids?.length
-      ? ids.map((commentId) => <Comment key={commentId} commentInfo={entities[commentId]} />)
+      ? ids.map((commentId) => (
+          <Comment key={commentId} commendId={commentId} commentInfo={entities[commentId]} />
+        ))
       : null;
   }
 

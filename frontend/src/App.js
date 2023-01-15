@@ -8,6 +8,7 @@ import TagPage from "./Features/tags/TagPage";
 import Signin from "./Features/Auth/Signin";
 import SignUp from "./Features/Auth/Signup";
 import PersistLogin from "./Features/Auth/PersistLogin";
+import NewPost from "./Features/posts/NewPost";
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route path='tag' element={<DashLayout />}>
             <Route path=':id' element={<TagPage />} />
+          </Route>
+          <Route path='post' element={<DashLayout />}>
+            <Route path='new' element={<NewPost />} />
           </Route>
         </Route>
       </Route>
