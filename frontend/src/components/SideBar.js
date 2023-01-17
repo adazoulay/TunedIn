@@ -5,19 +5,19 @@ const SideBar = () => {
   return (
     <div className='sidebar'>
       <div className='sidebar-content'>
-        <Link to='/home'>
+        <Link to='/feed'>
           <div className='sidebar-row'>
             <Home />
             Home
           </div>
         </Link>
-        <Link to=''>
+        <Link to='trend'>
           <div className='sidebar-row'>
             <TrendingUp />
             Trending
           </div>
         </Link>
-        <Link to=''>
+        <Link to='sub'>
           <div className='sidebar-row'>
             <Users />
             Subscribed

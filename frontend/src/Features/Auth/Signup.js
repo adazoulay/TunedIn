@@ -1,28 +1,17 @@
 import { useState, useEffect } from "react";
-import { useAddNewUserMutation } from "../users/usersApiSlice";
+import { useSignupMutation } from "./authApiSlice";
+import { useLoginMutation } from "./authApiSlice"; //! TODO login use creds and reroute to user page
 import { useNavigate } from "react-router-dom";
 import { Save } from "react-feather";
 
-const USER_REGEX = /^[A-z]{3,20}$/;
-const PWD_REGEX = /^[A-z0-9]{4,12}$/;
-
-const NewUserForm = () => {
-  const [addNewUser, { isLoading, isSuccess, isError, error }] = useAddNewUserMutation();
+const signup = () => {
+  const [addNewUser, { isLoading, isSuccess, isError, error }] = useSignupMutation();
 
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
-  const [validUsername, setValidUsername] = useState(false);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [validPassword, setValidPassword] = useState(false);
-
-  useEffect(() => {
-    setValidUsername(USER_REGEX.test(username));
-  }, [username]);
-
-  useEffect(() => {
-    setValidPassword(PWD_REGEX.test(password));
-  }, [password]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -34,60 +23,72 @@ const NewUserForm = () => {
 
   const onUsernameChanged = (e) => setUsername(e.target.value);
   const onPasswordChanged = (e) => setPassword(e.target.value);
+  const onEmailChanged = (e) => setEmail(e.target.value);
 
-  const canSave = [validUsername, validPassword].every(Boolean) && !isLoading;
+  const canSave = [username, email, password].every(Boolean) && !isLoading;
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-      await addNewUser({ username, password });
+      await addNewUser({ username, email, password });
     }
   };
 
-  const errClass = isError ? "errmsg" : "offscreen";
-  const validUserClass = !validUsername ? "form__input--incomplete" : "";
-  const validPwdClass = !validPassword ? "form__input--incomplete" : "";
-
   const content = (
-    <>
-      <p className={errClass}>{error?.data?.message}</p>
-
-      <form className='form' onSubmit={onSaveUserClicked}>
-        <div className='form__title-row'>
-          <h2>New User</h2>
+    <div className='auth-section'>
+      <h1>Sign Up</h1>
+      <p>{error?.data?.message}</p>
+      <form className='wrapper-form' onSubmit={onSaveUserClicked}>
+        <div className='form-row'>
+          <label className='form-label' htmlFor='signUpUsername'>
+            Username: <span className='upload-info'>[3-20 letters]</span>
+          </label>
+          <input
+            className='form-input'
+            id='signUpUsername'
+            name='username'
+            type='text'
+            autoComplete='off'
+            value={username}
+            onChange={onUsernameChanged}
+          />
         </div>
-        <label className='form__label' htmlFor='username'>
-          Username: <span className='nowrap'>[3-20 letters]</span>
-        </label>
-        <input
-          className={`form__input ${validUserClass}`}
-          id='username'
-          name='username'
-          type='text'
-          autoComplete='off'
-          value={username}
-          onChange={onUsernameChanged}
-        />
-        <label className='form__label' htmlFor='password'>
-          Password: <span className='nowrap'>[4-12 chars]</span>
-        </label>
-        <input
-          className={`form__input ${validPwdClass}`}
-          id='password'
-          name='password'
-          type='password'
-          value={password}
-          onChange={onPasswordChanged}
-        />
-        <div className='form__action-buttons'>
-          <button className='icon-button' title='Save' disabled={!canSave}>
-            <Save />
+        <div className='form-row'>
+          <label className='form-label' htmlFor='email'>
+            Email: <span className='upload-info'>[3-20 letters]</span>
+          </label>
+          <input
+            className='form-input'
+            id='email'
+            name='email'
+            type='text'
+            autoComplete='off'
+            value={email}
+            onChange={onEmailChanged}
+          />
+        </div>
+        <div className='form-row'>
+          <label className='form-label' htmlFor='signUpPassword'>
+            Password: <span className='upload-info'>[4-12 chars]</span>
+          </label>
+          <input
+            className='form-input'
+            id='signUpPassword'
+            name='password'
+            type='password'
+            value={password}
+            onChange={onPasswordChanged}
+          />
+        </div>
+        <div className='button-row'>
+          <button className='submit-button' title='Save' disabled={!canSave}>
+            Sign Up
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 
   return content;
 };
-export default NewUserForm;
+export default signup;

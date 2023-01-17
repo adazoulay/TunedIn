@@ -6,7 +6,9 @@ const Comment = ({ commentInfo, commentId }) => {
 
   return (
     <div>
-      <Link to={`/user/${userId}`}>{username}: </Link>
+      <Link to={`/user/${userId}`} className='comment-username'>
+        {username}:{" "}
+      </Link>
       {desc}
     </div>
   );

@@ -46,19 +46,23 @@ const Post = ({ postId }) => {
     colors = ids.map((id) => entities[id].color);
   }
 
+  useEffect(() => {
+    // console.log("POST liked change", post);
+  }, [post?.likes]);
+
   // if (isSuccessPost && isSuccessTags) {
   if (isSuccessTags) {
     const postHeaderData = {
       postId,
-      userId: post.userId,
-      title: post.title,
+      userId: post?.userId,
+      title: post?.title,
     };
     headerContent = <PostHeader postHeaderData={postHeaderData} />;
     const postFooterData = {
       postId,
-      desc: post.desc,
-      createdAt: post.createdAt,
-      likes: post.likes,
+      desc: post?.desc,
+      createdAt: post?.createdAt,
+      likes: post?.likes,
     };
     footerContent = <PostFooter postFooterData={postFooterData} />;
   }

@@ -7,12 +7,15 @@ const DashLayout = () => {
   return (
     <div className='dash-layout'>
       <Header />
-      <div className='layout-wrapper'>
+      <div>
         <SideBar />
-        <Outlet />
+        <div className='content-page'>
+          <Outlet />
+        </div>
       </div>
     </div>
   );
 };
 
-export default memo(DashLayout);
+export default DashLayout;
+// memo(DashLayout);

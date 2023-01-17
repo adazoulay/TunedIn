@@ -5,3 +5,5 @@ const Soundbar = () => {
 };
 
 export default Soundbar;
+
+//https://www.npmjs.com/package/react-audio-visualizers

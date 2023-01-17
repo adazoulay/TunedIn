@@ -15,8 +15,8 @@ router.get("/:postId/comments", postController.getComments); //? Maybe don't nee
 //! Home Feed Types
 router.get("/", postController.getAllPosts); //Done
 router.get("/trend", postController.getRandom);
-router.get("/random", postController.getTrend);
 router.get("/sub", verifyJWT, postController.getSub);
+router.get("/random", postController.getTrend);
 router.get("/search", postController.searchPost);
 
 //! Get Post By

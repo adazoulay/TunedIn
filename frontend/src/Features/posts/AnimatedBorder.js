@@ -31,6 +31,8 @@ const AnimatedBorder = ({ children, colors }) => {
   );
 };
 
-export default memo(AnimatedBorder, (prevPros, nextProps) => {
-  return JSON.stringify(prevPros.colors) === JSON.stringify(nextProps.colors);
-});
+export default AnimatedBorder;
+
+// memo(AnimatedBorder, (prevPros, nextProps) => {
+//   return JSON.stringify(prevPros.colors) === JSON.stringify(nextProps.colors);
+// });

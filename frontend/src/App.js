@@ -19,8 +19,10 @@ function App() {
         <Route path='/signup' element={<SignUp />} />
         {/*  */}
         <Route element={<PersistLogin />}>
-          <Route path='home' element={<DashLayout />}>
+          <Route path='feed' element={<DashLayout />}>
             <Route index element={<Feed type='HOME' />} />
+            <Route path='trend' element={<Feed type='TREND' />} />
+            <Route path='sub' element={<Feed type='SUB' />} />
           </Route>
           <Route path='user' element={<DashLayout />}>
             <Route path=':id' element={<UserPage />} />

@@ -15,7 +15,7 @@ const TagPage = () => {
   }
 
   return (
-    <div className='content-page'>
+    <>
       <div className='content-header'>
         <div className='tag-info'>
           {isSuccessTag && <Tag tagInfo={tag} tagId={tagId} size='large' />}
@@ -23,13 +23,11 @@ const TagPage = () => {
             <h3>Parents:</h3>
             <h3>Children:</h3>
           </div>
-          <button className='follow-btn'>Follow</button>
+          <button className='follow-button'>Follow</button>
         </div>
       </div>
-      <div className='content-body'>
-        <Feed type={"TAG"} source={tagId} />
-      </div>
-    </div>
+      <Feed type={"TAG"} source={tagId} />
+    </>
   );
 };
 

@@ -32,4 +32,5 @@ const CommentSection = ({ postId }) => {
   return <div className='comment-section'>{content}</div>;
 };
 
-export default memo(CommentSection); //! Might be problematic when user adds comments or likes comments. Will it rerender?
+export default CommentSection;
+// memo(CommentSection); //! Might be problematic when user adds comments or likes comments. Will it rerender?

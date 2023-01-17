@@ -18,7 +18,7 @@ const UserPage = () => {
   }
 
   return (
-    <div className='content-page'>
+    <>
       <div className='content-header'>
         <div className='user-info'>
           <img
@@ -34,7 +34,7 @@ const UserPage = () => {
             <div>Followers : {user?.followers.length}</div>
             <div>Following : {user?.following.length}</div>
           </div>
-          <button className='follow-btn'>Follow</button>
+          <button className='follow-button'>Follow</button>
         </div>
         <div className='user-spotlight'>
           <div className='tag-spotlight'>
@@ -45,10 +45,8 @@ const UserPage = () => {
           <div>Spotlight</div> {/*From saved posts*/}
         </div>
       </div>
-      <div className='content-body'>
-        <Feed type='USER' source={userId} />
-      </div>
-    </div>
+      <Feed type='USER' source={userId} />
+    </>
   );
 };
 

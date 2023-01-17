@@ -12,7 +12,7 @@ const initialState = postsAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    //! GET POST BY ...
+    //! FEED TYPE
     getPosts: builder.query({
       query: () => "/posts",
       transformResponse: (responseData) => {
@@ -21,12 +21,41 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       providesTags: (result, error, arg) => {
         if (result?.ids) {
           return [
-            { type: "Note", id: "LIST" },
-            ...result.ids.map((id) => ({ type: "Note", id })),
+            { type: "Post", id: "LIST" },
+            ...result.ids.map((id) => ({ type: "Post", id })),
           ];
-        } else return [{ type: "Note", id: "LIST" }];
+        } else return [{ type: "Post", id: "LIST" }];
       },
     }),
+    getTrend: builder.query({
+      query: () => "/posts/trend",
+      transformResponse: (responseData) => {
+        return postsAdapter.setAll(initialState, responseData);
+      },
+      providesTags: (result, error, arg) => {
+        if (result?.ids) {
+          return [
+            { type: "Post", id: "LIST" },
+            ...result.ids.map((id) => ({ type: "Post", id })),
+          ];
+        } else return [{ type: "Post", id: "LIST" }];
+      },
+    }),
+    getSub: builder.query({
+      query: () => "/posts/sub",
+      transformResponse: (responseData) => {
+        return postsAdapter.setAll(initialState, responseData);
+      },
+      providesTags: (result, error, arg) => {
+        if (result?.ids) {
+          return [
+            { type: "Post", id: "LIST" },
+            ...result.ids.map((id) => ({ type: "Post", id })),
+          ];
+        } else return [{ type: "Post", id: "LIST" }];
+      },
+    }),
+    //! GET POST BY ...
     getPost: builder.query({
       query: (id) => ({
         url: `/posts/find/${id}`,
@@ -106,21 +135,23 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       }),
       async onQueryStarted({ id, userId }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          extendedApiSlice.util.updateQueryData("getPost", id, (draft) => {
-            const post = current(draft).entities[id];
-            console.log("POST", post);
-            if (post && !post.likes.includes(userId)) {
+          extendedApiSlice.util.updateQueryData("getPosts", undefined, (draft) => {
+            const post = draft.entities[id];
+            if (current(post) && !current(post)?.likes.includes(userId)) {
+              console.log("in 1");
               post.likes.push(userId);
             }
           })
         );
         try {
+          console.log("1 try");
           await queryFulfilled;
+          console.log("1 fulfilled");
         } catch {
+          console.log("1 catch");
           patchResult.undo();
         }
       },
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }],
     }),
     unLikePost: builder.mutation({
       query: ({ id, userId }) => ({
@@ -130,27 +161,31 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       }),
       async onQueryStarted({ id, userId }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          extendedApiSlice.util.updateQueryData("getPosts", null, (draft) => {
-            const post = current(draft).entities[id];
-            console.log("POST", post);
-            if (post && post.likes.includes(userId)) {
+          extendedApiSlice.util.updateQueryData("getPosts", undefined, (draft) => {
+            const post = draft.entities[id];
+            if (current(post) && current(post)?.likes.includes(userId)) {
+              console.log("in 2");
               post.likes = post.likes.filter((id) => id !== userId);
             }
           })
         );
         try {
+          console.log("2 try");
           await queryFulfilled;
+          console.log("2 fulfilled");
         } catch {
+          console.log("2 catch");
           patchResult.undo();
         }
       },
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }],
     }),
   }),
 });
 
 export const {
   useGetPostsQuery,
+  useGetTrendQuery,
+  useGetSubQuery,
   useGetPostQuery,
   useGetPostsByUserIdQuery,
   useGetPostsByTagIdQuery,

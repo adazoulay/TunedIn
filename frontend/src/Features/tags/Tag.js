@@ -1,16 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { X } from "react-feather";
 
-const Tag = ({ tagInfo, tagId, size }) => {
+const Tag = ({ tagInfo, tagId, size, type }) => {
   const { color, name } = tagInfo;
 
-  return (
-    <Link to={`/tag/${tagId}`}>
-      <div className={size ? "tag-large" : "tag"} style={{ background: color }}>
-        {name}
+  if (type === "add" || type === "remove") {
+    return (
+      <div className={"tag"} style={{ background: color }}>
+        {name} {type === "remove" && <X size={10} />}
       </div>
-    </Link>
-  );
+    );
+  } else {
+    return (
+      <Link to={`/tag/${tagId}`}>
+        <div className={size ? "tag-large" : "tag"} style={{ background: color }}>
+          {name}
+        </div>
+      </Link>
+    );
+  }
 };
 
 export default Tag;

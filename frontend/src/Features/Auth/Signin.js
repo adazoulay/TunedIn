@@ -34,7 +34,7 @@ const Signin = () => {
       dispatch(setCredentials({ accessToken }));
       setUsername("");
       setPassword("");
-      navigate("/home");
+      navigate("/feed");
     } catch (err) {
       if (!err.status) {
         setErrMsg("No Server Response");
@@ -56,7 +56,8 @@ const Signin = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className='login-section'>
+    <div className='auth-section'>
+      <h1>Sign In</h1>
       <p ref={errRef} className='' aria-live='assertive'>
         {errMsg}
       </p>
@@ -89,8 +90,7 @@ const Signin = () => {
             required
           />
         </div>
-        <div className='form-row'>
-          <button className='login-button'>Sign In</button>
+        <div className='button-row'>
           <label htmlFor='persist' className='persist-button'>
             <input
               type='checkbox'
@@ -101,6 +101,9 @@ const Signin = () => {
             />
             Trust This Device
           </label>
+          <button className='submit-button' type='submit'>
+            Sign In
+          </button>
         </div>
       </form>
     </div>

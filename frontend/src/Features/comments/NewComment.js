@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useAddNewCommentMutation } from "./commentsApiSlice";
+import { Send } from "react-feather";
+import useAuth from "../../hooks/useAuth";
 
 const NewComment = ({ postId }) => {
   const [desc, setDesc] = useState("");
   const [addNewComment, { isLoading, isSuccess, isError, error }] = useAddNewCommentMutation();
+  const { userId, username } = useAuth();
 
   const handleDescChange = (e) => {
     setDesc(e.target.value);
@@ -13,9 +16,8 @@ const NewComment = ({ postId }) => {
     event.preventDefault();
     if (desc) {
       console.log(postId);
-      addNewComment({ id: postId, desc });
+      await addNewComment({ id: postId, userId, username, desc });
     }
-    console.log(event.target.value);
   };
 
   useEffect(() => {
@@ -25,7 +27,7 @@ const NewComment = ({ postId }) => {
   }, [isSuccess]);
 
   return (
-    <div className='new-comment'>
+    <div className='new-comment-wrapper'>
       <form className='comment-form' onSubmit={handleSubmit}>
         <input
           className='new-comment-input'
@@ -33,6 +35,10 @@ const NewComment = ({ postId }) => {
           value={desc}
           onChange={handleDescChange}
         />
+        <button className='send-comment'>
+          <Send color='white' />
+          {/*  */}
+        </button>
       </form>
     </div>
   );

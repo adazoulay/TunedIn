@@ -17,18 +17,22 @@ const PostFooter = ({ postFooterData }) => {
 
   const [likedStatus, setLikedStatus] = useState(false);
 
+  if (!postId) {
+    return <p>Loading...</p>;
+  }
+
   useEffect(() => {
     if (likes.includes(currentUser)) setLikedStatus(true);
-  }, []);
+  }, [likes]);
 
-  const handleLikeClicked = () => {
+  const handleLikeClicked = async () => {
     if (!likedStatus) {
       console.log("like component");
-      likePost({ id: postId, userId: currentUser });
+      await likePost({ id: postId, userId: currentUser });
       setLikedStatus(() => true);
     } else {
       console.log("unlike component");
-      unLikePost({ id: postId, userId: currentUser });
+      await unLikePost({ id: postId, userId: currentUser });
       setLikedStatus(() => false);
     }
   };
@@ -36,7 +40,7 @@ const PostFooter = ({ postFooterData }) => {
   return (
     <>
       <div className='description'>
-        <p>{desc.substring(0, 75)}</p>
+        <p>{desc && desc.substring(0, 75)}</p>
       </div>
       <hr className='divider' />
       <div className='comment-section'>

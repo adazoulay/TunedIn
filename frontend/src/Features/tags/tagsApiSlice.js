@@ -57,7 +57,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       query: (str) => `/tags/search?q=${str}`,
       keepUnusedDataFor: 5,
       transformResponse: (responseData) => {
-        console.log(responseData);
         if (!responseData) {
           return;
         }

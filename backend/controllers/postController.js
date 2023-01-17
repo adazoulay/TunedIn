@@ -32,14 +32,14 @@ const getPost = async (req, res, next) => {
 };
 
 const createNewPost = async (req, res, next) => {
-  //! Add mp3, imgUrl (and default) and TAGS
+  //! Add mp3, imgUrl
   const userId = req.user.id;
   if (!userId) {
     return res.status(400).json({ message: "Create an account to post" });
   }
-  const { title, desc } = req.body;
+  const { title, desc, tags } = req.body;
   if (!title || !desc) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: "Title and description are required" });
   }
   try {
     const user = await User.findById(userId);
@@ -47,6 +47,10 @@ const createNewPost = async (req, res, next) => {
       return res.status(400).json({ message: "You must be logged in to post" });
     }
     const post = await Post.create({ userId, title, desc });
+    if (tags && tags.length > 0) {
+      await post.update({ $addToSet: { tags: { $each: tags } } });
+      await Tag.updateMany({ _id: { $in: tags } }, { $addToSet: { posts: post._id } });
+    }
     if (post) {
       await User.findByIdAndUpdate({ _id: userId }, { $addToSet: { posts: post.id } });
       return res.status(201).json({ message: "New post created" });
@@ -161,16 +165,6 @@ const unLikePost = async (req, res, next) => {
 };
 
 //! Need to test
-
-const getRandom = async (req, res, next) => {
-  try {
-    const posts = await Post.aggregate([{ $sample: { size: 40 } }]);
-    res.status(200).json(posts);
-  } catch (err) {
-    next(err);
-  }
-};
-
 const getTrend = async (req, res, next) => {
   try {
     const posts = await Post.find().sort({ views: -1 });
@@ -190,6 +184,15 @@ const getSub = async (req, res, next) => {
       })
     );
     res.status(200).json(list.flat().sort((a, b) => b.createdAt - a.createdAt));
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getRandom = async (req, res, next) => {
+  try {
+    const posts = await Post.aggregate([{ $sample: { size: 40 } }]);
+    res.status(200).json(posts);
   } catch (err) {
     next(err);
   }
