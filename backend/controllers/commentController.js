@@ -41,8 +41,8 @@ const createNewComment = async (req, res, next) => {
       return res.status(400).json({ message: "Post not found" });
     }
     const comment = await Comment.create({ userId, username, desc });
-    await post.update({ $addToSet: { comments: comment._id } });
-    return res.status(201).json({ message: `${user.username} commented ${post.title}` });
+    await post.updateOne({ $addToSet: { comments: comment._id } });
+    return res.status(201).json(comment);
   } catch (err) {
     next(err);
   }

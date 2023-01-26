@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useLikePostMutation } from "./postsApiSlice";
 import { useUnLikePostMutation } from "./postsApiSlice";
-import CommentSection from "../comments/CommentSection";
-import TimeAgo from "./TimeAgo";
 import useAuth from "../../hooks/useAuth";
-import NewComment from "../comments/NewComment";
+import TimeAgo from "./TimeAgo";
+
+import CommentSection from "../comments/CommentSection";
 
 import { Music } from "react-feather";
 
 const PostFooter = ({ postFooterData }) => {
-  const { postId, desc, createdAt, likes } = postFooterData;
+  const { postId, desc, createdAt, likes, views } = postFooterData;
   const { userId: currentUser } = useAuth();
 
   const [likePost, { isLoading }] = useLikePostMutation();
@@ -17,22 +17,22 @@ const PostFooter = ({ postFooterData }) => {
 
   const [likedStatus, setLikedStatus] = useState(false);
 
-  if (!postId) {
+  if (!postId || !postFooterData) {
     return <p>Loading...</p>;
   }
 
   useEffect(() => {
-    if (likes.includes(currentUser)) setLikedStatus(true);
+    if (likes && likes.includes(currentUser) && !likedStatus) setLikedStatus(true);
   }, [likes]);
 
   const handleLikeClicked = async () => {
     if (!likedStatus) {
-      console.log("like component");
-      await likePost({ id: postId, userId: currentUser });
+      const newLikes = [...likes, `${currentUser}`]; //!String string?
+      likePost({ id: postId, newLikes });
       setLikedStatus(() => true);
     } else {
-      console.log("unlike component");
-      await unLikePost({ id: postId, userId: currentUser });
+      const newLikes = likes.filter((id) => id !== currentUser);
+      unLikePost({ id: postId, newLikes });
       setLikedStatus(() => false);
     }
   };
@@ -44,17 +44,20 @@ const PostFooter = ({ postFooterData }) => {
       </div>
       <hr className='divider' />
       <div className='comment-section'>
-        <NewComment postId={postId} />
         <CommentSection postId={postId} />
       </div>
-      <div className='timestamp'>
-        <TimeAgo timestamp={createdAt} />
+      <div className='footer-stats'>
+        <div className='views'>{views} views</div>
+        <div className=''>
+          <TimeAgo timestamp={createdAt} />
+        </div>
       </div>
+
       <div className='likes'>
         <div className='like-icon' onClick={handleLikeClicked}>
-          <Music color={likedStatus ? "red" : "white"} />
+          <Music size={28} color={likedStatus ? "#f40035" : "white"} />
         </div>
-        {likes.length}
+        {likes?.length}
       </div>
     </>
   );

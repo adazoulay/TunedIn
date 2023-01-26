@@ -41,7 +41,7 @@ const signup = () => {
       <form className='wrapper-form' onSubmit={onSaveUserClicked}>
         <div className='form-row'>
           <label className='form-label' htmlFor='signUpUsername'>
-            Username: <span className='upload-info'>[3-20 letters]</span>
+            Username: <span className='field-info'>[3-20 letters]</span>
           </label>
           <input
             className='form-input'
@@ -55,7 +55,7 @@ const signup = () => {
         </div>
         <div className='form-row'>
           <label className='form-label' htmlFor='email'>
-            Email: <span className='upload-info'>[3-20 letters]</span>
+            Email: <span className='field-info'>[3-20 letters]</span>
           </label>
           <input
             className='form-input'
@@ -69,7 +69,7 @@ const signup = () => {
         </div>
         <div className='form-row'>
           <label className='form-label' htmlFor='signUpPassword'>
-            Password: <span className='upload-info'>[4-12 chars]</span>
+            Password: <span className='field-info'>[4-12 chars]</span>
           </label>
           <input
             className='form-input'

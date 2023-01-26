@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Comment = ({ commentInfo, commentId }) => {
+const Comment = ({ commentInfo }) => {
   const { username, desc, userId } = commentInfo;
 
   return (

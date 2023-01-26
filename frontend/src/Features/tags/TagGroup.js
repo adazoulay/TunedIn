@@ -1,10 +1,9 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo } from "react";
 import Tag from "./Tag";
 
 const TagGroup = ({ tags, type, getSelectedTags }) => {
   if (tags) {
     const { ids, entities } = tags;
-
     if (type === "add" || type === "remove") {
       return (
         <div className='tag-selection'>
@@ -17,9 +16,12 @@ const TagGroup = ({ tags, type, getSelectedTags }) => {
             : null}
         </div>
       );
-    } else
+    } else {
+      if (!ids.length) {
+        return;
+      }
       return (
-        <div className='tag-group'>
+        <div className={`${type}`}>
           {ids?.length
             ? ids.map((tagId) => (
                 <Tag key={tagId} tagInfo={entities[tagId]} tagId={tagId} type={type} />
@@ -27,6 +29,7 @@ const TagGroup = ({ tags, type, getSelectedTags }) => {
             : null}
         </div>
       );
+    }
   } else {
     return <p>Loading...</p>;
   }

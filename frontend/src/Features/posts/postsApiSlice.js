@@ -1,7 +1,6 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
 import { current } from "@reduxjs/toolkit";
-import useAuth from "../../hooks/useAuth";
 
 const postsAdapter = createEntityAdapter({
   selectId: (post) => post._id, // Extract the _id field as the unique identifier
@@ -14,9 +13,12 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     //! FEED TYPE
     getPosts: builder.query({
-      query: () => "/posts",
+      query: (page = 1) => `/posts?page=${page}`,
       transformResponse: (responseData) => {
-        return postsAdapter.setAll(initialState, responseData);
+        if (responseData.message) {
+          return;
+        }
+        return postsAdapter.addMany(initialState, responseData);
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -26,11 +28,25 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           ];
         } else return [{ type: "Post", id: "LIST" }];
       },
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+      merge: (currentCache, newItems) => {
+        for (const key in newItems.entities) {
+          currentCache.entities[key] = newItems.entities[key];
+        }
+        currentCache.ids = currentCache.ids.concat(newItems.ids);
+      },
+      forceRefetch: ({ currentArg, previousArg }) => {
+        // console.log("currentArg", currentArg);
+        // console.log("previousArg", previousArg);
+        return currentArg?.page !== previousArg?.page;
+      },
     }),
     getTrend: builder.query({
-      query: () => "/posts/trend",
+      query: (page = 1) => `/posts/trend/${page}`,
       transformResponse: (responseData) => {
-        return postsAdapter.setAll(initialState, responseData);
+        return postsAdapter.addMany(initialState, responseData);
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -42,9 +58,9 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       },
     }),
     getSub: builder.query({
-      query: () => "/posts/sub",
+      query: (page = 1) => `/posts/sub/${page}`,
       transformResponse: (responseData) => {
-        return postsAdapter.setAll(initialState, responseData);
+        return postsAdapter.addMany(initialState, responseData);
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -73,14 +89,14 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         return postsAdapter.setAll(initialState, responseData);
       },
-      providesTags: (result, error, id) => [{ type: "Posts", id }],
+      providesTags: (result, error, id) => [{ type: "Post", id }],
     }),
     getPostsByTagId: builder.query({
       query: (id) => `/posts/tag/${id}`,
       transformResponse: (responseData) => {
         return postsAdapter.setAll(initialState, responseData);
       },
-      providesTags: (result, error, id) => [{ type: "Posts", id }],
+      providesTags: (result, error, id) => [{ type: "Post", id }],
     }),
     searchPost: builder.query({
       query: (str) => `/posts/search?q=${str}`,
@@ -107,7 +123,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
           ...postData,
         },
       }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
+      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
     updatePost: builder.mutation({
       query: (initialPost) => ({
@@ -127,54 +143,51 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
+    addView: builder.mutation({
+      query: ({ id }) => ({
+        url: `posts/view/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
+    }),
+
+    //! Like Dislike
     likePost: builder.mutation({
-      query: ({ id, userId }) => ({
+      query: ({ id, newLikes }) => ({
         //! LIKE
         url: `/posts/like/${id}`,
         method: "PUT",
       }),
-      async onQueryStarted({ id, userId }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ id, newLikes }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          extendedApiSlice.util.updateQueryData("getPosts", undefined, (draft) => {
+          extendedApiSlice.util.updateQueryData("getPosts", "getPosts", (draft) => {
             const post = draft.entities[id];
-            if (current(post) && !current(post)?.likes.includes(userId)) {
-              console.log("in 1");
-              post.likes.push(userId);
-            }
+            if (post) post.likes = newLikes;
           })
         );
         try {
-          console.log("1 try");
           await queryFulfilled;
-          console.log("1 fulfilled");
         } catch {
-          console.log("1 catch");
           patchResult.undo();
         }
       },
     }),
     unLikePost: builder.mutation({
-      query: ({ id, userId }) => ({
+      query: ({ id, newLikes }) => ({
         //! DISLIKE
         url: `/posts/unlike/${id}`,
         method: "PUT",
       }),
-      async onQueryStarted({ id, userId }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ id, newLikes }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          extendedApiSlice.util.updateQueryData("getPosts", undefined, (draft) => {
+          extendedApiSlice.util.updateQueryData("getPosts", "getPosts", (draft) => {
             const post = draft.entities[id];
-            if (current(post) && current(post)?.likes.includes(userId)) {
-              console.log("in 2");
-              post.likes = post.likes.filter((id) => id !== userId);
-            }
+            if (post) post.likes = newLikes;
           })
         );
         try {
-          console.log("2 try");
           await queryFulfilled;
-          console.log("2 fulfilled");
         } catch {
-          console.log("2 catch");
           patchResult.undo();
         }
       },
@@ -193,6 +206,7 @@ export const {
   useAddNewPostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
+  useAddViewMutation,
   useLikePostMutation,
   useUnLikePostMutation,
 } = extendedApiSlice;

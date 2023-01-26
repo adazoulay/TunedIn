@@ -1,5 +1,6 @@
 import React, { useEffect, useState, memo } from "react";
 
+//! ONLY ANIMATE WHEN ENTERS VIEW?
 const AnimatedBorder = ({ children, colors }) => {
   const [borderColor, setBorderColor] = useState(["white", "gray", "white"]);
 
@@ -31,8 +32,8 @@ const AnimatedBorder = ({ children, colors }) => {
   );
 };
 
-export default AnimatedBorder;
+// export default AnimatedBorder;
 
-// memo(AnimatedBorder, (prevPros, nextProps) => {
-//   return JSON.stringify(prevPros.colors) === JSON.stringify(nextProps.colors);
-// });
+export default memo(AnimatedBorder, (prevPros, nextProps) => {
+  return JSON.stringify(prevPros.colors) === JSON.stringify(nextProps.colors);
+});

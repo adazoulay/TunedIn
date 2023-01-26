@@ -1,5 +1,6 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
+import { current } from "@reduxjs/toolkit";
 
 const commentsAdapter = createEntityAdapter({
   selectId: (comment) => comment._id,
@@ -9,6 +10,7 @@ const commentsAdapter = createEntityAdapter({
 const initialState = commentsAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
+  //! QUERY
   endpoints: (builder) => ({
     getComments: builder.query({
       query: () => "/comments",
@@ -44,31 +46,28 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         } else return [{ type: "Comment", id: "LIST" }];
       },
     }),
+    //! MUTATION
     addNewComment: builder.mutation({
-      query: ({ id, desc, userId, username }) => ({
+      query: ({ id, commentData }) => ({
         url: `/comments/${id}`,
         method: "POST",
         body: {
-          userId,
-          username,
-          desc,
+          userId: commentData.userId,
+          username: commentData.username,
+          desc: commentData.desc,
         },
       }),
-      async onQueryStarted({ id, desc }, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          extendedApiSlice.util.updateQueryData("getCommentsByPostId", id, (draft) => {
-            const post = draft.entities[id];
-            console.log(current(draft));
-            post.comments.push({ userId, username, desc });
-          })
-        );
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
         try {
-          console.log("1 try");
-          await queryFulfilled;
-          console.log("1 fulfilled");
-        } catch {
-          console.log("1 catch");
-          patchResult.undo();
+          const { data: newComment } = await queryFulfilled;
+          const patchResult = dispatch(
+            extendedApiSlice.util.updateQueryData("getCommentsByPostId", id, (draft) => {
+              draft.entities[newComment._id] = newComment;
+              draft.ids.unshift(newComment._id);
+            })
+          );
+        } catch (err) {
+          console.log(err);
         }
       },
     }),

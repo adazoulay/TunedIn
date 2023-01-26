@@ -27,25 +27,28 @@ const Signin = () => {
     setErrMsg("");
   }, [username, password]);
 
+  const canSave = [username, password].every(Boolean) && !isLoading;
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const { accessToken } = await login({ username, password }).unwrap();
-      dispatch(setCredentials({ accessToken }));
-      setUsername("");
-      setPassword("");
-      navigate("/feed");
-    } catch (err) {
-      if (!err.status) {
-        setErrMsg("No Server Response");
-      } else if (err.status === 400) {
-        setErrMsg("Missing Username or Password");
-      } else if (err.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg(err.data?.message);
+    if (canSave) {
+      try {
+        const { accessToken } = await login({ username, password }).unwrap();
+        dispatch(setCredentials({ accessToken }));
+        setUsername("");
+        setPassword("");
+        navigate("/feed");
+      } catch (err) {
+        if (!err.status) {
+          setErrMsg("No Server Response");
+        } else if (err.status === 400) {
+          setErrMsg("Missing Username or Password");
+        } else if (err.status === 401) {
+          setErrMsg("Unauthorized");
+        } else {
+          setErrMsg(err.data?.message);
+        }
+        errRef.current.focus();
       }
-      errRef.current.focus();
     }
   };
 
@@ -101,7 +104,7 @@ const Signin = () => {
             />
             Trust This Device
           </label>
-          <button className='submit-button' type='submit'>
+          <button className='submit-button' type='submit' disabled={!canSave}>
             Sign In
           </button>
         </div>

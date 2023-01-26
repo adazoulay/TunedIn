@@ -1,36 +1,19 @@
-import Comment from "./Comment";
+import React from "react";
+import CommentList from "./CommentList";
+import NewComment from "./NewComment";
 import { useGetCommentsByPostIdQuery } from "./commentsApiSlice";
-import React, { memo } from "react";
 
 const CommentSection = ({ postId }) => {
-  const {
-    data: comments,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetCommentsByPostIdQuery(postId);
+  const { data: comments, isLoading } = useGetCommentsByPostIdQuery(postId);
 
-  let content;
+  if (isLoading) return <p>Loading...</p>;
 
-  if (isLoading) content = <p>Loading...</p>;
-
-  if (isError) {
-    content = <p className='errmsg'>{error?.data?.message}</p>;
-  }
-
-  if (isSuccess) {
-    const { ids, entities } = comments;
-
-    content = ids?.length
-      ? ids.map((commentId) => (
-          <Comment key={commentId} commendId={commentId} commentInfo={entities[commentId]} />
-        ))
-      : null;
-  }
-
-  return <div className='comment-section'>{content}</div>;
+  return (
+    <>
+      <NewComment postId={postId} />
+      <CommentList comments={comments} />
+    </>
+  );
 };
 
 export default CommentSection;
-// memo(CommentSection); //! Might be problematic when user adds comments or likes comments. Will it rerender?

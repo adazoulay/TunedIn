@@ -11,6 +11,8 @@ router.get("/find/:id", tagController.getTag); //Done
 router.get("/post/:id", tagController.getTagsByPostId); //Done
 router.get("/user/:id", tagController.getTagsByUserId); //Done
 router.get("/search", tagController.searchTag); //Done
+router.get("/realted/:id", tagController.getRelatedTags); //Done
+router.get("/trending", tagController.getTrendingTags);
 
 module.exports = router;
 

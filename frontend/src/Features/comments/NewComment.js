@@ -12,11 +12,15 @@ const NewComment = ({ postId }) => {
     setDesc(e.target.value);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (desc) {
-      console.log(postId);
-      await addNewComment({ id: postId, userId, username, desc });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (desc && username) {
+      const commentData = {
+        userId,
+        username,
+        desc,
+      };
+      addNewComment({ id: postId, commentData });
     }
   };
 
@@ -37,7 +41,6 @@ const NewComment = ({ postId }) => {
         />
         <button className='send-comment'>
           <Send color='white' />
-          {/*  */}
         </button>
       </form>
     </div>

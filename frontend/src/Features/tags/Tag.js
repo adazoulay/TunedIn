@@ -8,7 +8,12 @@ const Tag = ({ tagInfo, tagId, size, type }) => {
   if (type === "add" || type === "remove") {
     return (
       <div className={"tag"} style={{ background: color }}>
-        {name} {type === "remove" && <X size={10} />}
+        {name}
+        {type === "remove" && (
+          <div className='x'>
+            <X size={10} />
+          </div>
+        )}
       </div>
     );
   } else {

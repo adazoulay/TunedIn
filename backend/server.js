@@ -9,8 +9,9 @@ const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/dbConn");
 const mongoose = require("mongoose");
-const PORT = process.env.PORT || 3500;
+const { generateUploadURL } = require("./s3");
 
+const PORT = process.env.PORT || 3500;
 console.log(process.env.NODE_ENV);
 
 connectDB();
@@ -31,6 +32,11 @@ app.use("/auth", require("./routes/authRoutes"));
 app.use("/posts", require("./routes/postRoutes"));
 app.use("/tags", require("./routes/tagRoutes"));
 app.use("/comments", require("./routes/commentRoutes"));
+
+app.get("/s3Url", async (req, res) => {
+  const url = await generateUploadURL();
+  res.send({ url });
+});
 
 app.all("*", (req, res) => {
   res.status(404);

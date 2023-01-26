@@ -1,24 +1,16 @@
 import React, { useEffect } from "react";
 import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
 import AnimatedBorder from "./AnimatedBorder";
-import Soundbar from "./Soundbar";
+import AudioPlayer from "./AudioPlayer";
 import TagGroup from "../tags/TagGroup";
 import PostHeader from "./PostHeader";
 import PostFooter from "./PostFooter";
-import { useGetPostQuery } from "./postsApiSlice";
 import { useGetPostsQuery } from "./postsApiSlice";
 
-// ! TODO Body content soundbar
+//! Link icon to copy link
 //TODO Can react with emotes during song. Plays to other users like insta live emotes
 
 const Post = ({ postId }) => {
-  //! Post
-  // const {
-  //   data: postData,
-  //   isLoading: isLoadingPost,
-  //   isSuccess: isSuccessPost,
-  // } = useGetPostQuery(postId);
-
   const { post } = useGetPostsQuery("getPosts", {
     selectFromResult: ({ data }) => ({
       post: data?.entities[postId],
@@ -31,26 +23,15 @@ const Post = ({ postId }) => {
     isSuccess: isSuccessTags,
   } = useGetTagsByPostIdQuery(postId);
 
-  // let post;
   let colors;
   let headerContent;
   let footerContent;
-
-  // if (isSuccessPost) {
-  //   const { ids, entities } = postData;
-  //   post = entities[ids[0]];
-  // }
 
   if (isSuccessTags) {
     const { ids, entities } = tags;
     colors = ids.map((id) => entities[id].color);
   }
 
-  useEffect(() => {
-    // console.log("POST liked change", post);
-  }, [post?.likes]);
-
-  // if (isSuccessPost && isSuccessTags) {
   if (isSuccessTags) {
     const postHeaderData = {
       postId,
@@ -63,6 +44,7 @@ const Post = ({ postId }) => {
       desc: post?.desc,
       createdAt: post?.createdAt,
       likes: post?.likes,
+      views: post?.views,
     };
     footerContent = <PostFooter postFooterData={postFooterData} />;
   }
@@ -75,11 +57,13 @@ const Post = ({ postId }) => {
         <div className='post-header'>
           {headerContent}
           <div className='post-tags'>
-            {isSuccessTags ? <TagGroup tags={tags} containerType={"POST"} /> : null}
+            {isSuccessTags ? <TagGroup tags={tags} type='tag-group' /> : null}
           </div>
         </div>
         <div className='post-body'>
-          <Soundbar />
+          {post?.audioUrl && colors?.length && (
+            <AudioPlayer audio={post?.audioUrl} colors={colors} postId={postId} />
+          )}
         </div>
         <div className='post-footer'>{footerContent}</div>
       </article>

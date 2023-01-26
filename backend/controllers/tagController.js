@@ -16,7 +16,8 @@ const getAllTags = async (req, res, next) => {
 };
 
 const createNewTag = async (req, res, next) => {
-  const { name, color } = req.body;
+  //! TODO Array of colors
+  const { name, color, parent, child } = req.body;
   if (!name || !color) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -27,6 +28,14 @@ const createNewTag = async (req, res, next) => {
     }
     const tagObject = { name, color };
     const tag = await Tag.create(tagObject);
+    if (parent && parent.length > 0) {
+      await tag.updateOne({ $addToSet: { parents: { $each: parent } } });
+      await Tag.updateMany({ _id: { $in: parent } }, { $addToSet: { children: tag._id } });
+    }
+    if (child && child.length > 0) {
+      await tag.updateOne({ $addToSet: { children: { $each: child } } });
+      await Tag.updateMany({ _id: { $in: child } }, { $addToSet: { parents: tag._id } });
+    }
     if (tag) {
       res.status(201).json({ messsage: `New tag ${name} created` });
     } else {
@@ -142,6 +151,7 @@ const getTagsByUserId = async (req, res, next) => {
 
 const searchTag = async (req, res, next) => {
   const query = req.query.q;
+  console.log(query);
   try {
     const tags = await Tag.find();
     let dataSet = tags.map((tag) => tag.name);
@@ -159,6 +169,28 @@ const searchTag = async (req, res, next) => {
   }
 };
 
+const getRelatedTags = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const tag = await Tag.findById(id);
+    if (!tag) return res.status(404).json({ message: "Tag not found" });
+    const parents = await Tag.find({ _id: { $in: tag.parents } });
+    const children = await Tag.find({ _id: { $in: tag.children } });
+    return res.json({ tag, parents, children });
+  } catch (error) {
+    return res.status(500).json({ message: "Error retrieving tag" });
+  }
+};
+
+const getTrendingTags = async (req, res, next) => {
+  try {
+    const trendingTags = await Tag.find({}).sort({ "posts.length": -1 }).limit(15);
+    res.status(200).json(trendingTags);
+  } catch (error) {
+    return res.status(500).json({ message: "Error retrieving tag" });
+  }
+};
+
 module.exports = {
   getAllTags,
   createNewTag,
@@ -168,4 +200,6 @@ module.exports = {
   getTagsByPostId,
   getTagsByUserId,
   searchTag,
+  getRelatedTags,
+  getTrendingTags,
 };

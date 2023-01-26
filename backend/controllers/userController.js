@@ -60,31 +60,31 @@ const getUser = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const { id, username, password, desc, tags } = req.body;
-  if (!id || !username) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-  if (id !== req.user.id) {
-    return res.status(403).json({ message: "JWT auth failed" });
-  }
+  const { username, password, desc, imageUrl, tags } = req.body;
+  const id = req.user.id;
   try {
     const user = await User.findById(id).exec();
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    const duplicate = await User.findOne({ username }).lean().exec();
-    if (duplicate && duplicate?._id.toString() !== id) {
-      return res.status(409).json({ message: "Duplicate username" });
+    if (username && username.length) {
+      const duplicate = await User.findOne({ username }).lean().exec();
+      if (duplicate && duplicate?._id.toString() !== id) {
+        return res.status(409).json({ message: "Duplicate username" });
+      }
+      user.username = username;
     }
-    user.username = username;
-    if (password) {
+    if (password && password.length) {
       user.password = await bcrypt.hash(password, 10);
     }
-    if (desc) {
+    if (desc && desc.length) {
       user.desc = desc;
     }
     if (tags) {
       user.tags = tags;
+    }
+    if (imageUrl) {
+      user.imageUrl = imageUrl;
     }
     const updatedUser = await user.save();
     res.status(200).json({ message: `${updatedUser.username} updated` });
@@ -151,16 +151,17 @@ const unFollow = async (req, res, next) => {
     next(err);
   }
 };
+
 const followTag = async (req, res, next) => {
   try {
-    const tag = await Tag.findById(req.params.id).lean();
+    const tag = await Tag.findById(req.params.id);
     if (!tag) {
       return res.status(400).json("Tag does not exist");
     }
     await User.findByIdAndUpdate(req.user.id, {
       $addToSet: { tags: req.params.id },
     });
-    console.log(tag);
+    await tag.updateOne({ $addToSet: { followers: req.user.id } });
     res.status(200).json(`You are now following: ${tag.name}`);
   } catch (err) {
     next(err);
@@ -168,17 +169,18 @@ const followTag = async (req, res, next) => {
 };
 
 const unFollowTag = async (req, res, next) => {
-  if (req.user.id === req.params.id) {
-    return res.status(400).json("You can't unfollow yourself");
-  }
   try {
+    const tag = await Tag.findById(req.params.id);
+    if (!tag) {
+      return res.status(400).json("Tag does not exist");
+    }
     await User.findByIdAndUpdate(req.user.id, {
-      $pull: { following: req.params.id },
+      $pull: { tags: req.params.id },
     });
-    const user = await User.findByIdAndUpdate(req.params.id, {
+    await tag.updateOne({
       $pull: { followers: req.user.id },
     });
-    res.status(200).json(`You are no longer following ${user.username}`);
+    res.status(200).json(`You are no longer following ${tag.name}`);
   } catch (err) {
     next(err);
   }

@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    img: {
+    imageUrl: {
       type: String,
     },
     desc: {

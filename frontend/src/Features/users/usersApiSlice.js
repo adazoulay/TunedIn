@@ -1,5 +1,6 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
+import { current } from "@reduxjs/toolkit";
 
 const usersAdapter = createEntityAdapter({
   selectId: (comment) => comment._id,
@@ -87,6 +88,86 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
     }),
+    followUser: builder.mutation({
+      query: ({ id, newFollowers }) => ({
+        url: `/users/follow/${id}`,
+        method: "put",
+        body: { id },
+      }),
+      async onQueryStarted({ id, newFollowers }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          usersApiSlice.util.updateQueryData("getUser", id, (draft) => {
+            const user = draft.entities[id];
+            if (user) user.followers = newFollowers;
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+    unFollowUser: builder.mutation({
+      query: ({ id, newFollowers }) => ({
+        url: `/users/unfollow/${id}`,
+        method: "put",
+        body: { id },
+      }),
+      async onQueryStarted({ id, newFollowers }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          usersApiSlice.util.updateQueryData("getUser", id, (draft) => {
+            const user = draft.entities[id];
+            if (user) user.followers = newFollowers;
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+    followTag: builder.mutation({
+      query: ({ id, newFollowers }) => ({
+        url: `/users/followTag/${id}`,
+        method: "put",
+        body: { id },
+      }),
+      async onQueryStarted({ id, newFollowers }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          usersApiSlice.util.updateQueryData("getTagAndRelatedTags", id, (draft) => {
+            const tag = draft.tag.entities[draft.tag.ids[0]];
+            if (tag) tag.followers = newFollowers;
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+    unFollowTag: builder.mutation({
+      query: ({ id, newFollowers }) => ({
+        url: `/users/unfollowTag/${id}`,
+        method: "put",
+        body: { id },
+      }),
+      async onQueryStarted({ id, newFollowers }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          usersApiSlice.util.updateQueryData("getTagAndRelatedTags", id, (draft) => {
+            const tag = draft.tag.entities[draft.tag.ids[0]];
+            if (tag) tag.followers = newFollowers;
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
@@ -97,6 +178,10 @@ export const {
   useAddNewUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useFollowUserMutation,
+  useUnFollowUserMutation,
+  useFollowTagMutation,
+  useUnFollowTagMutation,
 } = usersApiSlice;
 
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select();

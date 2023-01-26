@@ -67,15 +67,46 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, error, arg) => [...result.ids.map((id) => ({ type: "Tag", id }))],
     }),
+    getTagAndRelatedTags: builder.query({
+      query: (id) => ({
+        url: `/tags/realted/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (responseData) => {
+        const { tag, parents, children } = responseData;
+
+        return {
+          tag: tagsAdapter.addOne(initialState, tag),
+          parents: tagsAdapter.addMany(initialState, parents),
+          children: tagsAdapter.addMany(initialState, children),
+        };
+      },
+      providesTags: (result, error, arg) => [
+        ...result.tag.ids,
+        ...result.parents.ids,
+        ...result.children.ids.map((id) => ({ type: "Tag", id })),
+      ],
+    }),
+    getTrendingTags: builder.query({
+      query: (id) => ({
+        url: `/tags/trending`,
+        method: "GET",
+      }),
+      transformResponse: (responseData) => {
+        const loadedTags = responseData.map((tag) => {
+          return tag;
+        });
+        return tagsAdapter.setAll(initialState, loadedTags);
+      },
+      providesTags: (result, error, arg) => [...result.ids.map((id) => ({ type: "Tag", id }))],
+    }),
     //! MUTATE TAG
     addNewTag: builder.mutation({
-      query: (initialTag) => ({
+      query: (tag) => ({
         url: "/tags",
         method: "POST",
         body: {
-          ...initialTag,
-          userId: Number(initialTag.userId),
-          date: new Date().toISOString(),
+          ...tag,
         },
       }),
       invalidatesTags: [{ type: "Tag", id: "LIST" }],
@@ -94,9 +125,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetTagsQuery,
   useGetTagQuery,
+  useGetTagAndRelatedTagsQuery,
   useGetTagsByPostIdQuery,
   useGetTagsByUserIdQuery,
   useSearchTagQuery,
+  useGetTrendingTagsQuery,
   useAddNewTagMutation,
   useDeleteTagMutation,
 } = extendedApiSlice;

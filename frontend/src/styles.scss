@@ -1,6 +1,8 @@
 $base-color: #121212;
 $section: #ebebeb;
 $secondary: #383838;
+$tertiary: #808080;
+$accent: #f40035;
 
 * {
   margin: 0;
@@ -35,6 +37,12 @@ a {
   z-index: 10;
   backdrop-filter: blur(3px);
 
+  .logo {
+    position: absolute;
+    left: 5%;
+    top: 5%;
+  }
+
   //! PROFILE AND UPLOAD
   .right-container {
     display: flex;
@@ -43,11 +51,18 @@ a {
     height: 100%;
     gap: 20px;
 
-    .pic-small {
-      max-width: 56px;
-      max-height: 56px;
-      border-radius: 20%;
+    .add-new {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 116px;
+      font-size: 1.1em;
+      padding: 5px;
+      background: $secondary;
+      border-radius: 4px;
     }
+
     //! Dropdown
     .dropdown {
       position: relative;
@@ -56,29 +71,49 @@ a {
     .dropdown-content {
       display: none;
       position: absolute;
-      background-color: rgb(18, 18, 18, 0.6);
-      max-width: fit-content;
+      right: 0px;
       z-index: 1;
-      padding: 12px 16px;
-      border: $section 1px solid;
       border-radius: 6px;
       cursor: pointer;
-      .dopdown-row {
-        display: flex;
-        align-items: center;
-      }
+      margin: auto;
+      width: 116px;
+      transition: all 0.2s ease-in-out;
     }
-    .dropdown:hover .dropdown-content {
+
+    .dropdown-content::before {
       display: block;
+      content: "";
+      height: 5px;
+      opacity: 1;
     }
-    .dropdown-content:hover {
-      background-color: rgb(18, 18, 18, 0.9);
+
+    .dropdown:hover .dropdown-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dropdown-row-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4em;
+      padding: 10px;
+      border-radius: 6px;
+      background-color: rgb(56, 56, 56, 0.85);
+    }
+    .dropdown-row-content:hover {
+      background-color: rgba(41, 40, 40, 0.98);
+    }
+
+    .menu-devider {
+      background-color: rgb(235, 235, 235, 0.8);
     }
   }
   .search-container {
     position: absolute;
     left: 50%;
-    top: 20px;
+    top: 18px;
   }
 }
 
@@ -100,15 +135,56 @@ a {
     justify-content: space-around;
     align-items: center;
 
-    .sidebar-row {
-      height: 100%;
-      flex: 1 1 100%;
+    .sidebar-devider {
+      width: 100%;
+      background-color: $section;
+      opacity: 20%;
+    }
 
+    .sidebar-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2em;
+      justify-content: space-between;
+      // font-size: 1.15em;
+      .sidebar-tag-section {
+        padding-bottom: 10px;
+      }
+    }
+
+    .sidebar-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content-title {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5em;
+      padding-left: 17px;
+      padding-bottom: 15px;
+      padding-top: 12px;
+    }
+
+    .sidebar-row {
+      width: 100%;
+      height: 70px;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 1em;
+
+      .row-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 1em;
+      }
     }
     .sidebar-row:hover {
       background-color: $secondary;
@@ -132,19 +208,29 @@ a {
     height: fit-content;
     flex-direction: column;
     padding: 20px;
+    align-items: center;
+    justify-content: center;
 
     .user-info {
       display: flex;
+      flex-direction: row;
       width: 100%;
       height: 100%;
       justify-content: space-evenly;
       align-items: center;
 
-      .user-page-profile-pic {
-        width: 80px;
-        height: 80px;
-        background-color: purple;
-        border-radius: 20%;
+      .user-header-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 1em;
+
+        .tag-spotlight {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5em;
+          font-weight: bold;
+        }
       }
       .name-desc {
         display: flex;
@@ -164,8 +250,8 @@ a {
         display: flex;
         height: 100%;
         flex-direction: column;
-        justify-content: space-evenly;
-        gap: 0.5em;
+        gap: 2em;
+        font-weight: bold;
       }
     }
     .user-spotlight {
@@ -173,22 +259,35 @@ a {
       display: flex;
       justify-content: space-between;
 
-      .tag-spotlight {
-        display: flex;
-        gap: 1em;
-        font-weight: bold;
-      }
       .song-spotlight {
       }
+    }
+    .follow {
+      width: max-content;
+      height: max-content;
+      font-weight: bold;
     }
 
     .tag-info {
       display: flex;
-      width: 100%;
+      width: 95%;
       height: 100%;
-      justify-content: flex-start;
+      justify-content: space-around;
       align-items: center;
       gap: 2em;
+
+      .tag-relation {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4em;
+        height: fit-content;
+      }
+      .tag-social {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        gap: 0.5em;
+      }
     }
   }
 }
@@ -212,11 +311,29 @@ a {
     border: none;
     appearance: none;
     outline: none;
+
+    input[type="search"]::-ms-clear {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    input[type="search"]::-ms-reveal {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    /* clears the ‘X’ from Chrome */
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+      display: none;
+    }
   }
 
   .filters {
     display: flex;
-    flex: 30%;
+    flex: 25%;
     height: 100%;
     align-items: center;
     justify-content: flex-end;
@@ -229,6 +346,19 @@ a {
       cursor: pointer;
       border: none;
       background-color: transparent;
+
+      svg {
+        height: 24px;
+        width: 24px;
+        opacity: 1;
+        transition: all 0.2s ease-in-out;
+        pointer-events: none;
+      }
+
+      &:hover svg {
+        opacity: 1;
+        fill: $base-color;
+      }
 
       input {
         position: absolute;
@@ -271,18 +401,6 @@ a {
       &:hover span {
         opacity: 1;
         top: -21px;
-      }
-
-      svg {
-        height: 20px;
-        width: 20px;
-        opacity: 0.7;
-        transition: all 0.2s ease-in-out;
-        pointer-events: none;
-      }
-
-      &:hover svg {
-        opacity: 1;
       }
     }
   }
@@ -331,9 +449,10 @@ a {
 
   //! POST
   .post-feed {
-    height: 400px;
+    height: fit-content;
     width: 700px;
     min-width: 500px;
+    max-height: 500px;
     display: flex;
     flex-direction: column;
 
@@ -347,19 +466,34 @@ a {
         display: flex;
         gap: 5px;
       }
+      .post-user {
+        width: calc(56px + 70%);
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 0.4em;
+      }
+      .post-username {
+        display: flex;
+        align-items: flex-end;
+      }
     }
     .post-body {
-      flex-basis: 50%;
-      border-top: 1px solid $section;
-      border-bottom: 1px solid $section;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-basis: 50%;
+      max-width: 700px;
+      max-height: 210px;
+      border-top: 1px solid $section;
+      border-bottom: 1px solid $section;
     }
     .post-footer {
       flex-basis: 35%;
       padding: 10px;
       position: relative;
+      height: fit-content;
+      max-height: 700px;
 
       .description {
         display: flex;
@@ -375,6 +509,22 @@ a {
 
       .comment-section {
         padding-top: 3px;
+      }
+
+      .comment-list {
+        padding-top: 3px;
+        max-height: 85px;
+        max-width: 435px;
+        overflow-y: scroll;
+      }
+
+      ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
       }
 
       .comment-username {
@@ -421,18 +571,24 @@ a {
         }
       }
 
-      .timestamp {
+      .footer-stats {
         position: absolute;
-        right: 2%;
+        right: 14px;
         bottom: 5%;
+        width: max-content;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
       }
 
       .likes {
         position: absolute;
-        right: 3%;
-        bottom: 30%;
+        right: 196px;
+        top: 55px;
         display: flex;
         gap: 0.5em;
+        font-size: 20px;
 
         .like-icon {
           cursor: pointer;
@@ -454,6 +610,7 @@ a {
 
 .auth-section {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -509,11 +666,12 @@ a {
     display: inline-block;
     box-sizing: border-box;
   }
+}
 
-  .upload-info {
-    font-size: 0.8em;
-    color: #ebebeba8;
-  }
+.field-info {
+  font-size: 12px;
+  font-weight: normal;
+  color: #ebebeba8;
 }
 
 .button-row {
@@ -527,17 +685,17 @@ a {
   align-items: flex-end;
   gap: 1em;
 
-  .tag-row {
+  .tag-col {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
+    align-self: flex-start;
   }
 
   .selected-label {
     font-size: 17px;
     font-weight: bold;
     color: $section;
-    padding-bottom: 7px;
   }
 }
 
@@ -557,11 +715,56 @@ a {
   display: flex;
   flex-wrap: wrap;
   width: 185px;
-  height: 100px;
+  min-height: 54px;
+  max-height: 86px;
   border-radius: 5px;
   gap: 0.5em;
   background-color: $secondary;
   padding: 15px;
+  overflow: scroll;
+}
+
+.tags-user {
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  width: fit-content;
+  max-width: 345px;
+  max-height: 86px;
+  border-radius: 5px;
+  gap: 0.5em;
+  background-color: $secondary;
+  padding: 15px;
+  overflow: scroll;
+}
+
+.tags-inheritance {
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  max-width: 350px;
+  max-height: 120px;
+  border-radius: 5px;
+  gap: 0.5em;
+  background-color: $secondary;
+  padding: 15px;
+  overflow: scroll;
+}
+
+.sidebar-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4em;
+  flex-wrap: wrap;
+  min-width: 100px;
+  width: fit-content;
+  max-width: 270px;
+  max-height: 145px;
+  border-radius: 5px;
+  background-color: $secondary;
+  padding: 8px;
+  margin: 0 6px;
   overflow: scroll;
 }
 
@@ -575,6 +778,14 @@ a {
   align-items: center;
   justify-content: center;
   color: $base-color;
+  position: relative;
+  .x {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: -4px;
+    right: 1px;
+  }
 }
 
 .tag-large {
@@ -596,13 +807,13 @@ a {
   justify-content: center;
   width: 160px;
   height: 50px;
-  background-color: #4673f3;
+  border-radius: 10px;
+  // background-color: #4673f3;
   color: $section;
   font-weight: bold;
   font-size: 16px;
-  font-weight: 500;
-  border-radius: 10px;
   border: none;
+  cursor: pointer;
 }
 
 .submit-button {
@@ -619,6 +830,9 @@ a {
   border-radius: 5px;
   cursor: pointer;
 }
+.submit-button:disabled {
+  opacity: 50%;
+}
 
 .persist-button {
   padding: 10px;
@@ -631,6 +845,252 @@ a {
   background: none;
   outline: none !important;
   cursor: pointer;
+}
+.crop-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 30px;
+}
+
+//! Porfile Pictures
+.pic-small {
+  width: 56px;
+  height: 56px;
+  border-radius: 20%;
+}
+
+.header-username {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.user-page-profile-pic {
+  width: 160px;
+  height: 160px;
+  background-color: $tertiary;
+  border-radius: 20%;
+}
+
+//! Cropper
+.img-upload-container {
+  height: 80vh;
+  width: 80vh;
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(18, 18, 18, 0.9);
+  z-index: 50;
+}
+.crop-container {
+  height: 90%;
+  width: 100%;
+  padding: 10px;
+
+  .cropper {
+    height: 90%;
+    position: relative;
+  }
+
+  .slider {
+    padding: 22px 0px;
+  }
+
+  .zoom-range {
+    height: 2px;
+    border-top: 5px solid $section;
+    border-bottom: 5px solid $section;
+    background: #3f51b5;
+    width: 100%;
+  }
+}
+
+.crop-buttons {
+  border: none;
+  height: 10%;
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+}
+
+.crop-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 40px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: rgb(66, 0, 128);
+  color: $section;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.audio-player {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.soundbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
+  width: 100%;
+}
+
+.media-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 20%;
+  width: 100%;
+  gap: 0.2em;
+  padding: 5px 10px;
+
+  .volume {
+    padding-left: 3px;
+    cursor: pointer;
+  }
+
+  .volume-range {
+    position: absolute;
+    right: 9px;
+    top: 10px;
+    flex-direction: column;
+
+    input[type="range"][orient="vertical"] {
+      -webkit-appearance: slider-vertical; /* Chromium */
+      --bar-bg: #ebebeb;
+
+      --seek-before-color: #f40035;
+      --knobby: none;
+      --selectedKnobby: none;
+
+      background: var(--bar-bg);
+
+      outline: none;
+
+      width: 5px;
+      height: max-content;
+      padding: 0 5px;
+    }
+  }
+  .media-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  .duration {
+    width: 35px;
+  }
+  .progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0 5px;
+
+    .progress-bar {
+      --bar-bg: #ebebeb;
+      --seek-before-width: 0;
+      --seek-before-color: #f40035;
+      --knobby: none;
+      --selectedKnobby: none;
+
+      appearance: none;
+      background: var(--bar-bg);
+      position: relative;
+      width: 100%;
+      height: 3px;
+      outline: none;
+    }
+
+    /* progress bar - safari */
+    .progress-bar::-webkit-slider-runnable-track {
+      background: var(--bar-bg);
+      position: relative;
+      width: 100%;
+      height: 3px;
+      outline: none;
+    }
+
+    /* progress bar - firefox */
+    .progress-bar::-moz-range-track {
+      background: var(--bar-bg);
+
+      position: relative;
+      width: 100%;
+      height: 3px;
+      outline: none;
+    }
+
+    .progress-bar::-moz-focus-outer {
+      border: 0;
+    }
+
+    /* progress bar - chrome and safari */
+    .progress-bar::before {
+      content: "";
+      height: 3px;
+      width: var(--seek-before-width);
+      background-color: var(--seek-before-color);
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      cursor: pointer;
+    }
+
+    /* progress bar - firefox */
+    .progress-bar::-moz-range-progress {
+      background-color: var(--seek-before-color);
+      height: 5px;
+    }
+
+    /* knobby - chrome and safari */
+    .progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 10px;
+      width: 10px;
+    }
+
+    /* knobby while dragging - chrome and safari */
+    .progress-bar:active::-webkit-slider-thumb {
+      transform: scale(1.2);
+      background: var(--selectedKnobby);
+    }
+
+    /* knobby - firefox */
+    .progress-bar::-moz-range-thumb {
+      height: 10px;
+      width: 10px;
+      cursor: pointer;
+      position: relative;
+      z-index: 3;
+      box-sizing: border-box;
+    }
+
+    /* knobby while dragging - firefox */
+    .progress-bar:active::-moz-range-thumb {
+      transform: scale(1.2);
+      background: var(--selectedKnobby);
+    }
+  }
 }
 
 //! BORDER ANIMATION

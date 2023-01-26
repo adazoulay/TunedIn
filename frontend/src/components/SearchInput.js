@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { useSearchPostQuery } from "../Features/posts/postsApiSlice";
 import { useSearchTagQuery } from "../Features/tags/tagsApiSlice";
 import { useSearchUserQuery } from "../Features/users/usersApiSlice";
@@ -34,8 +33,10 @@ const SearchInput = ({ selectedFilter, getSearchResults }) => {
   useEffect(() => {
     if (searchResults) {
       getSearchResults(searchResults);
+    } else if (!searchText.length) {
+      getSearchResults({});
     }
-  }, [isSuccess]);
+  }, [isSuccess, searchText]);
 
   return (
     <div className='search-form'>

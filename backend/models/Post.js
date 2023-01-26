@@ -15,8 +15,9 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    mp3Url: {
+    audioUrl: {
       type: String,
+      default: "",
     },
     imgUrl: {
       type: String,

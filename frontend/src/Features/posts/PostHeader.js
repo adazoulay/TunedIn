@@ -1,8 +1,6 @@
 import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { useGetUserQuery } from "../users/usersApiSlice";
-import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
-import TagGroup from "../tags/TagGroup";
 
 const PostHeader = ({ postHeaderData }) => {
   const { postId, userId, title } = postHeaderData;
@@ -13,7 +11,14 @@ const PostHeader = ({ postHeaderData }) => {
   if (isSuccessUser) {
     let { ids, entities } = userData;
     let user = entities[ids[0]];
-    userContent = <h3>{user.username}</h3>;
+    userContent = user?.imageUrl ? (
+      <div className='post-user'>
+        <img src={user.imageUrl} alt='profile-picture' className='pic-small' />
+        <h3 className='post-username'>{user.username}</h3>
+      </div>
+    ) : (
+      <h3 className='post-username'>{user.username}</h3>
+    );
   }
 
   if (isLoading) return <p>Loading...</p>;

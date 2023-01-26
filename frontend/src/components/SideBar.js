@@ -1,46 +1,98 @@
 import { Link } from "react-router-dom";
-import { Home, TrendingUp, Users, Eye, Bookmark, Headphones } from "react-feather";
+import {
+  Home,
+  TrendingUp,
+  Users,
+  Tag,
+  Bookmark,
+  Headphones,
+  Volume2,
+  PieChart,
+} from "react-feather";
+import SideBarTags from "../Features/tags/SideBarTags";
 
 const SideBar = () => {
   return (
     <div className='sidebar'>
       <div className='sidebar-content'>
-        <Link to='/feed'>
+        {/* LINKS */}
+        <div className='sidebar-section'>
           <div className='sidebar-row'>
-            <Home />
-            Home
+            <Link to='/feed'>
+              <div className='row-content'>
+                <Home size={26} />
+                Home
+              </div>
+            </Link>
           </div>
-        </Link>
-        <Link to='trend'>
           <div className='sidebar-row'>
-            <TrendingUp />
-            Trending
+            <Link to='/feed/trend'>
+              <div className='row-content'>
+                <TrendingUp size={26} />
+                Trending
+              </div>
+            </Link>
           </div>
-        </Link>
-        <Link to='sub'>
           <div className='sidebar-row'>
-            <Users />
-            Subscribed
+            <Link to='/feed/sub'>
+              <div className='row-content'>
+                <Users size={26} />
+                Following
+              </div>
+            </Link>
           </div>
-        </Link>
-        <Link to=''>
+        </div>
+        <hr className='sidebar-devider' />
+        {/* TAGS */}
+        <div className='sidebar-section'>
+          <div className='sidebar-tag-section'>
+            <div className='content-title'>
+              <Tag size={26} />
+              Trending Tags
+            </div>
+            <SideBarTags />
+          </div>
+        </div>
+        <hr className='sidebar-devider' />
+        {/* REST */}
+        <div className='sidebar-section'>
           <div className='sidebar-row'>
-            <Eye />
-            Discover
+            <Link to='/feed/sub'>
+              <div className='row-content'>
+                <Volume2 size={26} />
+                Broadcast
+              </div>
+            </Link>
           </div>
-        </Link>
-        <Link to=''>
+
           <div className='sidebar-row'>
-            <Bookmark />
-            Saved
+            <Link to=''>
+              <div className='row-content'>
+                <Bookmark size={26} />
+                Saved
+              </div>
+            </Link>
           </div>
-        </Link>
-        <Link to=''>
+        </div>
+        <hr className='sidebar-devider' />
+        <div className='sidebar-section'>
           <div className='sidebar-row'>
-            <Headphones />
-            Studio
+            <Link to=''>
+              <div className='row-content'>
+                <PieChart size={26} />
+                Analytics
+              </div>
+            </Link>
           </div>
-        </Link>
+          <div className='sidebar-row'>
+            <Link to=''>
+              <div className='row-content'>
+                <Headphones size={26} />
+                Studio
+              </div>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

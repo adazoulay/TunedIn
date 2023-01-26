@@ -1,11 +1,16 @@
-import Feed from "../posts/Feed";
 import { useGetUserQuery } from "./usersApiSlice";
 import { useGetTagsByUserIdQuery } from "../tags/tagsApiSlice";
+import { useParams, Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+
 import TagGroup from "../tags/TagGroup";
-import ProfilePic from "../../resources/ProfilePic.png";
-import { useParams } from "react-router-dom";
+import Feed from "../posts/Feed";
+import FollowButton from "../../components/FollowButton";
+import { Edit } from "react-feather";
+
 const UserPage = () => {
   let { id: userId } = useParams();
+  const { userId: currentUser } = useAuth();
 
   const { data: userData, isSuccess } = useGetUserQuery(userId);
   const { data: tags, isSuccess: isSuccessTags } = useGetTagsByUserIdQuery(userId);
@@ -17,32 +22,39 @@ const UserPage = () => {
     user = ids?.length ? entities[ids[0]] : null;
   }
 
+  let content;
+  if (isSuccess) {
+    if (userId === currentUser) {
+      content = (
+        <Link to='/user/edit'>
+          <Edit size={36} />
+        </Link>
+      );
+    } else {
+      content = <FollowButton user={user} />;
+    }
+  }
+
   return (
     <>
       <div className='content-header'>
         <div className='user-info'>
-          <img
-            className='user-page-profile-pic'
-            src={"ProfilePicture"}
-            alt='Profile Picture'
-          />
-          <div className='name-desc'>
-            <div className='username'>{user?.username}</div>
-            <div className='user-desc'>{user?.desc}</div>
+          <img className='user-page-profile-pic' src={user?.imageUrl} alt='Profile Picture' />
+          <div className='user-header-col'>
+            <div className='name-desc'>
+              <div className='username'>{user?.username}</div>
+              <div className='user-desc'>{user?.desc}</div>
+            </div>
+            <div className='tag-spotlight'>
+              <div>Top Tags:</div>
+              <TagGroup tags={tags} type={"tags-user"} />
+            </div>
           </div>
           <div className='social'>
-            <div>Followers : {user?.followers.length}</div>
-            <div>Following : {user?.following.length}</div>
+            <div className='follow'>{user?.followers.length} Followers</div>
+            <div className='follow'>{user?.following.length} Following</div>
           </div>
-          <button className='follow-button'>Follow</button>
-        </div>
-        <div className='user-spotlight'>
-          <div className='tag-spotlight'>
-            Top Tags:
-            <TagGroup tags={tags} containerType={"USER"} />
-            {/* Optional params... */}
-          </div>
-          <div>Spotlight</div> {/*From saved posts*/}
+          {content}
         </div>
       </div>
       <Feed type='USER' source={userId} />

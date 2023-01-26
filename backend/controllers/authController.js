@@ -32,6 +32,7 @@ const signup = async (req, res, next) => {
 };
 
 const signin = async (req, res, next) => {
+  console.log("signin");
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -52,7 +53,7 @@ const signin = async (req, res, next) => {
         userInfo: {
           id: user._id,
           username: user.username,
-          img: user.img,
+          imageUrl: user.imageUrl,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -64,7 +65,7 @@ const signin = async (req, res, next) => {
         userInfo: {
           id: user._id,
           username: user.username,
-          img: user.img,
+          imageUrl: user.imageUrl,
         },
       },
       process.env.REFRESH_TOKEN_SECRET,
@@ -100,7 +101,7 @@ const refresh = async (req, res, next) => {
         userInfo: {
           id: user._id,
           username: user.username,
-          img: user.img,
+          imageUrl: user.imageUrl,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,

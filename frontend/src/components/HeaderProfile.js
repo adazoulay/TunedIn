@@ -3,12 +3,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { useSendLogoutMutation } from "../Features/Auth/authApiSlice";
 import useAuth from "../hooks/useAuth";
 
-import { Plus } from "react-feather";
-import { LogOut } from "react-feather";
-import ProfilePic from "../resources/ProfilePic.png";
+import { Plus, LogOut, Tag, PlusSquare } from "react-feather";
 
 const HeaderProfile = () => {
-  const { userId, username, img } = useAuth();
+  const { userId, username, imageUrl } = useAuth();
+
   const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation();
 
   const onLogoutClicked = () => sendLogout();
@@ -27,17 +26,46 @@ const HeaderProfile = () => {
   if (userId) {
     content = (
       <>
-        <Link to={"/post/new"}>
-          <Plus color='#ffffff' size='40' />
-        </Link>
         <div className='dropdown'>
-          <Link to={`/user/${userId}`}>
-            <img src={ProfilePic} alt='Profile Picture' className='pic-small' />
-          </Link>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Link to={`/user/${userId}`} style={{ maxHeight: "56px", maxWidth: "56px" }}>
+              {imageUrl ? (
+                <img src={imageUrl} alt='profile-picture' className='pic-small' />
+              ) : (
+                <h3 className='header-username'>{username}</h3>
+              )}
+            </Link>
+          </div>
+
           <div className='dropdown-content' onClick={onLogoutClicked}>
-            <div className='dopdown-row'>
-              <LogOut /> Logout
+            <div className='dropdown-row-content'>
+              <LogOut /> <b>Logout</b>
             </div>
+          </div>
+        </div>
+
+        <div className='dropdown'>
+          <div className='add-new'>
+            <Plus color='#ffffff' size='30' />
+            <b>Add New</b>
+          </div>
+
+          <div className='dropdown-content'>
+            <Link to={"/post/new"}>
+              <div className='dropdown-row-content'>
+                <PlusSquare color='#ffffff' size='20' />
+                <b>Post</b>
+              </div>
+            </Link>
+
+            <hr className='menu-devider' />
+
+            <Link to={"/tag/new"}>
+              <div className='dropdown-row-content'>
+                <Tag color='#ffffff' size='20' />
+                <b>Tag</b>
+              </div>
+            </Link>
           </div>
         </div>
       </>

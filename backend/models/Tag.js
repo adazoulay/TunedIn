@@ -28,6 +28,12 @@ const tagSchema = new mongoose.Schema({
       ref: "Post",
     },
   ],
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Tag", tagSchema);
