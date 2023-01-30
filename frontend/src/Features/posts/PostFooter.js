@@ -3,10 +3,9 @@ import { useLikePostMutation } from "./postsApiSlice";
 import { useUnLikePostMutation } from "./postsApiSlice";
 import useAuth from "../../hooks/useAuth";
 import TimeAgo from "./TimeAgo";
-
 import CommentSection from "../comments/CommentSection";
 
-import { Music } from "react-feather";
+import { Music, Link2 } from "react-feather";
 
 const PostFooter = ({ postFooterData }) => {
   const { postId, desc, createdAt, likes, views } = postFooterData;
@@ -27,14 +26,20 @@ const PostFooter = ({ postFooterData }) => {
 
   const handleLikeClicked = async () => {
     if (!likedStatus) {
-      const newLikes = [...likes, `${currentUser}`]; //!String string?
-      likePost({ id: postId, newLikes });
+      // const newLikes = [...likes, `${currentUser}`]; //!String string?
+      likePost({ id: postId, userId: currentUser });
       setLikedStatus(() => true);
     } else {
       const newLikes = likes.filter((id) => id !== currentUser);
       unLikePost({ id: postId, newLikes });
       setLikedStatus(() => false);
     }
+  };
+
+  const copyLink = () => {
+    const link = `http://localhost:3000/post/${postId}`;
+    navigator.clipboard.writeText(link);
+    alert("LINK: " + link);
   };
 
   return (
@@ -46,13 +51,13 @@ const PostFooter = ({ postFooterData }) => {
       <div className='comment-section'>
         <CommentSection postId={postId} />
       </div>
+      <div className='post-link' onClick={copyLink}>
+        <Link2 />
+      </div>
       <div className='footer-stats'>
         <div className='views'>{views} views</div>
-        <div className=''>
-          <TimeAgo timestamp={createdAt} />
-        </div>
+        <TimeAgo timestamp={createdAt} />
       </div>
-
       <div className='likes'>
         <div className='like-icon' onClick={handleLikeClicked}>
           <Music size={28} color={likedStatus ? "#f40035" : "white"} />

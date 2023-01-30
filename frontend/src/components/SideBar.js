@@ -50,7 +50,9 @@ const SideBar = () => {
               <Tag size={26} />
               Trending Tags
             </div>
-            <SideBarTags />
+            <div className='sidebar-tags-wrapper'>
+              <SideBarTags />
+            </div>
           </div>
         </div>
         <hr className='sidebar-devider' />

@@ -7,7 +7,7 @@ const tagsAdapter = createEntityAdapter({
 
 const initialState = tagsAdapter.getInitialState();
 
-export const extendedApiSlice = apiSlice.injectEndpoints({
+export const tagsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     //! GET TAGS
     getTags: builder.query({
@@ -132,9 +132,9 @@ export const {
   useGetTrendingTagsQuery,
   useAddNewTagMutation,
   useDeleteTagMutation,
-} = extendedApiSlice;
+} = tagsApiSlice;
 
-export const selectTagsResult = extendedApiSlice.endpoints.getTags.select();
+export const selectTagsResult = tagsApiSlice.endpoints.getTags.select();
 
 const selectTagsData = createSelector(selectTagsResult, (tagsResult) => tagsResult.data);
 

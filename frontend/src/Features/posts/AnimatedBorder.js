@@ -1,8 +1,15 @@
 import React, { useEffect, useState, memo } from "react";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
 //! ONLY ANIMATE WHEN ENTERS VIEW?
 const AnimatedBorder = ({ children, colors }) => {
   const [borderColor, setBorderColor] = useState(["white", "gray", "white"]);
+
+  const [containerRef, isVisible] = useIntersectionObserver({
+    root: null,
+    rootMargin: "0px",
+    threshhold: 0,
+  });
 
   useEffect(() => {
     if (colors) {
@@ -20,12 +27,13 @@ const AnimatedBorder = ({ children, colors }) => {
 
   return (
     <div
+      ref={containerRef}
       style={{
         "--angle": "0deg",
         display: "inline-block",
         border: "1.5px solid",
         borderImage: `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
-        animation: "10s rotate linear infinite",
+        animation: isVisible && "10s rotate linear infinite",
       }}>
       {children}
     </div>

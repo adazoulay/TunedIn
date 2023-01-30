@@ -1,14 +1,12 @@
-import React, { memo, useRef, useEffect } from "react";
+import React, { memo, useEffect } from "react";
 
 import AudioSpectrum from "react-audio-spectrum";
 
 const AudioSpectrumWrapper = ({ postId, meterColors, capColor }) => {
-  const renders = useRef(0);
   return (
     <>
-      <div>renders: {renders.current++}</div>
       <AudioSpectrum
-        id='audio-canvas'
+        // id='audio-canvas'
         height={150}
         width={600}
         audioId={postId}

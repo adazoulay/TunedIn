@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 import TagGroup from "../tags/TagGroup";
 import Feed from "../posts/Feed";
 import FollowButton from "../../components/FollowButton";
-import { Edit } from "react-feather";
+import { Edit, Link2 } from "react-feather";
 
 const UserPage = () => {
   let { id: userId } = useParams();
@@ -35,6 +35,12 @@ const UserPage = () => {
     }
   }
 
+  const copyLink = () => {
+    const link = `http://localhost:3000/user/${userId}`;
+    navigator.clipboard.writeText(link);
+    alert("Copied the text: " + copyText.value);
+  };
+
   return (
     <>
       <div className='content-header'>
@@ -54,7 +60,12 @@ const UserPage = () => {
             <div className='follow'>{user?.followers.length} Followers</div>
             <div className='follow'>{user?.following.length} Following</div>
           </div>
-          {content}
+          <div className='social'>
+            {content}
+            <div className='user-share' onClick={copyLink}>
+              <Link2 />
+            </div>
+          </div>
         </div>
       </div>
       <Feed type='USER' source={userId} />

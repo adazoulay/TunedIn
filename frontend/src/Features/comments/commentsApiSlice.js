@@ -9,7 +9,7 @@ const commentsAdapter = createEntityAdapter({
 
 const initialState = commentsAdapter.getInitialState();
 
-export const extendedApiSlice = apiSlice.injectEndpoints({
+export const commentsApiSlice = apiSlice.injectEndpoints({
   //! QUERY
   endpoints: (builder) => ({
     getComments: builder.query({
@@ -61,7 +61,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         try {
           const { data: newComment } = await queryFulfilled;
           const patchResult = dispatch(
-            extendedApiSlice.util.updateQueryData("getCommentsByPostId", id, (draft) => {
+            commentsApiSlice.util.updateQueryData("getCommentsByPostId", id, (draft) => {
               draft.entities[newComment._id] = newComment;
               draft.ids.unshift(newComment._id);
             })
@@ -87,9 +87,9 @@ export const {
   useGetCommentsByPostIdQuery,
   useAddNewCommentMutation,
   useDeleteCommentMutation,
-} = extendedApiSlice;
+} = commentsApiSlice;
 
-export const selectCommentsResult = extendedApiSlice.endpoints.getComments.select();
+export const selectCommentsResult = commentsApiSlice.endpoints.getComments.select();
 
 const selectCommentsData = createSelector(
   selectCommentsResult,

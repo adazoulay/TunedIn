@@ -5,6 +5,7 @@ import { useAddNewTagMutation } from "./tagsApiSlice";
 import TagGroup from "../tags/TagGroup";
 import SearchInput from "../../components/SearchInput";
 import { HexColorPicker } from "react-colorful";
+import Tag from "./Tag";
 
 const NewTag = () => {
   const nameRef = useRef();
@@ -158,7 +159,10 @@ const NewTag = () => {
         </div>
         <div className='form-row'>
           <label className='form-label'>Color:</label>
-          <HexColorPicker color={color} onChange={setColor} />
+          <div className='tag-preview'>
+            <HexColorPicker color={color} onChange={setColor} />
+            <Tag tagInfo={{ color, name }} size='tag-large' />
+          </div>
         </div>
         <div className='tag-form'>
           <div className='tag-col'>

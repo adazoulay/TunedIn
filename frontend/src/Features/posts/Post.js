@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { memo } from "react";
 import { useGetTagsByPostIdQuery } from "../tags/tagsApiSlice";
 import AnimatedBorder from "./AnimatedBorder";
 import AudioPlayer from "./AudioPlayer";
@@ -10,18 +10,14 @@ import { useGetPostsQuery } from "./postsApiSlice";
 //! Link icon to copy link
 //TODO Can react with emotes during song. Plays to other users like insta live emotes
 
-const Post = ({ postId }) => {
-  const { post } = useGetPostsQuery("getPosts", {
+const Post = ({ postId, postArgs }) => {
+  const { post } = useGetPostsQuery(postArgs, {
     selectFromResult: ({ data }) => ({
       post: data?.entities[postId],
     }),
   });
 
-  const {
-    data: tags,
-    isLoading: isLoadingTags,
-    isSuccess: isSuccessTags,
-  } = useGetTagsByPostIdQuery(postId);
+  const { data: tags, isSuccess: isSuccessTags } = useGetTagsByPostIdQuery(postId);
 
   let colors;
   let headerContent;
@@ -54,6 +50,9 @@ const Post = ({ postId }) => {
   return (
     <AnimatedBorder colors={colors}>
       <article className='post-feed'>
+        <div>
+          {postArgs.type} {postArgs.page}
+        </div>
         <div className='post-header'>
           {headerContent}
           <div className='post-tags'>
@@ -71,4 +70,4 @@ const Post = ({ postId }) => {
   );
 };
 
-export default Post;
+export default memo(Post);

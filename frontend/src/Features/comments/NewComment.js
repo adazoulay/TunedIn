@@ -5,7 +5,7 @@ import useAuth from "../../hooks/useAuth";
 
 const NewComment = ({ postId }) => {
   const [desc, setDesc] = useState("");
-  const [addNewComment, { isLoading, isSuccess, isError, error }] = useAddNewCommentMutation();
+  const [addNewComment, { isSuccess }] = useAddNewCommentMutation();
   const { userId, username } = useAuth();
 
   const handleDescChange = (e) => {

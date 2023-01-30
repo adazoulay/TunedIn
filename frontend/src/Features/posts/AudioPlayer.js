@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Play, Pause, Volume2, VolumeX } from "react-feather";
-import AudioSpectrum from "react-audio-spectrum";
 import { useAddViewMutation } from "./postsApiSlice";
 import AudioSpectrumWrapper from "./AudioSpectrumWrapper";
+import "./audioPlayer.scss";
 
 const AudioPlayer = ({ audio, colors, postId }) => {
   const [playing, setPlaying] = useState(false);
@@ -153,10 +153,9 @@ const AudioPlayer = ({ audio, colors, postId }) => {
         </div>
         <div className='volume-range'>
           <input
-            className='volume-range'
+            className='volume-bar'
             type='range'
             id='volume'
-            orient='vertical'
             min={0}
             max={1}
             step={0.01}

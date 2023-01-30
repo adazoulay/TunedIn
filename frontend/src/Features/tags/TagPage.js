@@ -4,6 +4,7 @@ import Feed from "../posts/Feed";
 import TagGroup from "../tags/TagGroup";
 import Tag from "./Tag";
 import FollowButton from "../../components/FollowButton";
+import { Link2 } from "react-feather";
 
 const TagPage = () => {
   let { id: tagId } = useParams();
@@ -18,6 +19,12 @@ const TagPage = () => {
     parents = tagData.parents;
     children = tagData.children;
   }
+
+  const copyLink = () => {
+    const link = `http://localhost:3000/tag/${tagId}`;
+    navigator.clipboard.writeText(link);
+    alert("Copied the text: " + copyText.value);
+  };
 
   return (
     <>
@@ -39,7 +46,12 @@ const TagPage = () => {
           {isSuccessTag && (
             <div className='tag-social'>
               <FollowButton tag={tag} />
-              <div className='follow'>{tag.followers?.length} Followers </div>
+              <div className='tag-connect'>
+                <div className='follow'>{tag.followers?.length} Followers </div>
+                <div className='link' onClick={copyLink}>
+                  <Link2 />
+                </div>
+              </div>
             </div>
           )}
         </div>

@@ -8,46 +8,55 @@ const LIMIT = 5;
 
 const getPosts = async (req, res, next) => {
   const page = req.query.page;
-  console.log("PAGE", page);
+  const type = req.query.type;
+  console.log("page", page);
+  console.log("type", type);
+
   try {
-    const posts = await Post.find()
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * LIMIT)
-      .limit(LIMIT)
-      .lean();
+    let posts;
+    switch (type) {
+      case "HOME":
+        console.log("IN HOME");
+        posts = await Post.find()
+          .sort({ createdAt: -1, views: -1 })
+          .skip((page - 1) * LIMIT)
+          .limit(LIMIT);
+
+        break;
+      case "TREND":
+        console.log("IN TREND");
+        posts = await Post.find()
+          .sort({ views: -1, createdAt: -1 })
+          .skip((page - 1) * LIMIT)
+          .limit(LIMIT);
+
+        break;
+      case "SUB":
+        console.log("IN SUB");
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        const following = user.following;
+        posts = await Promise.all(
+          following.map(async (userId) => {
+            return await Post.find({ userId });
+          })
+        ).then((results) => {
+          const flattenedResults = results.flat();
+          const sortedResults = flattenedResults.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          return sortedResults.slice((page - 1) * LIMIT, page * LIMIT);
+        });
+
+        break;
+      default:
+        return res.status(200).json([]);
+    }
     if (!posts?.length) {
       return res.status(200).json([]);
     }
+    console.log(posts);
     res.json(posts);
-  } catch (err) {
-    next(err);
-  }
-};
-
-const getTrend = async (req, res, next) => {
-  const page = req.params.page;
-  try {
-    const posts = await Post.find()
-      .sort({ views: -1 })
-      .skip((page - 1) * LIMIT)
-      .limit(LIMIT)
-      .lean();
-    res.status(200).json(posts);
-  } catch (err) {
-    next(err);
-  }
-};
-
-const getSub = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id);
-    const following = user.following;
-    const list = await Promise.all(
-      following.map(async (userId) => {
-        return await Post.find({ userId }).lean();
-      })
-    );
-    res.status(200).json(list.flat().sort((a, b) => b.createdAt - a.createdAt));
   } catch (err) {
     next(err);
   }
@@ -81,15 +90,6 @@ const getPostByTagId = async (req, res, next) => {
   }
 };
 
-const getRandom = async (req, res, next) => {
-  try {
-    const posts = await Post.aggregate([{ $sample: { size: 40 } }]);
-    res.status(200).json(posts);
-  } catch (err) {
-    next(err);
-  }
-};
-
 const searchPost = async (req, res, next) => {
   const query = req.query.q;
   try {
@@ -107,6 +107,14 @@ const searchPost = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+const getAllPosts = async (req, res, next) => {
+  const posts = await Post.find();
+  if (!posts?.length) {
+    return res.status(400).json({ message: "No posts Found" });
+  }
+  res.json(posts);
 };
 
 const getPost = async (req, res, next) => {
@@ -143,15 +151,11 @@ const createNewPost = async (req, res, next) => {
       await Tag.updateMany({ _id: { $in: tags } }, { $addToSet: { posts: post._id } });
     }
     if (audioUrl) {
-      console.log("HAS AUDIOURL", audioUrl);
-      console.log("Typeof URL", typeof audioUrl);
-      console.log(audioUrl);
       post.audioUrl = audioUrl;
       await post.save();
     }
     if (post) {
       await User.findByIdAndUpdate({ _id: userId }, { $addToSet: { posts: post.id } });
-      console.log("POST", post);
       return res.status(201).json({ message: "New post created" });
     } else {
       return res.status(400).json({ message: "Invalid post data received" });
@@ -200,7 +204,6 @@ const deletePost = async (req, res, next) => {
   }
   try {
     const post = await Post.findById(PostId).exec();
-    console.log(post);
     if (!post.userId.equals(req.user.id)) {
       return res.status(403).json({ message: "You can delete only your posts!" });
     }
@@ -253,7 +256,6 @@ const unLikePost = async (req, res, next) => {
   }
   const postId = req.params.id;
   try {
-    console.log("IN UNLIKED");
     const post = await Post.findByIdAndUpdate(postId, {
       $pull: { likes: userId },
     });
@@ -265,12 +267,10 @@ const unLikePost = async (req, res, next) => {
 
 module.exports = {
   getPosts,
-  getTrend,
-  getSub,
   getPostByUserId,
   getPostByTagId,
-  getRandom,
   searchPost,
+  getAllPosts,
   getPost,
   createNewPost,
   updatePost,

@@ -48,7 +48,6 @@ function App() {
             <Route path='trend' element={<Feed type='TREND' />} />
             <Route path='sub' element={<Feed type='SUB' />} />
           </Route>
-
           <Route path='user' element={<DashLayout />}>
             <Route
               path=':id'
