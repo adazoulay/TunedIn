@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useSearchPostQuery } from "../Features/posts/postsApiSlice";
-import { useSearchTagQuery } from "../Features/tags/tagsApiSlice";
-import { useSearchUserQuery } from "../Features/users/usersApiSlice";
+import { useSearchPostQuery } from "../../../Features/posts/postsApiSlice";
+import { useSearchTagQuery } from "../../../Features/tags/tagsApiSlice";
+import { useSearchUserQuery } from "../../../Features/users/usersApiSlice";
+import "./search.scss";
 
 const SearchInput = ({ selectedFilter, getSearchResults }) => {
   const [searchText, setSearchText] = useState("");

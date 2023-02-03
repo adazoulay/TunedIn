@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Play, Pause, Volume2, VolumeX } from "react-feather";
-import { useAddViewMutation } from "./postsApiSlice";
-import AudioSpectrumWrapper from "./AudioSpectrumWrapper";
+import { useAddViewMutation } from "../../../Features/posts/postsApiSlice";
+import { useSpring, animated } from "@react-spring/web";
+import useMeasure from "react-use-measure";
 import "./audioPlayer.scss";
+import { Play, Pause, Volume2, VolumeX } from "react-feather";
+import { set } from "date-fns";
 
-const AudioPlayer = ({ audio, colors, postId }) => {
+const AudioPlayer = ({ audio, postId, children, contentRef }) => {
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [duration, setDuration] = useState(0);
@@ -17,6 +19,7 @@ const AudioPlayer = ({ audio, colors, postId }) => {
 
   const [addView] = useAddViewMutation();
 
+  //! PLAY/PAUSE
   const handlePlayPause = () => {
     const prevValue = playing;
     setPlaying(!prevValue);
@@ -34,11 +37,19 @@ const AudioPlayer = ({ audio, colors, postId }) => {
   };
 
   useEffect(() => {
-    audioRef.current.addEventListener("loadedmetadata", () => {
-      const seconds = Math.floor(audioRef.current.duration);
+    const handleLoadedMetadata = () => {
+      const seconds = Math.floor(audioRef?.current?.duration);
       setDuration(seconds);
       progressBarRef.current.max = seconds;
-    });
+    };
+    if (audioRef.current) {
+      audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
+    }
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      }
+    };
   }, []);
 
   const calculateTime = (secs) => {
@@ -49,6 +60,7 @@ const AudioPlayer = ({ audio, colors, postId }) => {
     return `${returnedMinutes}:${returnedSeconds}`;
   };
 
+  //! VOLUME
   const handleVolumeChange = (e) => {
     setVolume(e.target.value);
     audioRef.current.volume = e.target.value;
@@ -66,6 +78,24 @@ const AudioPlayer = ({ audio, colors, postId }) => {
     }
   };
 
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const [ref, bounds] = useMeasure();
+
+  const volumeSliderAnimation = useSpring({
+    height: isCollapsed ? 0 : bounds.height,
+  });
+
+  const handleShow = (e) => {
+    e.preventDefault();
+    setIsCollapsed(false);
+  };
+  const handleHide = (e) => {
+    e.preventDefault();
+    setIsCollapsed(true);
+  };
+
+  //! TIME
   const whilePlaying = () => {
     progressBarRef.current.value = Math.floor(audioRef.current.currentTime);
     changePlayerCurrentTime();
@@ -87,23 +117,8 @@ const AudioPlayer = ({ audio, colors, postId }) => {
     }
   };
 
-  const createMeterColors = (colors) => {
-    if (colors.length < 2) {
-      return [
-        { stop: 0, color: "#f00" },
-        { stop: 0.5, color: "#0CD7FD" },
-        { stop: 1, color: "red" },
-      ];
-    }
-    return colors.map((color, index) => {
-      return { stop: index / (colors.length - 1), color: color };
-    });
-  };
-
-  const meterColors = useMemo(() => createMeterColors(colors), [colors]);
-
   return (
-    <div className='audio-player'>
+    <div className='audio-player' ref={contentRef}>
       <audio
         ref={audioRef}
         src={audio}
@@ -113,14 +128,9 @@ const AudioPlayer = ({ audio, colors, postId }) => {
         // onError={(e) => console.log(e)}
         preload='metadata'
       />
+      {/* SOUNDBAR */}
       <div className='soundbar' onClick={handlePlayPause} id={postId}>
-        {postId && (
-          <AudioSpectrumWrapper
-            postId={postId}
-            meterColors={meterColors}
-            capColor={colors[0]}
-          />
-        )}
+        {children}
       </div>
       <div className='media-wrapper'>
         <button className='media-button' onClick={handlePlayPause}>
@@ -143,25 +153,33 @@ const AudioPlayer = ({ audio, colors, postId }) => {
         <div className='duration field-info'>
           {duration && !isNaN(duration) && calculateTime(duration)}
         </div>
-        {/* volume */}
-        <div className='volume'>
-          {audioRef?.current?.volume ? (
-            <Volume2 size={28} color='#ebebeb' onClick={toggleVolume} />
-          ) : (
-            <VolumeX size={28} color='#ebebeb' onClick={toggleVolume} />
-          )}
-        </div>
-        <div className='volume-range'>
-          <input
-            className='volume-bar'
-            type='range'
-            id='volume'
-            min={0}
-            max={1}
-            step={0.01}
-            value={volume}
-            onChange={handleVolumeChange}
-          />
+        {/* -------- volume --------- */}
+        <div className='volume' onMouseEnter={handleShow} onMouseLeave={handleHide}>
+          <div className='volume-btn'>
+            {audioRef?.current?.volume ? (
+              <Volume2 size={30} color='#ebebeb' onClick={toggleVolume} />
+            ) : (
+              <VolumeX size={30} color='#ebebeb' onClick={toggleVolume} />
+            )}
+          </div>
+          <div className='volume-range-wrapper' ref={ref}>
+            <animated.div className='volume-range' style={volumeSliderAnimation}>
+              <input
+                className='volume-bar'
+                type='range'
+                id='volume'
+                min={0}
+                max={1}
+                step={0.05}
+                value={volume}
+                onChange={handleVolumeChange}
+                style={{
+                  accentColor: "#ebebeb",
+                  // display: isCollapsed ? "none" : "flex",
+                }}
+              />
+            </animated.div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
-import { memo } from "react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
-import SideBar from "./SideBar";
+import Header from "../sections/Header";
+import SideBar from "../sections/SideBar";
+import Footer from "../sections/Footer";
 
 const DashLayout = () => {
   return (
@@ -12,6 +13,7 @@ const DashLayout = () => {
         <div className='content-page'>
           <Outlet />
         </div>
+        <Footer />
       </div>
     </div>
   );

@@ -9,8 +9,7 @@ const LIMIT = 5;
 const getPosts = async (req, res, next) => {
   const page = req.query.page;
   const type = req.query.type;
-  console.log("page", page);
-  console.log("type", type);
+  console.log("page", page, "type", type);
 
   try {
     let posts;
@@ -18,27 +17,27 @@ const getPosts = async (req, res, next) => {
       case "HOME":
         console.log("IN HOME");
         posts = await Post.find()
-          .sort({ createdAt: -1, views: -1 })
+          .sort({ createdAt: -1 })
           .skip((page - 1) * LIMIT)
           .limit(LIMIT);
-
         break;
+
       case "TREND":
         console.log("IN TREND");
         posts = await Post.find()
           .sort({ views: -1, createdAt: -1 })
           .skip((page - 1) * LIMIT)
           .limit(LIMIT);
-
         break;
+
       case "SUB":
         console.log("IN SUB");
         const userId = req.user.id;
-        const user = await User.findById(userId);
-        const following = user.following;
+        const currUser = await User.findById(userId);
+        const following = currUser.following;
         posts = await Promise.all(
           following.map(async (userId) => {
-            return await Post.find({ userId });
+            return await Post.find({ userId: userId });
           })
         ).then((results) => {
           const flattenedResults = results.flat();
@@ -47,15 +46,54 @@ const getPosts = async (req, res, next) => {
           );
           return sortedResults.slice((page - 1) * LIMIT, page * LIMIT);
         });
-
         break;
+
+      case "USER":
+        console.log("IN USER");
+        const userSource = req.query.source;
+        console.log(userSource);
+        if (!userSource) {
+          return res.status(400).json({ message: "Source parameter is missing" });
+        }
+        const user = await User.findById(userSource).populate({
+          path: "posts",
+          options: {
+            sort: { createdAt: -1 },
+          },
+        });
+        if (!user) {
+          return res.status(400).json({ message: "User not found" });
+        }
+        posts = user.posts.slice((page - 1) * LIMIT, page * LIMIT);
+        break;
+
+      case "TAG":
+        console.log("IN TAG");
+        const tagSource = req.query.source;
+        console.log(tagSource);
+        if (!tagSource) {
+          return res.status(400).json({ message: "Source parameter is missing" });
+        }
+        const tag = await Tag.findById(tagSource).populate({
+          path: "posts",
+          options: {
+            sort: { createdAt: -1 },
+          },
+        });
+        if (!tag) {
+          return res.status(400).json({ message: "Tag not found" });
+        }
+        posts = tag.posts.slice((page - 1) * LIMIT, page * LIMIT);
+        break;
+
       default:
         return res.status(200).json([]);
     }
+
     if (!posts?.length) {
       return res.status(200).json([]);
     }
-    console.log(posts);
+
     res.json(posts);
   } catch (err) {
     next(err);

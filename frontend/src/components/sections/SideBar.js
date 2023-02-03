@@ -9,7 +9,7 @@ import {
   Volume2,
   PieChart,
 } from "react-feather";
-import SideBarTags from "../Features/tags/SideBarTags";
+import SideBarTags from "../../Features/tags/SideBarTags";
 
 const SideBar = () => {
   return (

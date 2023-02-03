@@ -4,9 +4,9 @@ import {
   useUnFollowUserMutation,
   useFollowTagMutation,
   useUnFollowTagMutation,
-} from "../Features/users/usersApiSlice";
-import {} from "../Features/users/usersApiSlice";
-import useAuth from "../hooks/useAuth";
+} from "../../Features/users/usersApiSlice";
+import {} from "../../Features/users/usersApiSlice";
+import useAuth from "../../hooks/useAuth";
 
 const FollowButton = ({ user, tag }) => {
   if (user) {
@@ -40,9 +40,8 @@ const FollowButton = ({ user, tag }) => {
 
     return (
       <button
-        className='follow-button'
-        onClick={handleLikeClicked}
-        style={{ backgroundColor: `${followStatus ? "#808080" : "#4673f3"}` }}>
+        className={`main-button ${followStatus ? "following" : ""}`}
+        onClick={handleLikeClicked}>
         {`${followStatus ? `Following` : `Follow`}`}
       </button>
     );
@@ -78,9 +77,8 @@ const FollowButton = ({ user, tag }) => {
 
     return (
       <button
-        className='follow-button'
-        onClick={handleLikeClicked}
-        style={{ backgroundColor: `${followStatus ? "#808080" : "#4673f3"}` }}>
+        className={`main-button ${followStatus ? "following" : ""}`}
+        onClick={handleLikeClicked}>
         {`${followStatus ? `Following` : `Follow`}`}
       </button>
     );

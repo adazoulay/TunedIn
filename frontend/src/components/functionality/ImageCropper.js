@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import getCroppedImg from "../util/cropImage";
+import getCroppedImg from "../../util/cropImage";
 import Cropper from "react-easy-crop";
 
 const ImageCropper = ({ setCroppedImage, img }) => {

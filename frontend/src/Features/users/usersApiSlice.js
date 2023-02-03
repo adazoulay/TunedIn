@@ -43,6 +43,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, error, id) => [{ type: "User", id }],
     }),
+    getUserByPostId: builder.query({
+      query: (id) => ({
+        url: `/users/post/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (responseData) => {
+        return usersAdapter.setOne(initialState, responseData);
+      },
+      providesTags: (result, error, id) => [{ type: "User", id }],
+    }),
     searchUser: builder.query({
       query: (str) => `/users/search?q=${str}`,
       keepUnusedDataFor: 5,
@@ -174,6 +184,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetUsersQuery,
   useGetUserQuery,
+  useGetUserByPostIdQuery,
   useSearchUserQuery,
   useAddNewUserMutation,
   useUpdateUserMutation,

@@ -1,9 +1,8 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-
 import { useAddNewTagMutation } from "./tagsApiSlice";
 import TagGroup from "../tags/TagGroup";
-import SearchInput from "../../components/SearchInput";
+import SearchInput from "../../components/functionality/search/SearchInput";
 import { HexColorPicker } from "react-colorful";
 import Tag from "./Tag";
 
@@ -208,8 +207,8 @@ const NewTag = () => {
             )}
           </div>
         </div>
-        <button className='submit-button' disabled={!canSave}>
-          CREATE
+        <button className='main-button' disabled={!canSave}>
+          Create
         </button>
       </form>
     </div>

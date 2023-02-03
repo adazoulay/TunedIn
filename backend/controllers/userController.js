@@ -194,8 +194,8 @@ const getUserByPostId = async (req, res, next) => {
     if (!post) {
       return res.status(400).json({ message: "Post not found" });
     }
-    const { tags } = post;
-    res.status(200).json(tags);
+    const { userId } = post;
+    res.status(200).json(userId);
   } catch (err) {
     next(err);
   }

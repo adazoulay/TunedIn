@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUpdateUserMutation } from "./usersApiSlice";
 import useAuth from "../../hooks/useAuth";
-import ImageCropper from "../../components/ImageCropper";
+import ImageCropper from "../../components/functionality/ImageCropper";
 import { uploadFile } from "../../util/uploadToS3";
 
 import { Save } from "react-feather";

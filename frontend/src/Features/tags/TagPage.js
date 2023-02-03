@@ -3,7 +3,7 @@ import { useGetTagAndRelatedTagsQuery } from "./tagsApiSlice";
 import Feed from "../posts/Feed";
 import TagGroup from "../tags/TagGroup";
 import Tag from "./Tag";
-import FollowButton from "../../components/FollowButton";
+import FollowButton from "../../components/functionality/FollowButton";
 import { Link2 } from "react-feather";
 
 const TagPage = () => {
@@ -32,15 +32,19 @@ const TagPage = () => {
         <div className='tag-info'>
           {isSuccessTag && <Tag tagInfo={tag} tagId={tagId} size='large' />}
           <div className='tag-relation'>
-            <h3>Parents:</h3>
-            {isSuccessTag && parents?.ids.length && (
-              <TagGroup tags={parents} type='tags-inheritance' />
+            {isSuccessTag && parents?.ids.length > 0 && (
+              <>
+                <h3>Parents:</h3>
+                <TagGroup tags={parents} type='tags-inheritance' />
+              </>
             )}{" "}
           </div>
           <div className='tag-relation'>
-            <h3>Children:</h3>
-            {isSuccessTag && children?.ids.length && (
-              <TagGroup tags={children} type='tags-inheritance' />
+            {isSuccessTag && children?.ids.length > 0 && (
+              <>
+                <h3>Children:</h3>
+                <TagGroup tags={children} type='tags-inheritance' />
+              </>
             )}
           </div>
           {isSuccessTag && (

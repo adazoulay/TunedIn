@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useLikePostMutation } from "./postsApiSlice";
-import { useUnLikePostMutation } from "./postsApiSlice";
-import useAuth from "../../hooks/useAuth";
-import TimeAgo from "./TimeAgo";
-import CommentSection from "../comments/CommentSection";
+import React, { useState, useEffect, memo } from "react";
+import { useLikePostMutation, useUnLikePostMutation } from "../postsApiSlice";
+import useAuth from "../../../hooks/useAuth";
+import TimeAgo from "../../../components/functionality/audio/TimeAgo";
+import CommentSection from "../../comments/CommentSection";
+import BookmarkButton from "../../../components/BookmarkButton";
 
 import { Music, Link2 } from "react-feather";
 
@@ -58,6 +58,9 @@ const PostFooter = ({ postFooterData }) => {
         <div className='views'>{views} views</div>
         <TimeAgo timestamp={createdAt} />
       </div>
+      <div className='bookmark'>
+        <BookmarkButton />
+      </div>
       <div className='likes'>
         <div className='like-icon' onClick={handleLikeClicked}>
           <Music size={28} color={likedStatus ? "#f40035" : "white"} />
@@ -68,4 +71,4 @@ const PostFooter = ({ postFooterData }) => {
   );
 };
 
-export default PostFooter;
+export default memo(PostFooter);

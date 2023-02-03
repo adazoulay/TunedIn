@@ -13,5 +13,4 @@ const CommentList = ({ comments }) => {
   );
 };
 
-export default CommentList;
-// memo(CommentSection); //! Might be problematic when user adds comments or likes comments. Will it rerender?
+export default memo(CommentList);

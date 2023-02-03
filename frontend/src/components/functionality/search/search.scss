@@ -1,0 +1,170 @@
+$base-color: #040404;
+// $base-color: #121212;
+$sidebar: #121212;
+$section: #ebebeb;
+$secondary: #383838;
+$tertiary: #808080;
+$accent: #f40035;
+
+//! SEARCH BAR
+.search-form {
+  position: relative;
+  width: 100%;
+  height: 35px;
+  border-radius: 5px;
+  background: $section;
+  display: flex;
+  padding-left: 8px;
+  background-color: $secondary;
+
+  .search-input {
+    flex: 1;
+    font-size: 14px;
+    background: none;
+    background-color: $secondary;
+    color: $section;
+    border: none;
+    appearance: none;
+    outline: none;
+
+    .search-input::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: red;
+      opacity: 1; /* Firefox */
+    }
+
+    .search-input:-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: red;
+    }
+
+    .search-input::-ms-input-placeholder {
+      /* Microsoft Edge */
+      color: red;
+    }
+
+    input[type="search"]::-ms-clear {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    input[type="search"]::-ms-reveal {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    /* clears the ‘X’ from Chrome */
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+      display: none;
+    }
+  }
+
+  .filters {
+    display: flex;
+    flex: 30%;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 10px;
+
+    .filter {
+      position: relative;
+      display: inline-block;
+      margin: 0 4px;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+
+      svg {
+        height: 24px;
+        width: 24px;
+        opacity: 1;
+        transition: all 0.2s ease-in-out;
+        pointer-events: none;
+      }
+
+      &:hover svg {
+        opacity: 1;
+        fill: $base-color;
+      }
+
+      input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.01;
+        cursor: pointer;
+      }
+
+      span {
+        position: absolute;
+        display: block;
+        text-align: center;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        background-color: #262626;
+        color: #fff;
+        font-size: 9px;
+        letter-spacing: 1px;
+        line-height: 1;
+        text-transform: uppercase;
+        padding: 4px 7px;
+        border-radius: 5px;
+        top: -18px;
+        transition: all 0.2s ease-in-out;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -3px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-top: 4px solid #262626;
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          transition: all 0.2s ease-in-out;
+        }
+      }
+      &:hover span {
+        opacity: 1;
+        top: -21px;
+      }
+    }
+  }
+  .dataResult {
+    position: absolute;
+    top: 35px;
+    color: $secondary;
+    margin-top: 5px;
+    width: 286px;
+    max-height: 200px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+
+  .dataResult::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dataResult .dataItem {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    color: black;
+    background-color: rgb(56, 56, 56, 0.97);
+  }
+
+  .dataItem p {
+    margin-left: 10px;
+    color: $section;
+  }
+
+  .dataItem:hover {
+    background-color: $base-color;
+  }
+}

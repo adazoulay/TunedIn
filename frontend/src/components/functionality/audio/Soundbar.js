@@ -1,4 +1,3 @@
-import "./soundbar.scss";
 import React, { useState, useRef, useEffect } from "react";
 import { set } from "date-fns";
 

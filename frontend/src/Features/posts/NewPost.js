@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddNewPostMutation } from "./postsApiSlice";
 import TagGroup from "../tags/TagGroup";
-import SearchInput from "../../components/SearchInput";
+import SearchInput from "../../components/functionality/search/SearchInput";
 import useAuth from "../../hooks/useAuth";
 import { uploadFile } from "../../util/uploadToS3";
 
@@ -160,7 +160,7 @@ const NewPost = () => {
             id='file'
             onChange={onSelectFile}
           />
-          <div className='field-info'>Accepts audio files</div>
+          <div className='field-info'>Accepts FLAC, .WAV, AIFF (and MP3 👎 ) </div>
         </div>
         <div className='form-row'>
           <label className='form-label' htmlFor='desc'>
@@ -197,8 +197,8 @@ const NewPost = () => {
         <div className='field-info'>
           Tags max 5. If you feel like you need more consider creating a new tag!
         </div>
-        <button className='submit-button' disabled={!canSave}>
-          POST
+        <button className='main-button' disabled={!canSave}>
+          Post
         </button>
       </form>
     </div>

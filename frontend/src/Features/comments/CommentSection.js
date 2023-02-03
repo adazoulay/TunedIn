@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import CommentList from "./CommentList";
 import NewComment from "./NewComment";
 import { useGetCommentsByPostIdQuery } from "./commentsApiSlice";
@@ -16,4 +16,4 @@ const CommentSection = ({ postId }) => {
   );
 };
 
-export default CommentSection;
+export default memo(CommentSection);

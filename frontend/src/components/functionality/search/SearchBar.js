@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import { Link } from "react-router-dom";
 import SearchInput from "./SearchInput";
+import "./search.scss";
 
 //Searching by tags should also dislpay posts with the tags. See lamadev Query tuto on youtube tuto
 const SearchBar = () => {
@@ -83,29 +84,37 @@ const SearchBar = () => {
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}>
       <button className='search-button'>
-        <svg width='22' height='22' viewBox='0 0 0.8 0.8' xmlns='http://www.w3.org/2000/svg'>
+        <svg
+          width='22'
+          height='22'
+          fill='#ebebeb'
+          viewBox='0 0 0.8 0.8'
+          xmlns='http://www.w3.org/2000/svg'>
           <path d='M.763.737.502.476A.268.268 0 1 0 .299.57H.3A.269.269 0 0 0 .476.503l.261.261A.02.02 0 0 0 .75.77C.76.77.769.762.769.751A.016.016 0 0 0 .763.738zM.069.3A.231.231 0 1 1 .3.531.231.231 0 0 1 .069.3z' />
         </svg>
       </button>
       <SearchInput selectedFilter={selectedFilter} getSearchResults={getSearchResults} />
       <div className='filters'>
         <button
+          // HEHREHREH
           type='button'
           className={`filter ${selectedFilter === "type-post" ? "selected" : ""}`}
           onClick={() => handleFilterClick("type-post")}>
           <svg
-            viewBox='0 0 4 4'
             style={{
-              fill: selectedFilter === "type-post" ? "#f40014" : "#383838",
-              opacity: 1,
+              fill: selectedFilter === "type-post" ? "#f40014" : "#ebebeb",
+
               fillRule: "evenodd",
               clipRule: "evenodd",
               strokeLinejoin: "round",
               strokeMiterlimit: 2,
             }}
-            xmlSpace='preserve'
-            xmlns='http://www.w3.org/2000/svg'>
-            <path d='M3.75 1.125c0 -0.1 -0.04 -0.195 -0.11 -0.265A0.374 0.374 0 0 0 3.375 0.75H0.625c-0.1 0 -0.195 0.04 -0.265 0.11A0.374 0.374 0 0 0 0.25 1.125v1.75c0 0.1 0.04 0.195 0.11 0.265A0.374 0.374 0 0 0 0.625 3.25h2.75c0.1 0 0.195 -0.04 0.265 -0.11A0.374 0.374 0 0 0 3.75 2.875V1.125Zm-1.875 0.25 0 1.248a0.125 0.125 0 0 0 0.25 0L2.125 1.375a0.125 0.125 0 0 0 -0.25 0Zm0.5 0.25v0.75a0.125 0.125 0 0 0 0.25 0v-0.75a0.125 0.125 0 0 0 -0.25 0Zm-1 0v0.75a0.125 0.125 0 0 0 0.25 0v-0.75a0.125 0.125 0 0 0 -0.25 0Zm1.5 0.25v0.248a0.125 0.125 0 0 0 0.25 0V1.875a0.125 0.125 0 0 0 -0.25 0ZM0.875 1.875v0.248a0.125 0.125 0 0 0 0.25 0V1.875a0.125 0.125 0 0 0 -0.25 0Z' />
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='71.68 116.67 496.32 326.67'>
+            <path
+              d='m326.67 431.67c0 6.4414 5.2227 11.664 11.664 11.664h23.336c6.4414 0 11.664-5.2227 11.664-11.664v-303.34c0-6.4414-5.2227-11.664-11.664-11.664h-23.336c-6.4414 0-11.664 5.2227-11.664 11.664zm-81.668 11.664c-6.4414 0-11.668-5.2227-11.668-11.664v-233.34c0-6.4414 5.2266-11.664 11.668-11.664h23.332c6.4453 0 11.668 5.2227 11.668 11.664v233.34c0 6.4414-5.2227 11.664-11.668 11.664zm280 0c-6.4414 0-11.668-5.2227-11.668-11.664v-186.67c0-6.4414 5.2266-11.668 11.668-11.668h23.332c6.4453 0 11.668 5.2266 11.668 11.668v186.67c0 6.4414-5.2227 11.664-11.668 11.664zm-373.33 0c-6.4453 0-11.668-5.2227-11.668-11.664v-116.67c0-6.4414 5.2227-11.668 11.668-11.668h23.332c6.4414 0 11.668 5.2266 11.668 11.668v116.67c0 6.4414-5.2266 11.664-11.668 11.664zm268.33-11.664c0 6.4414 5.2227 11.664 11.668 11.664h23.332c6.4414 0 11.668-5.2227 11.668-11.664v-116.67c0-6.4414-5.2266-11.668-11.668-11.668h-23.332c-6.4453 0-11.668 5.2266-11.668 11.668z'
+              fillRule='evenodd'
+            />
           </svg>
           <span>Post</span>
         </button>
@@ -116,9 +125,10 @@ const SearchBar = () => {
           <svg
             viewBox='0 0 3 3'
             style={{
-              fill: selectedFilter === "type-tag" ? "#f40035" : "#383838",
+              stroke: selectedFilter === "type-tag" ? "#f40014" : "#ebebeb",
               opacity: 1,
-              marginLeft: "2px",
+              fill: "transparent",
+              strokeWidth: "0.25",
               fillRule: "evenodd",
               clipRule: "evenodd",
               strokeLinejoin: "round",
@@ -133,12 +143,15 @@ const SearchBar = () => {
         <button
           type='button'
           className={`filter ${selectedFilter === "type-user" ? "selected" : ""}`}
-          onClick={() => handleFilterClick("type-user")}>
+          onClick={() => handleFilterClick("type-user")}
+          style={{ marginLeft: "-1px" }}>
           <svg
             viewBox='0 0 24 24'
             style={{
-              fill: selectedFilter === "type-user" ? "#f40035" : "#383838",
+              stroke: selectedFilter === "type-user" ? "#f40014" : "#ebebeb",
               opacity: 1,
+              fill: "transparent",
+              strokeWidth: "2.0",
               fillRule: "evenodd",
               clipRule: "evenodd",
               strokeLinejoin: "round",
@@ -156,4 +169,4 @@ const SearchBar = () => {
   );
 };
 
-export default SearchBar;
+export default memo(SearchBar);

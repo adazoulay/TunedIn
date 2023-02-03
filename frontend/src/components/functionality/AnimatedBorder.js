@@ -1,17 +1,14 @@
-import React, { useEffect, useState, memo } from "react";
+import React, { memo, useMemo } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
-//! ONLY ANIMATE WHEN ENTERS VIEW?
 const AnimatedBorder = ({ children, colors }) => {
-  const [borderColor, setBorderColor] = useState(["white", "gray", "white"]);
-
   const [containerRef, isVisible] = useIntersectionObserver({
     root: null,
     rootMargin: "0px",
     threshhold: 0,
   });
 
-  useEffect(() => {
+  const calculateColors = () => {
     if (colors) {
       let colorsCopy = [...colors];
       if (colorsCopy.length === 1) {
@@ -21,9 +18,13 @@ const AnimatedBorder = ({ children, colors }) => {
           colorsCopy.push(colors[i]);
         }
       }
-      setBorderColor(colorsCopy);
+      return colorsCopy;
+    } else {
+      return ["white", "gray", "white"];
     }
-  }, [colors]);
+  };
+
+  const borderColor = useMemo(() => calculateColors(colors), [colors]);
 
   return (
     <div
@@ -31,16 +32,16 @@ const AnimatedBorder = ({ children, colors }) => {
       style={{
         "--angle": "0deg",
         display: "inline-block",
-        border: "1.5px solid",
+        // border: "0.5px solid",
+        borderTop: "0.5px solid",
+        borderBottom: "0.5px solid",
         borderImage: `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
-        animation: isVisible && "10s rotate linear infinite",
+        animation: isVisible && "15s rotate linear infinite",
       }}>
       {children}
     </div>
   );
 };
-
-// export default AnimatedBorder;
 
 export default memo(AnimatedBorder, (prevPros, nextProps) => {
   return JSON.stringify(prevPros.colors) === JSON.stringify(nextProps.colors);

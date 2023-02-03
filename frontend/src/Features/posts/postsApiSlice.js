@@ -13,7 +13,8 @@ export const postsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     //! FEED TYPE
     getPosts: builder.query({
-      query: ({ page = 1, type }) => `/posts?page=${page}&type=${type}`,
+      query: ({ page = 1, type, source }) =>
+        `/posts?page=${page}&type=${type}&source=${source}`,
       transformResponse: (responseData) => {
         if (responseData.message) {
           return;
@@ -32,50 +33,26 @@ export const postsApiSlice = apiSlice.injectEndpoints({
         return endpointName;
       },
       merge: (currentCache, newItems, arg) => {
-        console.log(arg.arg);
         if (arg.arg.page > 1) {
-          console.log("merge: in if");
           for (const key in newItems.entities) {
             currentCache.entities[key] = newItems.entities[key];
           }
           currentCache.ids = currentCache.ids.concat(newItems.ids);
         } else {
-          console.log("merge: in else");
           currentCache.entities = newItems.entities;
           currentCache.ids = newItems.ids;
         }
       },
       forceRefetch: ({ currentArg, previousArg }) => {
-        return currentArg?.page !== previousArg?.page || currentArg.type !== previousArg.type;
+        // console.log(currentArg, previousArg);
+        return (
+          currentArg?.page !== previousArg?.page ||
+          currentArg.type !== previousArg.type ||
+          currentArg.source !== previousArg.source
+        );
       },
     }),
     //! GET POST BY ...
-    getPost: builder.query({
-      query: (id) => ({
-        url: `/posts/find/${id}`,
-        method: "GET",
-      }),
-      transformResponse: (responseData) => {
-        return postsAdapter.setOne(initialState, responseData);
-      },
-      providesTags: (result, error, arg) => [
-        ...result.ids.map((id) => ({ type: "Post", id })),
-      ],
-    }),
-    getPostsByUserId: builder.query({
-      query: (id) => `/posts/user/${id}`,
-      transformResponse: (responseData) => {
-        return postsAdapter.setAll(initialState, responseData);
-      },
-      providesTags: (result, error, id) => [{ type: "Post", id }],
-    }),
-    getPostsByTagId: builder.query({
-      query: (id) => `/posts/tag/${id}`,
-      transformResponse: (responseData) => {
-        return postsAdapter.setAll(initialState, responseData);
-      },
-      providesTags: (result, error, id) => [{ type: "Post", id }],
-    }),
     searchPost: builder.query({
       query: (str) => `/posts/search?q=${str}`,
       keepUnusedDataFor: 5,
@@ -147,11 +124,10 @@ export const postsApiSlice = apiSlice.injectEndpoints({
           const patchResult = dispatch(
             postsApiSlice.util.updateQueryData(endpointName, originalArgs, (draft) => {
               console.log("3", endpointName, originalArgs);
-              // console.log(current(draft));
-              // console.log("IDIDIDID", id);
               const post = draft.entities[id];
               console.log(current(post));
               if (post) {
+                console.log("mutating");
                 post.likes = [...post.likes, userId];
               }
               console.log(current(post));
@@ -165,23 +141,6 @@ export const postsApiSlice = apiSlice.injectEndpoints({
           }
         }
       },
-
-      // async onQueryStarted({ id, newLikes }, { dispatch, queryFulfilled }) {
-      //   const patchResult = dispatch(
-      //     postsApiSlice.util.updateQueryData("getPosts", "getPosts", (draft) => {
-      //       console.log(current(draft));
-      //       const post = draft.entities[id];
-      //       if (post) post.likes = newLikes;
-      //       console.log(current(draft));
-      //     })
-      //   );
-      //   try {
-      //     await queryFulfilled;
-      //     console.log(current(draft));
-      //   } catch {
-      //     patchResult.undo();
-      //   }
-      // },
     }),
     unLikePost: builder.mutation({
       query: ({ id, newLikes }) => ({
@@ -189,30 +148,6 @@ export const postsApiSlice = apiSlice.injectEndpoints({
         url: `/posts/unlike/${id}`,
         method: "PUT",
       }),
-      // async onQueryStarted({ id, newLikes }, { dispatch, queryFulfilled, getState }) {
-      //   console.log("1");
-      //   for (const { endpointName, originalArgs } of postsApiSlice.util.selectInvalidatedBy(
-      //     getState(),
-      //     [
-      //       { type: "Post", id },
-      //       { type: "Post", id: "LIST" },
-      //     ]
-      //   )) {
-      //     console.log("2", endpointName, originalArgs);
-      //     // we only want to update `getPosts` here
-      //     if (endpointName !== "getPosts") continue;
-      //     dispatch(
-      //       postsApiSlice.util.updateQueryData(endpointName, originalArgs, (draft) => {
-      //         console.log("3", endpointName, originalArgs);
-      //         console.log(current(draft));
-      //         const post = draft.entities[id];
-      //         if (post) post.likes = newLikes;
-      //         console.log(current(draft));
-      //       })
-      //     );
-      //   }
-      // },
-
       async onQueryStarted({ id, newLikes }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           postsApiSlice.util.updateQueryData("getPosts", 1, (draft) => {
@@ -235,9 +170,6 @@ export const postsApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetPostsQuery,
-  useGetPostsByUserIdQuery,
-  useGetPostsByTagIdQuery,
-  useGetPostQuery,
   useSearchPostQuery,
   useAddNewPostMutation,
   useUpdatePostMutation,

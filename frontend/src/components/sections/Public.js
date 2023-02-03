@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
-import Signin from "../Features/Auth/Signin";
-import Signup from "../Features/Auth/Signup";
-import AnimatedBorder from "../Features/posts/AnimatedBorder";
+import Signin from "../../Features/Auth/Signin";
+import Signup from "../../Features/Auth/Signup";
+import AnimatedBorder from "../functionality/AnimatedBorder";
 
 const Public = () => {
   const content = (

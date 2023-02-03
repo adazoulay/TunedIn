@@ -5,7 +5,7 @@ import useAuth from "../../hooks/useAuth";
 
 import TagGroup from "../tags/TagGroup";
 import Feed from "../posts/Feed";
-import FollowButton from "../../components/FollowButton";
+import FollowButton from "../../components/functionality/FollowButton";
 import { Edit, Link2 } from "react-feather";
 
 const UserPage = () => {
@@ -45,17 +45,28 @@ const UserPage = () => {
     <>
       <div className='content-header'>
         <div className='user-info'>
-          <img className='user-page-profile-pic' src={user?.imageUrl} alt='Profile Picture' />
-          <div className='user-header-col'>
-            <div className='name-desc'>
-              <div className='username'>{user?.username}</div>
-              <div className='user-desc'>{user?.desc}</div>
-            </div>
-            <div className='tag-spotlight'>
-              <div>Top Tags:</div>
-              <TagGroup tags={tags} type={"tags-user"} />
+          <div className='user-left'>
+            <img
+              className='user-page-profile-pic'
+              src={user?.imageUrl}
+              alt='Profile Picture'
+            />
+            <div className='user-header-col'>
+              <div className='name-desc'>
+                <div className='username'>{user?.username}</div>
+                <div className='user-desc'>{user?.desc}</div>
+              </div>
             </div>
           </div>
+          <div className='tag-spotlight'>
+            {tags?.ids?.length > 1 && (
+              <>
+                <div>Top Tags:</div>
+                <TagGroup tags={tags} type={"tags-user"} />
+              </>
+            )}
+          </div>
+
           <div className='social'>
             <div className='follow'>{user?.followers.length} Followers</div>
             <div className='follow'>{user?.following.length} Following</div>

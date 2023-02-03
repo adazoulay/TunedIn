@@ -1,11 +1,7 @@
-import {
-  useGetPostsQuery,
-  useGetPostsByUserIdQuery,
-  useGetPostsByTagIdQuery,
-} from "./postsApiSlice";
+import { useGetPostsQuery } from "./postsApiSlice";
 import React, { useEffect, useState, useRef, memo } from "react";
 
-import Post from "./Post";
+import Post from "./post/Post";
 
 const Feed = ({ type, source }) => {
   const [page, setPage] = useState(1);
@@ -14,34 +10,23 @@ const Feed = ({ type, source }) => {
   const feedRef = useRef(null);
 
   useEffect(() => {
-    console.log("mounted");
-    setPage(1);
-    setIds(0);
+    setPage(() => 1);
+    setIds(() => []);
     window.scrollTo(0, 0);
-    return () => console.log("unmounted");
-  }, [type]); //! SET IDS AND TYPE IN STATE
+  }, [type, source]); //! SET IDS AND TYPE IN STATE
 
-  let feedData;
-  if (type === "HOME" || type === "TREND" || type === "SUB") {
-    // console.log("HOME");
-    feedData = useGetPostsQuery({ page, type }, { refetchOnMountOrArgChange: true });
-  } else if (type === "USER") {
-    feedData = useGetPostsByUserIdQuery(source);
-  } else if (type === "TAG") {
-    feedData = useGetPostsByTagIdQuery(source);
-  } else {
-    return <p>Loading1...</p>;
-  }
-
-  const { data: posts, isLoading, isSuccess, isFetching, isError, error } = feedData;
+  const {
+    data: posts,
+    isLoading,
+    isSuccess,
+    isFetching,
+    isError,
+    error,
+  } = useGetPostsQuery({ page, type, source }, { refetchOnMountOrArgChange: true });
 
   useEffect(() => {
     function handleScroll() {
-      if (
-        feedRef?.current?.getBoundingClientRect().bottom <= window.innerHeight &&
-        isFetching
-      ) {
-        console.log("page", page);
+      if (feedRef?.current?.getBoundingClientRect().bottom <= window.innerHeight) {
         setPage((page) => page + 1);
       }
     }
@@ -49,26 +34,25 @@ const Feed = ({ type, source }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [feedRef]);
 
-  let content;
-
   useEffect(() => {
-    if (isLoading) {
-      content = <p>Loading2...</p>;
-    } else if (isError) {
-      content = <p className='errmsg'>{error?.data?.message}</p>;
-    } else if (isSuccess) {
-      // const { ids } = posts;
+    if (isSuccess) {
       setIds(() => posts.ids);
     }
   }, [posts]);
 
-  console.log(posts);
+  if (isLoading) {
+    return <p>Loading...</p>;
+  } else if (isError) {
+    return <p className='errmsg'>{error?.data?.message}</p>;
+  }
 
   return (
     <>
       <div ref={feedRef} className='feed'>
-        {ids?.length ? (
-          ids.map((postId) => <Post key={postId} postId={postId} postArgs={{ page, type }} />)
+        {isSuccess && ids?.length ? (
+          posts.ids.map((postId) => (
+            <Post key={postId} postId={postId} postArgs={{ page, type, source }} />
+          ))
         ) : (
           <p>No posts here yet. Make one!</p>
         )}
