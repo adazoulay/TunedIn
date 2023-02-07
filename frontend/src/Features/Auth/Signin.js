@@ -3,10 +3,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "./authSlice";
 import { useLoginMutation } from "./authApiSlice";
-
 import usePersist from "../../hooks/usePersist";
 
-const Signin = ({ dropdownRef }) => {
+const Signin = () => {
   const userRef = useRef();
   const errRef = useRef();
   const [username, setUsername] = useState("");
@@ -59,7 +58,7 @@ const Signin = ({ dropdownRef }) => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className='auth-section' ref={dropdownRef}>
+    <div className='auth-section'>
       <h1>Sign In</h1>
       <p ref={errRef} className='' aria-live='assertive'>
         {errMsg}

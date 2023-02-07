@@ -5,7 +5,6 @@ import TagGroup from "../tags/TagGroup";
 import Tag from "./Tag";
 import FollowButton from "../../components/functionality/FollowButton";
 import CopyLinkButton from "../../components/functionality/CopyLinkButton";
-import { Link2 } from "react-feather";
 
 const TagPage = () => {
   let { id: tagId } = useParams();
@@ -20,12 +19,6 @@ const TagPage = () => {
     parents = tagData.parents;
     children = tagData.children;
   }
-
-  const copyLink = () => {
-    const link = `http://localhost:3000/tag/${tagId}`;
-    navigator.clipboard.writeText(link);
-    alert("Copied the text: " + copyText.value);
-  };
 
   return (
     <>

@@ -71,7 +71,7 @@ const HeaderProfile = ({ setModalType }) => {
               {imageUrl ? (
                 <img src={imageUrl} alt='profile-picture' className='pic-small' />
               ) : (
-                <h3 className='header-username'>{username}</h3>
+                <h4 className='header-username'>{username}</h4>
               )}
             </Link>
           </div>

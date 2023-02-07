@@ -54,19 +54,27 @@
   );
   height: calc(100vh - (960 / 300) * 100%);
 
+  .body-upper {
+    padding-top: 270px;
+    width: 80%;
+    display: flex;
+  }
+
   .auth-menu {
-    padding-top: 160px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-self: flex-start;
+    align-items: flex-end;
+    justify-content: space-between;
     gap: 4em;
-    margin-top: 7em;
-    max-height: 600px;
-    width: 500px;
-    transform-origin: 100% 50%;
+    width: 82%;
+    z-index: 5;
+    padding-bottom: 50px;
 
     .auth-buttons {
+      .intro {
+        justify-self: flex-start;
+      }
+
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -76,14 +84,15 @@
 
     .public-forms-wrapper {
       display: flex;
+      max-height: 400px;
     }
   }
 
   .public-info {
-    padding-top: 150px;
     height: 1450px;
     width: 100%;
     position: relative;
+    margin-bottom: 50px;
 
     .post-preview {
       width: 90%;
@@ -115,10 +124,11 @@
       right: 10%;
       display: flex;
       flex-direction: row-reverse;
-      gap: 3em;
+      justify-content: space-evenly;
 
       .tag-img {
         width: 30%;
+        max-width: 450px;
         height: auto;
         -webkit-filter: drop-shadow(0px 0px 1px white);
         filter: drop-shadow(0px 0px 1px white);
@@ -241,14 +251,18 @@
   top: -2px;
   left: -2px;
   background-size: 400%;
-  z-index: -1;
+  z-index: 5;
   filter: blur(5px);
   -webkit-filter: blur(5px);
-  width: calc(100% + 4px);
-  height: calc(100% + 4px);
   animation: glowing-button-85 20s linear infinite;
   transition: opacity 0.3s ease-in-out;
   border-radius: 10px;
+}
+
+.button-85:hover:before {
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  z-index: -1;
 }
 
 @keyframes glowing-button-85 {

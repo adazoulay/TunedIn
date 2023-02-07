@@ -323,7 +323,6 @@ const unLikePost = async (req, res, next) => {
 };
 
 const savePost = async (req, res, next) => {
-  console.log("SAVING");
   const userId = req.user.id;
   const postId = req.params.id;
   try {
@@ -333,7 +332,6 @@ const savePost = async (req, res, next) => {
     }
     const user = await User.findByIdAndUpdate(userId, { $addToSet: { saved: postId } });
     res.status(200).json(`${user.username} added ${post.title}`);
-    console.log("SAVING SUCCESS");
   } catch (err) {
     next(err);
   }

@@ -35,6 +35,7 @@ const PostBody = ({ audioUrl, colors, postId, title, userData }) => {
   const toggleWrapperAnimatedStyle = useSpring({
     transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)",
   });
+
   const panelContentAnimatedStyle = useSpring({
     height: isCollapsed ? 0 : bounds.height,
     config: {

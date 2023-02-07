@@ -109,6 +109,7 @@ const NewPost = ({ handleModalClose }) => {
 
   useEffect(() => {
     if (isSuccess) {
+      handleModalClose();
       setTitle("");
       setDesc("");
       setSelectedTags({});

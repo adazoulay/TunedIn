@@ -11,10 +11,16 @@ const AuthDropdown = () => {
 
   const [ref, bounds] = useMeasure();
 
+  //   const panelContentAnimatedStyle = useSpring({
+  //     transform: isCollapsed ? "scale(1, 0)" : "scale(1, 1)",
+  //     origin: "top",
+  //   });
+
   const panelContentAnimatedStyle = useSpring({
     height: isCollapsed ? 0 : bounds.height,
     config: {
       mass: 0.05,
+      tension: 150,
     },
   });
 
@@ -23,20 +29,9 @@ const AuthDropdown = () => {
     setIsCollapsed(false);
   };
 
-  const handleCloseDropdown = () => {
-    setIsCollapsed(true);
-  };
-
-  useEffect(() => {
-    console.log(isCollapsed);
-  }, [isCollapsed]);
-
   return (
-    <div className='auth-menu'>
+    <div className='auth-menu' ref={ref}>
       <div className='auth-buttons'>
-        <div className='button-85' onClick={handleCloseDropdown}>
-          Collapse
-        </div>
         <div className='button-85' onClick={() => handleDropDownOpen("signIn")}>
           Sign In
         </div>
@@ -44,22 +39,22 @@ const AuthDropdown = () => {
           SignUp
         </div>
       </div>
-      <div className='public-forms-wrapper'>
-        <animated.div style={modalType === "signIn" ? panelContentAnimatedStyle : {}}>
+      <animated.div style={panelContentAnimatedStyle} className='public-forms-wrapper'>
+        <div>
           {modalType === "signIn" && (
             <AnimatedBorder colors={["purple", "red", "orange", "yellow", "pink"]}>
-              <Signin dropDownRef={ref} />
+              <Signin />
             </AnimatedBorder>
           )}
-        </animated.div>
-        <animated.div style={modalType === "signUp" ? panelContentAnimatedStyle : {}}>
+        </div>
+        <div>
           {modalType === "signUp" && (
             <AnimatedBorder colors={["purple", "red", "orange", "yellow", "pink"]}>
-              <Signup dropDownRef={ref} />
+              <Signup />
             </AnimatedBorder>
           )}
-        </animated.div>
-      </div>
+        </div>
+      </animated.div>
     </div>
   );
 };

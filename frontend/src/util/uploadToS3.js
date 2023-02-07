@@ -1,5 +1,6 @@
 export const uploadFile = async (file, fileType) => {
   try {
+    //DEV
     const { url } = await fetch("http://localhost:3500/s3Url").then((res) => res.json());
 
     await fetch(url, {

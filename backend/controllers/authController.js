@@ -32,7 +32,6 @@ const signup = async (req, res, next) => {
 };
 
 const signin = async (req, res, next) => {
-  console.log("signin");
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -90,14 +89,21 @@ const signin = async (req, res, next) => {
 const refresh = async (req, res, next) => {
   const cookies = req.cookies;
 
-  if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" });
+  console.log("cookies", cookies);
+  if (!cookies?.jwt) {
+    console.log("1");
+    return res.status(401).json({ message: "Unauthorized" });
+  }
   const refreshToken = cookies.jwt;
 
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
     if (err) return res.status(403).json({ message: "Forbidden" });
     const user = await User.findOne({ username: decoded.userInfo.username }).exec();
 
-    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    if (!user) {
+      console.log("2");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const accessToken = jwt.sign(
       {
         userInfo: {

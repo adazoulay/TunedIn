@@ -2,19 +2,31 @@ import { useState, useEffect } from "react";
 import { useSignupMutation } from "./authApiSlice";
 import { useLoginMutation } from "./authApiSlice"; //! TODO login use creds and reroute to user page
 import { useNavigate } from "react-router-dom";
-import { Save } from "react-feather";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "./authSlice";
+import usePersist from "../../hooks/usePersist";
 
-const signup = ({ dropdownRef }) => {
+const signup = () => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] = useSignupMutation();
-
-  const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [login] = useLoginMutation();
+  const [persist, setPersist] = usePersist();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const loginAfterSignup = async () => {
+      setPersist(true);
+      const { accessToken } = await login({ username, password }).unwrap();
+      dispatch(setCredentials({ accessToken }));
+    };
+
     if (isSuccess) {
+      loginAfterSignup();
       setUsername("");
       setPassword("");
       navigate("/feed");
@@ -35,7 +47,7 @@ const signup = ({ dropdownRef }) => {
   };
 
   const content = (
-    <div className='auth-section' ref={dropdownRef}>
+    <div className='auth-section'>
       <h1>Sign Up</h1>
       <p>{error?.data?.message}</p>
       <form className='wrapper-form' onSubmit={onSaveUserClicked}>

@@ -52,7 +52,7 @@ const updateTag = async (req, res, next) => {
     return res.status(400).json({ message: "Tag ID Requried" });
   }
   const { name, color, child, parent, post } = req.body;
-  console.log(name, color, child, parent, post);
+
   try {
     const tag = await Tag.findById(tagId).exec();
     if (!tag) {
@@ -158,7 +158,6 @@ const getTagsByUserId = async (req, res, next) => {
 
 const searchTag = async (req, res, next) => {
   const query = req.query.q;
-  console.log(query);
   try {
     const tags = await Tag.find();
     let dataSet = tags.map((tag) => tag.name);

@@ -34,7 +34,10 @@ const Public = () => {
         </div>
       </div>
       <div className='public-body'>
-        <AuthDropdown />
+        <div className='body-upper'>
+          <h1 className='intro'>Welcome. Please sign in or Sign up to continue</h1>
+          <AuthDropdown />
+        </div>
         <div className='public-info'>
           <div className='post-preview'>
             <img src={PostImg} className='post-img' alt='Post' />

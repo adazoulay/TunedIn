@@ -15,6 +15,7 @@ const CopyLinkButton = ({ type, id }) => {
 
   const copyLink = () => {
     setIsCollapsed(false);
+    //DEV
     const link = `http://localhost:3000/${type}/${id}`;
     navigator.clipboard.writeText(link);
     // setIsCollapsed(true);
