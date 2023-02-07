@@ -49,7 +49,7 @@ const Footer = () => {
           <div className='footer-info'>
             <Link to={`/user/${playerInfo?.userId}`}>{userContent}</Link>
             {/* <Link to={`/post/${playerInfo?.postId}`}> */}
-            <h2 className='post-username'>{playerInfo?.title}</h2>
+            <h4 className='post-username'>{playerInfo?.title}</h4>
             {/* </Link> */}
           </div>
           <div onClick={handleClosePlayer} className={"close-footer"}>

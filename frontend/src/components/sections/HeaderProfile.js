@@ -10,14 +10,14 @@ import { Plus, LogOut, Tag, PlusSquare } from "react-feather";
 const HeaderProfile = ({ setModalType }) => {
   const { userId, username, imageUrl } = useAuth();
   const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation();
-
-  const onLogoutClicked = () => sendLogout();
-
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isSuccess) navigate("/");
-  }, [isSuccess, navigate]);
+  const onLogoutClicked = () => {
+    sendLogout();
+    navigate("/");
+  };
+
+  useEffect(() => {}, [isSuccess, navigate]);
 
   if (isLoading) return <p>Logging Out...</p>;
   if (isError) return <p>Error: {error.data.message}</p>;
@@ -54,6 +54,7 @@ const HeaderProfile = ({ setModalType }) => {
   };
   const handleHideProfile = (e) => {
     e.preventDefault();
+    setTimeout(() => {});
     setIsCollapsedProfile(true);
   };
 
@@ -112,7 +113,11 @@ const HeaderProfile = ({ setModalType }) => {
       </>
     );
   } else {
-    content = <Link to='/signin'>Login</Link>;
+    content = (
+      <div className='base-button'>
+        <Link to='/'>Login</Link>
+      </div>
+    );
   }
 
   return <>{content}</>;

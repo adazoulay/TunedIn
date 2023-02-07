@@ -46,6 +46,12 @@ const UserSchema = new mongoose.Schema(
         ref: "Tag",
       },
     ],
+    topTags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tag",
+      },
+    ],
     saved: [
       {
         type: mongoose.Schema.Types.ObjectId,

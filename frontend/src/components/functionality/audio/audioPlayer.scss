@@ -36,7 +36,7 @@ $accent: #f40035;
   height: 20%;
   width: 92%;
   gap: 0.2em;
-  padding: 15px 10px;
+  padding: 17px 10px;
 
   .volume {
     position: relative;
@@ -46,65 +46,66 @@ $accent: #f40035;
       padding-left: 3px;
       padding-top: 1px;
       cursor: pointer;
-      background-color: $base-color;
-      z-index: 7;
+      // background-color: $base-color; // HEHEHEH
+      // background-color: rgb(19, 18, 18, 0.95); // HEHEHEH
+      z-index: 5;
     }
 
     .volume-range-wrapper {
-      z-index: 4;
       position: absolute;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      height: 100px;
-      left: 50%;
-      bottom: 33px;
+      align-items: center;
+      height: 120px;
+      left: 8px;
+      bottom: 25px;
+      z-index: 6;
+    }
+
+    .volume-range-wrapper::after {
+      display: block;
+      content: "";
+      min-height: 15px;
+      width: 30px;
+      text-align: center;
+      align-self: center;
     }
 
     .volume-range {
-      .volume-bar {
-        height: 100%;
-        -webkit-appearance: slider-vertical; /* Chromium */
-        cursor: pointer;
+      input[type="range"] {
+        -webkit-appearance: none; /* Chromium */
         appearance: none;
+        background: transparent;
+        cursor: pointer;
+        height: 100%;
       }
 
       input[type="range"] {
         -webkit-appearance: slider-vertical;
-        width: 5px; /* Specific width is required for Firefox. */
-        background: transparent; /* Otherwise white in Chrome */
+        width: 10px;
       }
 
       input[type="range"]:focus {
-        outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+        outline: none;
       }
 
-      input[type="range"]::before {
-        content: "";
-        height: 3px;
-        width: var(--seek-before-width);
-        background-color: $accent;
-
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 2;
-        cursor: pointer;
-      }
-
-      /* progress bar - firefox */
-      input[type="range"]::-moz-range-progress {
-        background-color: $accent;
-        height: 5px;
+      input[type="range"]::-webkit-slider-runnable-track {
+        background-color: rgba(56, 56, 56, 0.85);
+        border-radius: 0.5rem;
+        width: 24px;
       }
 
       input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
-        border: 1px solid #000000;
-        height: 36px;
-        width: 16px;
-        cursor: pointer;
-        transform: translateX(40%);
+        margin-right: 4px;
+      }
+
+      //! Moz
+      /* progress bar - firefox */
+      input[type="range"]::-moz-range-progress {
+        background-color: $accent;
+        height: 5px;
       }
 
       input[type="range"]::-moz-range-thumb {
@@ -113,36 +114,7 @@ $accent: #f40035;
         width: 16px;
         background: #ffffff;
         cursor: pointer;
-        transform: translateX(40%);
-      }
-
-      input[type="range"]::-ms-thumb {
-        border: 1px solid #000000;
-        height: 36px;
-        width: 16px;
-        background: #ffffff;
-        cursor: pointer;
-        transform: translateX(40%);
-      }
-
-      input[type="range"]::-ms-track {
-        width: 100%;
-        cursor: pointer;
-        /* Hides the slider so custom styles can be added */
-        background: transparent;
-        border-color: transparent;
-        color: transparent;
-      }
-
-      input[type="range"]::-webkit-slider-runnable-track {
-        width: 100%;
-        cursor: pointer;
-        background: $tertiary;
-        border: 0.2px solid #010101;
-      }
-
-      input[type="range"]:focus::-webkit-slider-runnable-track {
-        background: $tertiary;
+        // transform: translateX(40%);
       }
 
       input[type="range"]::-moz-range-track {
@@ -150,29 +122,6 @@ $accent: #f40035;
         cursor: pointer;
         background: $tertiary;
         border: 0.2px solid #010101;
-      }
-
-      input[type="range"]::-ms-track {
-        width: 100%;
-        cursor: pointer;
-        background: transparent;
-        border-color: transparent;
-        border-width: 16px 0;
-        color: transparent;
-      }
-      input[type="range"]::-ms-fill-lower {
-        background: $accent;
-        border: 0.2px solid #010101;
-      }
-      input[type="range"]:focus::-ms-fill-lower {
-        background: $accent;
-      }
-      input[type="range"]::-ms-fill-upper {
-        background: $accent;
-        border: 0.2px solid #010101;
-      }
-      input[type="range"]:focus::-ms-fill-upper {
-        background: $accent;
       }
     }
   }
@@ -276,9 +225,15 @@ $accent: #f40035;
     border: none;
     background: none;
     cursor: pointer;
+    z-index: 8;
   }
 
   .duration {
     width: 35px;
+  }
+
+  svg {
+    margin: 0 5px;
+    z-index: 8;
   }
 }

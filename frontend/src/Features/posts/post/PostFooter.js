@@ -1,71 +1,44 @@
-import React, { useState, useEffect, memo } from "react";
-import { useLikePostMutation, useUnLikePostMutation } from "../postsApiSlice";
-import useAuth from "../../../hooks/useAuth";
+import React, { memo } from "react";
 import TimeAgo from "../../../components/functionality/audio/TimeAgo";
 import CommentSection from "../../comments/CommentSection";
-import BookmarkButton from "../../../components/BookmarkButton";
-
-import { Music, Link2 } from "react-feather";
+import SavePostButton from "./buttons/SavePostButton";
+import LikePostButton from "./buttons/LikePostButton";
+import CopyLinkButton from "../../../components/functionality/CopyLinkButton";
 
 const PostFooter = ({ postFooterData }) => {
   const { postId, desc, createdAt, likes, views } = postFooterData;
-  const { userId: currentUser } = useAuth();
-
-  const [likePost, { isLoading }] = useLikePostMutation();
-  const [unLikePost] = useUnLikePostMutation();
-
-  const [likedStatus, setLikedStatus] = useState(false);
 
   if (!postId || !postFooterData) {
     return <p>Loading...</p>;
   }
 
-  useEffect(() => {
-    if (likes && likes.includes(currentUser) && !likedStatus) setLikedStatus(true);
-  }, [likes]);
-
-  const handleLikeClicked = async () => {
-    if (!likedStatus) {
-      // const newLikes = [...likes, `${currentUser}`]; //!String string?
-      likePost({ id: postId, userId: currentUser });
-      setLikedStatus(() => true);
-    } else {
-      const newLikes = likes.filter((id) => id !== currentUser);
-      unLikePost({ id: postId, newLikes });
-      setLikedStatus(() => false);
-    }
-  };
-
-  const copyLink = () => {
-    const link = `http://localhost:3000/post/${postId}`;
-    navigator.clipboard.writeText(link);
-    alert("LINK: " + link);
-  };
-
   return (
     <>
+      {/* <hr className='divider' /> */}
       <div className='description'>
-        <p>{desc && desc.substring(0, 75)}</p>
+        <p>{desc && desc}</p>
       </div>
       <hr className='divider' />
-      <div className='comment-section'>
-        <CommentSection postId={postId} />
-      </div>
-      <div className='post-link' onClick={copyLink}>
-        <Link2 />
-      </div>
-      <div className='footer-stats'>
-        <div className='views'>{views} views</div>
-        <TimeAgo timestamp={createdAt} />
-      </div>
-      <div className='bookmark'>
-        <BookmarkButton />
-      </div>
-      <div className='likes'>
-        <div className='like-icon' onClick={handleLikeClicked}>
-          <Music size={28} color={likedStatus ? "#f40035" : "white"} />
+      <div className='interact'>
+        <div className='comment-section'>
+          <CommentSection postId={postId} />
         </div>
-        {likes?.length}
+        <div className='lower-right'>
+          <div className='post-link'>
+            <CopyLinkButton type={"post"} id={postId} />
+          </div>
+
+          <div className='bookmark'>
+            <SavePostButton postId={postId} />
+          </div>
+          <div className='likes'>
+            <LikePostButton postId={postId} likes={likes} />
+          </div>
+        </div>
+        <div className='footer-stats'>
+          {views > 0 && <div className='views'>{views} views</div>}
+          <TimeAgo timestamp={createdAt} />
+        </div>
       </div>
     </>
   );

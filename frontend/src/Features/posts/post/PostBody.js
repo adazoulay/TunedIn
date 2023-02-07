@@ -37,6 +37,9 @@ const PostBody = ({ audioUrl, colors, postId, title, userData }) => {
   });
   const panelContentAnimatedStyle = useSpring({
     height: isCollapsed ? 0 : bounds.height,
+    config: {
+      mass: 0.05,
+    },
   });
 
   const togglePanel = () => {

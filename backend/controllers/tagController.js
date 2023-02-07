@@ -138,12 +138,19 @@ const getTagsByPostId = async (req, res, next) => {
 const getTagsByUserId = async (req, res, next) => {
   const userId = req.params.id;
   try {
-    const user = await User.findById(userId).populate("tags").exec();
+    let user = await User.findById(userId);
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    const { tags } = user;
-    res.status(200).json(tags);
+    if (user?.topTags?.length > 0) {
+      await user.populate("topTags");
+      const { topTags } = user;
+      res.status(200).json(topTags);
+    } else {
+      await user.populate("tags");
+      const { tags } = user;
+      res.status(200).json(tags);
+    }
   } catch (err) {
     next(err);
   }

@@ -7,15 +7,16 @@ import SearchInput from "../../components/functionality/search/SearchInput";
 import useAuth from "../../hooks/useAuth";
 import { uploadFile } from "../../util/uploadToS3";
 
-const NewPost = () => {
+const NewPost = ({ handleModalClose }) => {
   const titleRef = useRef();
   const errRef = useRef();
-  const [addNewPost, { isLoading, isSuccess, isError, error }] = useAddNewPostMutation();
+  const [errMsg, setErrMsg] = useState("");
+
+  const [addNewPost, { isLoading, isSuccess, error }] = useAddNewPostMutation();
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [errMsg, setErrMsg] = useState("");
   const [audioUrl, setAudioUrl] = useState("");
   const [audio, setAudio] = useState("");
 
@@ -27,18 +28,6 @@ const NewPost = () => {
 
   const onTitleChanged = (e) => setTitle(e.target.value);
   const onDescChanged = (e) => setDesc(e.target.value);
-
-  //! File
-  // Types: ['audio/flac', 'audio/mpeg', 'audio/aiff', 'audio/wav', 'audio/mp3'];
-  const onSelectFile = (event) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.onload = function () {
-        setAudio(new Blob([reader.result], { type: "audio/mp3" }));
-      };
-      reader.readAsArrayBuffer(event.target.files[0]);
-    }
-  };
 
   useEffect(() => {
     const upload = async () => {
@@ -127,8 +116,24 @@ const NewPost = () => {
     }
   }, [isSuccess, navigate]);
 
+  //! File
+  // Types: ['audio/flac', 'audio/mpeg', 'audio/aiff', 'audio/wav', 'audio/mp3'];
+
+  const inputRef = useRef();
+  const triggerFileSelectPopup = () => inputRef.current.click();
+
+  const onSelectFile = (event) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        setAudio(new Blob([reader.result], { type: "audio/mp3" }));
+      };
+      reader.readAsArrayBuffer(event.target.files[0]);
+    }
+  };
+
   return (
-    <div className='post-section'>
+    <div className='form-section'>
       <p ref={errRef} className='' aria-live='assertive'>
         {errMsg}
       </p>
@@ -158,8 +163,14 @@ const NewPost = () => {
             type='file'
             accept='audio/*'
             id='file'
+            ref={inputRef}
+            style={{ display: "none" }}
             onChange={onSelectFile}
           />
+          <button className='base-button' onClick={triggerFileSelectPopup} type='button'>
+            Upload Song
+          </button>
+          {/* <div> Add file preview </div> */}
           <div className='field-info'>Accepts FLAC, .WAV, AIFF (and MP3 👎 ) </div>
         </div>
         <div className='form-row'>

@@ -98,6 +98,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
     }),
+    //! Follow, like, save
     followUser: builder.mutation({
       query: ({ id, newFollowers }) => ({
         url: `/users/follow/${id}`,

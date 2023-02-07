@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
-const AnimatedBorder = ({ children, colors }) => {
+const AnimatedBorder = ({ children, colors, type }) => {
   const [containerRef, isVisible] = useIntersectionObserver({
     root: null,
     rootMargin: "0px",
@@ -32,9 +32,12 @@ const AnimatedBorder = ({ children, colors }) => {
       style={{
         "--angle": "0deg",
         display: "inline-block",
-        // border: "0.5px solid",
+
+        borderLeft: type !== "post" && "0.5px solid",
+        borderRight: type !== "post" && "0.5px solid",
         borderTop: "0.5px solid",
         borderBottom: "0.5px solid",
+
         borderImage: `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
         animation: isVisible && "15s rotate linear infinite",
       }}>

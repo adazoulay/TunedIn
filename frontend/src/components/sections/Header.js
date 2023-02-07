@@ -10,34 +10,33 @@ import { X } from "react-feather";
 
 const Header = () => {
   const [modalType, setModalType] = useState("");
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const handleModalClose = () => {
+    setIsCollapsed(() => true);
+    setTimeout(() => {
+      setModalType("");
+    }, 500);
+  };
+
+  const handleModalOpen = (type) => {
+    setModalType(type);
+    setIsCollapsed(false);
+  };
+
+  const modalFadeInAnimatedStyle = useSpring({
+    opacity: !isCollapsed ? 1 : 0,
+    backdropFilter: `blur(${!isCollapsed ? 3 : 0}px)`,
+  });
 
   let modalContent;
   if (modalType == "post") {
-    modalContent = (
-      <>
-        <div className='x' onClick={() => setModalType(false)}>
-          <X />
-        </div>
-        <NewPost />
-      </>
-    );
+    modalContent = <NewPost handleModalClose={handleModalClose} />;
   } else if (modalType === "tag") {
-    modalContent = (
-      <>
-        <div className='x' onClick={() => setModalType(false)}>
-          <X />
-        </div>
-        <NewTag />
-      </>
-    );
+    modalContent = <NewTag handleModalClose={handleModalClose} />;
   } else {
     modalContent = null;
   }
-
-  const modalFadeInAnimatedStyle = useSpring({
-    opacity: modalType ? 1 : 0,
-    backdropFilter: `blur(${modalType ? 3 : 0}px)`, //! Check performance
-  });
 
   return (
     <>
@@ -51,12 +50,21 @@ const Header = () => {
           <SearchBar />
         </div>
         <div className='dropdown-container'>
-          <HeaderProfile setModalType={setModalType} />
+          <HeaderProfile setModalType={handleModalOpen} handleModalClose={handleModalClose} />
         </div>
       </div>
       <div className='modal'>
         <animated.div style={modalFadeInAnimatedStyle}>
-          <div className='modal-styles'>{modalContent}</div>
+          <div className='modal-styles'>
+            {modalType && (
+              <>
+                <div className='x' onClick={handleModalClose}>
+                  <X />
+                </div>
+                {modalContent}
+              </>
+            )}
+          </div>
         </animated.div>
       </div>
     </>

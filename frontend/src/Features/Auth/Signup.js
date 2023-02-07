@@ -4,7 +4,7 @@ import { useLoginMutation } from "./authApiSlice"; //! TODO login use creds and 
 import { useNavigate } from "react-router-dom";
 import { Save } from "react-feather";
 
-const signup = () => {
+const signup = ({ dropdownRef }) => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] = useSignupMutation();
 
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const signup = () => {
   };
 
   const content = (
-    <div className='auth-section'>
+    <div className='auth-section' ref={dropdownRef}>
       <h1>Sign Up</h1>
       <p>{error?.data?.message}</p>
       <form className='wrapper-form' onSubmit={onSaveUserClicked}>
@@ -81,7 +81,7 @@ const signup = () => {
           />
         </div>
         <div className='button-row'>
-          <button className='submit-button' title='Save' disabled={!canSave}>
+          <button className='base-button' title='Save' disabled={!canSave}>
             Sign Up
           </button>
         </div>

@@ -80,10 +80,11 @@ const AudioPlayer = ({ audio, postId, children, contentRef }) => {
 
   const [isCollapsed, setIsCollapsed] = useState(true);
 
-  const [ref, bounds] = useMeasure();
+  const [volumeRef, bounds] = useMeasure();
 
   const volumeSliderAnimation = useSpring({
     height: isCollapsed ? 0 : bounds.height,
+    zIndex: isCollapsed ? 0 : 10,
   });
 
   const handleShow = (e) => {
@@ -162,24 +163,25 @@ const AudioPlayer = ({ audio, postId, children, contentRef }) => {
               <VolumeX size={30} color='#ebebeb' onClick={toggleVolume} />
             )}
           </div>
-          <div className='volume-range-wrapper' ref={ref}>
-            <animated.div className='volume-range' style={volumeSliderAnimation}>
-              <input
-                className='volume-bar'
-                type='range'
-                id='volume'
-                min={0}
-                max={1}
-                step={0.05}
-                value={volume}
-                onChange={handleVolumeChange}
-                style={{
-                  accentColor: "#ebebeb",
-                  // display: isCollapsed ? "none" : "flex",
-                }}
-              />
-            </animated.div>
-          </div>
+          {!isCollapsed && (
+            <div className='volume-range-wrapper' ref={volumeRef}>
+              <animated.div className='volume-range' style={volumeSliderAnimation}>
+                <input
+                  className='volume-bar'
+                  type='range'
+                  id='volume'
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  style={{
+                    accentColor: "#ebebeb",
+                  }}
+                />
+              </animated.div>
+            </div>
+          )}
         </div>
       </div>
     </div>

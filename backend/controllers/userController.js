@@ -60,7 +60,7 @@ const getUser = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const { username, password, desc, imageUrl, tags } = req.body;
+  const { username, password, desc, imageUrl, topTags } = req.body;
   const id = req.user.id;
   try {
     const user = await User.findById(id).exec();
@@ -80,8 +80,8 @@ const updateUser = async (req, res, next) => {
     if (desc && desc.length) {
       user.desc = desc;
     }
-    if (tags) {
-      user.tags = tags;
+    if (topTags) {
+      user.topTags = topTags;
     }
     if (imageUrl) {
       user.imageUrl = imageUrl;

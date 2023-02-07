@@ -8,20 +8,20 @@ router
   .get(userController.getAllUsers)
   .post(userController.createNewUser)
   .patch(verifyJWT, userController.updateUser)
-  .delete(verifyJWT, userController.deleteUser); //!Fix
+  .delete(verifyJWT, userController.deleteUser);
 
-//router.delete("/:id", userController.deleteUser);
+//! Find
 router.get("/find/:id", userController.getUser);
+router.get("/post/:id", userController.getUserByPostId);
+router.get("/search", userController.searchUser);
+
+//! Follow / Add
 router.put("/follow/:id", verifyJWT, userController.follow);
 router.put("/unfollow/:id", verifyJWT, userController.unFollow);
 router.put("/followTag/:id", verifyJWT, userController.followTag);
 router.put("/unfollowTag/:id", verifyJWT, userController.unFollowTag);
 
-router.get("/post/:id", userController.getUserByPostId);
-
-router.get("/search", userController.searchUser);
+//! Mutate
+//router.delete("/:id", userController.deleteUser); //!Fix
 
 module.exports = router;
-
-//! Decide comments, liked comments after
-//! Decide Tags / following tags

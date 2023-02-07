@@ -4,6 +4,7 @@ import Feed from "../posts/Feed";
 import TagGroup from "../tags/TagGroup";
 import Tag from "./Tag";
 import FollowButton from "../../components/functionality/FollowButton";
+import CopyLinkButton from "../../components/functionality/CopyLinkButton";
 import { Link2 } from "react-feather";
 
 const TagPage = () => {
@@ -31,30 +32,30 @@ const TagPage = () => {
       <div className='content-header'>
         <div className='tag-info'>
           {isSuccessTag && <Tag tagInfo={tag} tagId={tagId} size='large' />}
-          <div className='tag-relation'>
-            {isSuccessTag && parents?.ids.length > 0 && (
+          {isSuccessTag && parents?.ids.length > 0 && (
+            <div className='tag-relation'>
               <>
                 <h3>Parents:</h3>
                 <TagGroup tags={parents} type='tags-inheritance' />
               </>
-            )}{" "}
-          </div>
-          <div className='tag-relation'>
-            {isSuccessTag && children?.ids.length > 0 && (
+            </div>
+          )}{" "}
+          {isSuccessTag && children?.ids.length > 0 && (
+            <div className='tag-relation'>
               <>
                 <h3>Children:</h3>
                 <TagGroup tags={children} type='tags-inheritance' />
               </>
-            )}
-          </div>
+            </div>
+          )}
           {isSuccessTag && (
             <div className='tag-social'>
               <FollowButton tag={tag} />
               <div className='tag-connect'>
-                <div className='follow'>{tag.followers?.length} Followers </div>
-                <div className='link' onClick={copyLink}>
-                  <Link2 />
+                <div className='follow'>
+                  {tag.followers?.length} <div className='grayed'>Followers</div>
                 </div>
+                <CopyLinkButton type={"tag"} id={tagId} />
               </div>
             </div>
           )}

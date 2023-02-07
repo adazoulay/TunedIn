@@ -6,7 +6,7 @@ import { useLoginMutation } from "./authApiSlice";
 
 import usePersist from "../../hooks/usePersist";
 
-const Signin = () => {
+const Signin = ({ dropdownRef }) => {
   const userRef = useRef();
   const errRef = useRef();
   const [username, setUsername] = useState("");
@@ -59,7 +59,7 @@ const Signin = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className='auth-section'>
+    <div className='auth-section' ref={dropdownRef}>
       <h1>Sign In</h1>
       <p ref={errRef} className='' aria-live='assertive'>
         {errMsg}
@@ -94,20 +94,17 @@ const Signin = () => {
           />
         </div>
         <div className='button-row'>
-          <label htmlFor='persist' className='persist-button'>
-            <input
-              type='checkbox'
-              className=''
-              id='persist'
-              onChange={handleToggle}
-              checked={persist}
-            />
-            Trust This Device
-          </label>
-          <button className='submit-button' type='submit' disabled={!canSave}>
-            Sign In
-          </button>
+          <div className='checkbox-wrapper-39'>
+            <label>
+              <input type='checkbox' id='persist' onChange={handleToggle} checked={persist} />
+              <span className='checkbox'></span>
+            </label>
+          </div>
+          <div className='checkbox-label'>Trust this device</div>
         </div>
+        <button className='base-button' type='submit' disabled={!canSave}>
+          Sign In
+        </button>
       </form>
     </div>
   );

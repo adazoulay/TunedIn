@@ -1,15 +1,21 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUpdateUserMutation } from "./usersApiSlice";
 import useAuth from "../../hooks/useAuth";
 import ImageCropper from "../../components/functionality/ImageCropper";
 import { uploadFile } from "../../util/uploadToS3";
+import SearchInput from "../../components/functionality/search/SearchInput";
+import TagGroup from "../tags/TagGroup";
 
 import { Save } from "react-feather";
 
 const EditUser = () => {
   const [updateUser, { isSuccess, error }] = useUpdateUserMutation();
+
+  const inputRef = useRef();
+  const errRef = useRef();
+  const [errMsg, setErrMsg] = useState("");
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,22 +23,13 @@ const EditUser = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [image, setImage] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
+  const [searchResults, setSearchResults] = useState({});
+  const [selectedTags, setSelectedTags] = useState({
+    ids: [],
+    entities: {},
+  });
 
-  //Display Stuff
-  const inputRef = React.useRef();
-  const triggerFileSelectPopup = () => inputRef.current.click();
-
-  const onSelectFile = (event) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-      reader.addEventListener(`load`, () => {
-        setSelectedImage(reader.result);
-      });
-    }
-  };
-
-  //! Other stuff
+  //! Input fields
 
   const { userId } = useAuth();
   const navigate = useNavigate();
@@ -40,6 +37,69 @@ const EditUser = () => {
   const onUsernameChanged = (e) => setUsername(e.target.value);
   const onPasswordChanged = (e) => setPassword(e.target.value);
   const onDescChanged = (e) => setDesc(e.target.value);
+
+  //! Tags
+
+  const getSearchResults = (result) => {
+    setSearchResults(result);
+  };
+
+  const getSelectedTags = (tagId, entity, type) => {
+    if (type === "add") {
+      if (!selectedTags.ids.includes(tagId)) {
+        setSelectedTags((prevState) => {
+          return {
+            ids: [...prevState.ids, tagId],
+            entities: {
+              ...prevState.entities,
+              [tagId]: entity,
+            },
+          };
+        });
+      }
+    } else {
+      setSelectedTags((prevState) => {
+        return {
+          ids: prevState.ids.filter((id) => id !== tagId),
+          entities: Object.keys(prevState.entities).reduce((obj, key) => {
+            if (key !== tagId) {
+              obj[key] = prevState.entities[key];
+            }
+            return obj;
+          }, {}),
+        };
+      });
+    }
+  };
+
+  //! Submit
+
+  const onSaveUserClicked = async (e) => {
+    e.preventDefault();
+    try {
+      await updateUser({ username, password, desc, imageUrl, topTags: selectedTags?.ids });
+    } catch (err) {
+      if (!err.status) {
+        setErrMsg("No Server Response");
+      } else if (err.status === 400) {
+        setErrMsg("Missing Username or Password");
+      } else if (err.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg(err.data?.message);
+      }
+      errRef.current.focus();
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setUsername("");
+      setPassword("");
+      setDesc("");
+      navigate(`/user/${userId}`);
+    }
+  }, [isSuccess, navigate]);
 
   useEffect(() => {
     const upload = async () => {
@@ -54,26 +114,30 @@ const EditUser = () => {
     }
   }, [image]);
 
-  //! Submit
-  useEffect(() => {
-    if (isSuccess) {
-      setUsername("");
-      setPassword("");
-      setDesc("");
-      navigate(`/user/${userId}`);
-    }
-  }, [isSuccess, navigate]);
+  //! Display file popup
 
-  const onSaveUserClicked = async (e) => {
-    e.preventDefault();
-    await updateUser({ username, password, desc, imageUrl });
+  const triggerFileSelectPopup = () => inputRef.current.click();
+
+  const onSelectFile = (event) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+      reader.addEventListener(`load`, () => {
+        setSelectedImage(reader.result);
+      });
+    }
   };
 
-  const content = (
-    <div className='auth-section'>
-      <h1>EDIT</h1>
-      <p>{error?.data?.message}</p>
-      <form className='wrapper-form' id='edit-user-form' onSubmit={onSaveUserClicked}>
+  return (
+    <div className='form-section'>
+      <p ref={errRef} className='' aria-live='assertive'>
+        {errMsg}
+      </p>
+      <form
+        className='wrapper-form edit-user-form'
+        id='edit-user-form'
+        onSubmit={onSaveUserClicked}>
+        <h1>Edit User</h1>
         <div className='form-row'>
           <label className='form-label' htmlFor='editUsername'>
             Username: <span className='field-info'>[3-20 letters]</span>
@@ -102,9 +166,6 @@ const EditUser = () => {
           />
         </div>
         <div className='form-row'>
-          <label className='form-label' htmlFor='img'>
-            Profile Picture:
-          </label>
           <input
             type='file'
             accept='image/*'
@@ -112,11 +173,18 @@ const EditUser = () => {
             style={{ display: "none" }}
             onChange={onSelectFile}
           />
-          <button className='crop-button' onClick={triggerFileSelectPopup} type='button'>
-            Select Image
-          </button>
+          <div className='picture-section'>
+            <div className='picture-header'>
+              <label className='form-label' htmlFor='img'>
+                Profile Picture:
+              </label>
+              <button className='base-button' onClick={triggerFileSelectPopup} type='button'>
+                Select Image
+              </button>
+            </div>
+            {image && <img src={imageUrl} alt='NO IMAGE' className='user-page-profile-pic' />}
+          </div>
           <ImageCropper setCroppedImage={setImage} img={selectedImage} />
-          {image && <img src={imageUrl} alt='NO IMAGE' className='user-page-profile-pic' />}
         </div>
         <div className='form-row'>
           <label className='form-label' htmlFor='editDesc'>
@@ -131,15 +199,39 @@ const EditUser = () => {
             onChange={onDescChanged}
           />
         </div>
-        <div className='button-row'>
-          <button className='submit-button' type='submit' form='edit-user-form' title='Save'>
+        <div className='form-row'>
+          <label className='form-label' htmlFor='editDesc'>
+            Tag spotlight:
+          </label>
+          <div className='tag-form'>
+            <div className='tag-col'>
+              <SearchInput selectedFilter={"type-tag"} getSearchResults={getSearchResults} />
+              {searchResults && (
+                <TagGroup getSelectedTags={getSelectedTags} type='add' tags={searchResults} />
+              )}
+            </div>
+            <div className='tag-col'>
+              <div
+                className='selected-label'
+                style={{ height: "35px", display: "flex", alignItems: "center" }}>
+                Selected Tags:
+              </div>
+              {selectedTags && (
+                <TagGroup
+                  getSelectedTags={getSelectedTags}
+                  type='remove'
+                  tags={selectedTags}
+                />
+              )}
+            </div>
+          </div>
+          <div className='button-row'></div>
+          <button className='base-button' type='submit' form='edit-user-form' title='Save'>
             <Save /> Save
           </button>
         </div>
       </form>
     </div>
   );
-
-  return content;
 };
 export default EditUser;

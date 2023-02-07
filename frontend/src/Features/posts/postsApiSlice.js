@@ -165,6 +165,18 @@ export const postsApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    savePost: builder.mutation({
+      query: ({ id, newLikes }) => ({
+        url: `/posts/save/${id}`,
+        method: "PUT",
+      }),
+    }),
+    unSavePost: builder.mutation({
+      query: ({ id, newLikes }) => ({
+        url: `/posts/unsave/${id}`,
+        method: "PUT",
+      }),
+    }),
   }),
 });
 
@@ -177,6 +189,8 @@ export const {
   useAddViewMutation,
   useLikePostMutation,
   useUnLikePostMutation,
+  useSavePostMutation,
+  useUnSavePostMutation,
 } = postsApiSlice;
 
 export const selectPostsResult = postsApiSlice.endpoints.getPosts.select();

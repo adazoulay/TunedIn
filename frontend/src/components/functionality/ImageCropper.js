@@ -90,11 +90,11 @@ const ImageCropper = ({ setCroppedImage, img }) => {
           style={{ display: "none" }}
           onChange={onSelectFile}
         />
-        <button className='crop-button' onClick={triggerFileSelectPopup} type='button'>
+        <button className='base-button' onClick={triggerFileSelectPopup} type='button'>
           Select Image
         </button>
         <button
-          className='crop-button'
+          className='base-button'
           type='button'
           onClick={getCroppedImage}
           style={{ display: display ? "block" : "none" }}>

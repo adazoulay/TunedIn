@@ -18,7 +18,7 @@ const PostHeader = ({ postHeaderData, userData }) => {
     <>
       <Link to={`/user/${userId}`}>{userContent}</Link>
       <Link to={`/post/${postId}`}>
-        <h2>{title}</h2>
+        <h2 className='post-title'>{title}</h2>
       </Link>
     </>
   );

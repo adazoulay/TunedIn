@@ -8,6 +8,7 @@ import PostHeader from "./PostHeader";
 import PostFooter from "./PostFooter";
 import PostBody from "./PostBody";
 import "./post.scss";
+import { hr } from "date-fns/locale";
 
 //! Link icon to copy link
 //TODO Can react with emotes during song. Plays to other users like insta live emotes
@@ -43,8 +44,8 @@ const Post = ({ postId, postArgs }) => {
           {isSuccessTags ? <TagGroup tags={tags} type='tag-group' /> : null}
         </div>
       </div>
-      {post?.audioUrl && isSuccessTags && isSuccessUser && (
-        <AnimatedBorder colors={tags?.ids?.map((id) => tags.entities[id].color)}>
+      {post?.audioUrl && isSuccessTags && isSuccessUser ? (
+        <AnimatedBorder colors={tags?.ids?.map((id) => tags.entities[id].color)} type={"post"}>
           <div className='post-body'>
             <PostBody
               audioUrl={post.audioUrl}
@@ -55,6 +56,8 @@ const Post = ({ postId, postArgs }) => {
             />
           </div>
         </AnimatedBorder>
+      ) : (
+        <hr className='divider-top' />
       )}
       <div className='post-footer'>
         {isSuccessTags && (

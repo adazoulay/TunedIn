@@ -59,19 +59,18 @@ const SideBar = () => {
         {/* REST */}
         <div className='sidebar-section'>
           <div className='sidebar-row'>
-            <Link to='/feed/sub'>
-              <div className='row-content'>
-                <Volume2 size={26} />
-                Broadcast
-              </div>
-            </Link>
-          </div>
-
-          <div className='sidebar-row'>
-            <Link to=''>
+            <Link to='/feed/saved'>
               <div className='row-content'>
                 <Bookmark size={26} />
                 Saved
+              </div>
+            </Link>
+          </div>
+          <div className='sidebar-row'>
+            <Link to=''>
+              <div className='row-content'>
+                <Volume2 size={26} />
+                Broadcast
               </div>
             </Link>
           </div>

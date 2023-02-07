@@ -6,7 +6,7 @@ import SearchInput from "../../components/functionality/search/SearchInput";
 import { HexColorPicker } from "react-colorful";
 import Tag from "./Tag";
 
-const NewTag = () => {
+const NewTag = ({ handleModalClose }) => {
   const nameRef = useRef();
   const errRef = useRef();
   const [addNewTag, { isLoading, isSuccess, isError, error }] = useAddNewTagMutation();
@@ -15,6 +15,7 @@ const NewTag = () => {
   const [color, setColor] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
+  //! Input fields
   useEffect(() => {
     nameRef.current.focus();
   }, []);
@@ -125,6 +126,7 @@ const NewTag = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      handleModalClose();
       setName("");
       setColor("");
       setSelectedChildrenTags({});
@@ -135,7 +137,7 @@ const NewTag = () => {
   }, [isSuccess]);
 
   return (
-    <div className='post-section'>
+    <div className='form-section'>
       <p ref={errRef} className='' aria-live='assertive'>
         {errMsg}
       </p>

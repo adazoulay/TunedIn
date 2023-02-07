@@ -9,6 +9,9 @@ const LIMIT = 5;
 const getPosts = async (req, res, next) => {
   const page = req.query.page;
   const type = req.query.type;
+  let userId = null;
+  let currUser = null;
+
   console.log("page", page, "type", type);
 
   try {
@@ -32,8 +35,8 @@ const getPosts = async (req, res, next) => {
 
       case "SUB":
         console.log("IN SUB");
-        const userId = req.user.id;
-        const currUser = await User.findById(userId);
+        userId = req.user.id;
+        currUser = await User.findById(userId);
         const following = currUser.following;
         posts = await Promise.all(
           following.map(async (userId) => {
@@ -51,7 +54,6 @@ const getPosts = async (req, res, next) => {
       case "USER":
         console.log("IN USER");
         const userSource = req.query.source;
-        console.log(userSource);
         if (!userSource) {
           return res.status(400).json({ message: "Source parameter is missing" });
         }
@@ -84,6 +86,23 @@ const getPosts = async (req, res, next) => {
           return res.status(400).json({ message: "Tag not found" });
         }
         posts = tag.posts.slice((page - 1) * LIMIT, page * LIMIT);
+        break;
+
+      case "SAVED":
+        userId = req.user.id;
+        if (!userId) {
+          return res.status(400).json({ message: "Sign in to save posts" });
+        }
+        currUser = await User.findById(userId).populate({
+          path: "saved",
+          options: {
+            sort: { createdAt: -1 },
+          },
+        });
+        if (!currUser) {
+          return res.status(400).json({ message: "User not found" });
+        }
+        posts = currUser.saved.slice((page - 1) * LIMIT, page * LIMIT);
         break;
 
       default:
@@ -303,6 +322,38 @@ const unLikePost = async (req, res, next) => {
   }
 };
 
+const savePost = async (req, res, next) => {
+  console.log("SAVING");
+  const userId = req.user.id;
+  const postId = req.params.id;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({ message: "Post not found" });
+    }
+    const user = await User.findByIdAndUpdate(userId, { $addToSet: { saved: postId } });
+    res.status(200).json(`${user.username} added ${post.title}`);
+    console.log("SAVING SUCCESS");
+  } catch (err) {
+    next(err);
+  }
+};
+
+const unSavePost = async (req, res, next) => {
+  const userId = req.user.id;
+  const postId = req.params.id;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({ message: "Post not found" });
+    }
+    const user = await User.findByIdAndUpdate(userId, { $pull: { saved: postId } });
+    res.status(200).json(`${user.username} added ${post.title}`);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getPosts,
   getPostByUserId,
@@ -316,4 +367,6 @@ module.exports = {
   addView,
   likePost,
   unLikePost,
+  savePost,
+  unSavePost,
 };
