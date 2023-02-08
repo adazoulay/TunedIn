@@ -3,7 +3,7 @@ import { setCredentials } from "../../Features/Auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
   //DEV baseUrl: "http://localhost:3500",
-  baseUrl: "http://localhost:3500",
+  baseUrl: "https://melonet.onrender.com",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
