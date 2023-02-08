@@ -11,5 +11,5 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
   //DEV devTools: true,
-  devTools: false,
+  devTools: process.env.DEV ? true : false,
 });

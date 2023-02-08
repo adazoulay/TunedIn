@@ -18,11 +18,11 @@ const BookmarkButton = ({ postId }) => {
 
   const handleBookmarkClicked = async () => {
     if (!savedStatus) {
-      await savePost({ id: postId });
       setSavedStatus(true);
+      await savePost({ id: postId });
     } else {
-      await unSavePost({ id: postId });
       setSavedStatus(false);
+      await unSavePost({ id: postId });
     }
   };
 

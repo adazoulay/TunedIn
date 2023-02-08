@@ -18,7 +18,6 @@ const CopyLinkButton = ({ type, id }) => {
     //DEV
     const link = `https://melonet.xyz/${type}/${id}`;
     navigator.clipboard.writeText(link);
-    // setIsCollapsed(true);
   };
 
   const popupFadeInAnimatedStyle = useSpring({
