@@ -7,8 +7,6 @@ const BookmarkButton = ({ postId }) => {
   const [savedStatus, setSavedStatus] = useState(false);
   const { saved } = useAuth();
 
-  // console.log("STUFF", postId, saved);
-
   const [savePost] = useSavePostMutation();
   const [unSavePost] = useUnSavePostMutation();
 

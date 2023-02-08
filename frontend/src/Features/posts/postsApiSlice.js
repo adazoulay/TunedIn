@@ -44,7 +44,6 @@ export const postsApiSlice = apiSlice.injectEndpoints({
         }
       },
       forceRefetch: ({ currentArg, previousArg }) => {
-        // console.log(currentArg, previousArg);
         return (
           currentArg?.page !== previousArg?.page ||
           currentArg.type !== previousArg.type ||
@@ -114,28 +113,23 @@ export const postsApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
       }),
       async onQueryStarted({ id, userId }, { dispatch, queryFulfilled, getState }) {
-        console.log("1");
         for (const { endpointName, originalArgs } of postsApiSlice.util.selectInvalidatedBy(
           getState(),
           [{ type: "Post", id }]
         )) {
           if (endpointName !== "getPosts") continue;
-          console.log("2");
+
           const patchResult = dispatch(
             postsApiSlice.util.updateQueryData(endpointName, originalArgs, (draft) => {
-              console.log("3", endpointName, originalArgs);
               const post = draft.entities[id];
-              console.log(current(post));
+
               if (post) {
-                console.log("mutating");
                 post.likes = [...post.likes, userId];
               }
-              console.log(current(post));
             })
           );
           try {
             await queryFulfilled;
-            console.log(current(draft));
           } catch {
             patchResult.undo();
           }
@@ -151,11 +145,9 @@ export const postsApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted({ id, newLikes }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           postsApiSlice.util.updateQueryData("getPosts", 1, (draft) => {
-            console.log("UNLIKE");
             const post = draft.entities[id];
-            console.log(current(draft));
+
             if (post) post.likes = newLikes;
-            console.log(current(draft));
           })
         );
         try {

@@ -55,7 +55,6 @@ const Soundbar = ({ audioRef, handlePlayPause }) => {
   }, [analyser]);
 
   useEffect(() => {
-    console.log("test");
     if (analyser && dataArray) {
       animate();
     }
@@ -68,7 +67,6 @@ const Soundbar = ({ audioRef, handlePlayPause }) => {
       const audioctx = new AudioContext();
       setAudioCtx(audioctx);
     }
-    console.log(dataArray);
   };
 
   const canvasHeight = 150;
@@ -79,9 +77,8 @@ const Soundbar = ({ audioRef, handlePlayPause }) => {
 
   function animate() {
     x = 0;
-    console.log("test");
+
     if (analyser !== undefined && dataArray) {
-      console.log("test");
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       analyser.getFrequencyData(dataArray);
       for (let i = 0; i < bufferLength; i++) {
@@ -105,5 +102,3 @@ const Soundbar = ({ audioRef, handlePlayPause }) => {
 };
 
 export default Soundbar;
-
-//https://www.npmjs.com/package/react-audio-visualizers
