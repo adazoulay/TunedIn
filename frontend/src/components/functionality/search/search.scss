@@ -26,40 +26,24 @@ $accent: #f40035;
     border: none;
     appearance: none;
     outline: none;
+  }
 
-    .search-input::placeholder {
-      /* Chrome, Firefox, Opera, Safari 10.1+ */
-      color: red;
-      opacity: 1; /* Firefox */
-    }
-
-    .search-input:-ms-input-placeholder {
-      /* Internet Explorer 10-11 */
-      color: red;
-    }
-
-    .search-input::-ms-input-placeholder {
-      /* Microsoft Edge */
-      color: red;
-    }
-
-    input[type="search"]::-ms-clear {
-      display: none;
-      width: 0;
-      height: 0;
-    }
-    input[type="search"]::-ms-reveal {
-      display: none;
-      width: 0;
-      height: 0;
-    }
-    /* clears the ‘X’ from Chrome */
-    input[type="search"]::-webkit-search-decoration,
-    input[type="search"]::-webkit-search-cancel-button,
-    input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration {
-      display: none;
-    }
+  // Clear X
+  input[type="search"]::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  input[type="search"]::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    display: none;
   }
 
   .filters {

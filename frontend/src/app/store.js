@@ -10,6 +10,6 @@ export const store = configureStore({
     player: playerReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
-  //DEV devTools: true,
-  devTools: process.env.DEV ? true : false,
+  //DEV
+  devTools: process.env.NODE_ENV === "development" ? true : false,
 });

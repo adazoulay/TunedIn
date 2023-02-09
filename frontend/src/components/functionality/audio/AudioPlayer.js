@@ -4,7 +4,6 @@ import { useSpring, animated } from "@react-spring/web";
 import useMeasure from "react-use-measure";
 import "./audioPlayer.scss";
 import { Play, Pause, Volume2, VolumeX } from "react-feather";
-import { set } from "date-fns";
 
 const AudioPlayer = ({ audio, postId, children, contentRef }) => {
   const [playing, setPlaying] = useState(false);

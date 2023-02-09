@@ -190,7 +190,22 @@ const getRelatedTags = async (req, res, next) => {
 
 const getTrendingTags = async (req, res, next) => {
   try {
-    const trendingTags = await Tag.find({}).sort({ "posts.length": -1 }).limit(15);
+    const trendingTags = await Tag.aggregate([
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          color: 1,
+          postsCount: { $size: "$posts" },
+        },
+      },
+      {
+        $sort: { postsCount: -1 },
+      },
+      {
+        $limit: 21,
+      },
+    ]);
     res.status(200).json(trendingTags);
   } catch (error) {
     return res.status(500).json({ message: "Error retrieving tag" });

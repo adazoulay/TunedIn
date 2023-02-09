@@ -4,9 +4,9 @@ import Layout from "./components/layout/Layout";
 import DashLayout from "./components/layout/DashLayout";
 import Feed from "./Features/posts/Feed";
 import PersistLogin from "./Features/Auth/PersistLogin";
+import Test from "./Features/Test";
 
 //! Lazy
-
 import BroadcastPage from "./Features/comments/BroadcastPage";
 
 const UserPage = lazy(() => import("./Features/users/UserPage"));
@@ -16,8 +16,11 @@ const PostPage = lazy(() => import("./Features/posts/PostPage"));
 const Public = lazy(() => import("./components/layout/publicPage/Public"));
 
 //!TODO
-//! Add Img/Gif as tag background
+//! Fix feed
+
 //!Video overlay post
+//! Add Img/Gif as tag background
+//! Broadcast page
 
 function App() {
   return (
@@ -37,6 +40,9 @@ function App() {
             <Route path='trend' element={<Feed type='TREND' />} />
             <Route path='sub' element={<Feed type='SUB' />} />
             <Route path='saved' element={<Feed type='SAVED' />} />
+          </Route>
+          <Route path='test' element={<DashLayout />}>
+            <Route index element={<Test />} />
           </Route>
           <Route path='user' element={<DashLayout />}>
             <Route

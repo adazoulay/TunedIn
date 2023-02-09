@@ -89,9 +89,7 @@ const signin = async (req, res, next) => {
 const refresh = async (req, res, next) => {
   const cookies = req.cookies;
 
-  console.log("cookies", cookies);
   if (!cookies?.jwt) {
-    console.log("1");
     return res.status(401).json({ message: "Unauthorized" });
   }
   const refreshToken = cookies.jwt;
@@ -101,7 +99,6 @@ const refresh = async (req, res, next) => {
     const user = await User.findOne({ username: decoded.userInfo.username }).exec();
 
     if (!user) {
-      console.log("2");
       return res.status(401).json({ message: "Unauthorized" });
     }
     const accessToken = jwt.sign(

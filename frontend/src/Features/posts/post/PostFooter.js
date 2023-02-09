@@ -6,7 +6,7 @@ import LikePostButton from "./buttons/LikePostButton";
 import CopyLinkButton from "../../../components/functionality/CopyLinkButton";
 
 const PostFooter = ({ postFooterData }) => {
-  const { postId, desc, createdAt, likes, views } = postFooterData;
+  const { postId, desc, createdAt, likes, views, fileName } = postFooterData;
 
   if (!postId || !postFooterData) {
     return <p>Loading...</p>;
@@ -15,6 +15,7 @@ const PostFooter = ({ postFooterData }) => {
   return (
     <>
       {/* <hr className='divider' /> */}
+      <p className='grayed file'>{fileName}</p>
       <div className='description'>
         <p>{desc && desc}</p>
       </div>

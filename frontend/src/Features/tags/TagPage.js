@@ -25,6 +25,7 @@ const TagPage = () => {
       <div className='content-header'>
         <div className='tag-info'>
           {isSuccessTag && <Tag tagInfo={tag} tagId={tagId} size='large' />}
+          <div></div>
           {isSuccessTag && parents?.ids.length > 0 && (
             <div className='tag-relation'>
               <>
@@ -32,7 +33,8 @@ const TagPage = () => {
                 <TagGroup tags={parents} type='tags-inheritance' />
               </>
             </div>
-          )}{" "}
+          )}
+
           {isSuccessTag && children?.ids.length > 0 && (
             <div className='tag-relation'>
               <>

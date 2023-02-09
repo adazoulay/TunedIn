@@ -52,6 +52,14 @@ export const postsApiSlice = apiSlice.injectEndpoints({
       },
     }),
     //! GET POST BY ...
+    getPost: builder.query({
+      query: (id) => `/posts/find/${id}`,
+      transformResponse: (responseData) => {
+        const post = responseData;
+        return postsAdapter.addOne(initialState, post);
+      },
+      providesTags: (result, id) => [{ type: "Post", id }],
+    }),
     searchPost: builder.query({
       query: (str) => `/posts/search?q=${str}`,
       keepUnusedDataFor: 5,
@@ -174,6 +182,7 @@ export const postsApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetPostsQuery,
+  useGetPostQuery,
   useSearchPostQuery,
   useAddNewPostMutation,
   useUpdatePostMutation,

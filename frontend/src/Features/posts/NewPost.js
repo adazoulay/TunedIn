@@ -12,12 +12,18 @@ const NewPost = ({ handleModalClose }) => {
   const errRef = useRef();
   const [errMsg, setErrMsg] = useState("");
 
-  const [addNewPost, { isLoading, isSuccess, error }] = useAddNewPostMutation();
+  const [addNewPost, { isLoading, isSuccess }] = useAddNewPostMutation();
   const navigate = useNavigate();
+
+  const [searchResults, setSearchResults] = useState({});
+  const [selectedTags, setSelectedTags] = useState({
+    ids: [],
+    entities: {},
+  });
 
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [audioUrl, setAudioUrl] = useState("");
+  const [file, setFile] = useState();
   const [audio, setAudio] = useState("");
 
   const { userId } = useAuth();
@@ -29,25 +35,70 @@ const NewPost = ({ handleModalClose }) => {
   const onTitleChanged = (e) => setTitle(e.target.value);
   const onDescChanged = (e) => setDesc(e.target.value);
 
-  useEffect(() => {
-    const upload = async () => {
-      if (audio) {
-        const fileType = "audio/mp3";
-        const url = await uploadFile(audio, fileType);
-        setAudioUrl(url);
-      }
-    };
-    if (audio) {
-      upload();
-    }
-  }, [audio]);
+  //! File
+  const inputRef = useRef();
+  const triggerFileSelectPopup = () => inputRef.current.click();
 
-  //! Tags
-  const [searchResults, setSearchResults] = useState({});
-  const [selectedTags, setSelectedTags] = useState({
-    ids: [],
-    entities: {},
-  });
+  const upload = async () => {
+    if (audio) {
+      const url = await uploadFile(audio, audio.type);
+      console.log("UPLOAD", url);
+      return url;
+    }
+  };
+
+  const onSelectFile = (event) => {
+    setFile(event.target.files[0]);
+    if (event.target.files && event.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        setAudio(new Blob([reader.result], { type: event.target.files[0].type }));
+      };
+      reader.readAsArrayBuffer(event.target.files[0]);
+    }
+  };
+
+  //! Submit
+  const canSave = [title, desc].every(Boolean) && !isLoading;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (canSave) {
+      try {
+        const audioUrl = await upload();
+        handleModalClose();
+        await addNewPost({
+          title,
+          desc,
+          tags: selectedTags?.ids,
+          audioUrl,
+          fileName: file?.name,
+        });
+      } catch (err) {
+        if (!err.status) {
+          setErrMsg("No Server Response");
+        } else if (err.status === 400) {
+          setErrMsg("Missing Username or Password");
+        } else if (err.status === 401) {
+          setErrMsg("Unauthorized");
+        } else {
+          setErrMsg(err.data?.message);
+        }
+        errRef.current.focus();
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setTitle("");
+      setDesc("");
+      setSelectedTags({});
+      navigate(`/user/${userId}`);
+    }
+  }, [isSuccess, navigate]);
+
+  //! TAGS SEARCH
 
   const getSearchResults = (result) => {
     setSearchResults(result);
@@ -81,55 +132,6 @@ const NewPost = ({ handleModalClose }) => {
           }, {}),
         };
       });
-    }
-  };
-
-  //! Submit
-  const canSave = [title, desc].every(Boolean) && !isLoading;
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (canSave) {
-      try {
-        await addNewPost({ title, desc, tags: selectedTags?.ids, audioUrl });
-      } catch (err) {
-        if (!err.status) {
-          setErrMsg("No Server Response");
-        } else if (err.status === 400) {
-          setErrMsg("Missing Username or Password");
-        } else if (err.status === 401) {
-          setErrMsg("Unauthorized");
-        } else {
-          setErrMsg(err.data?.message);
-        }
-        errRef.current.focus();
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      handleModalClose();
-      setTitle("");
-      setDesc("");
-      setSelectedTags({});
-      navigate(`/user/${userId}`);
-    }
-  }, [isSuccess, navigate]);
-
-  //! File
-  // Types: ['audio/flac', 'audio/mpeg', 'audio/aiff', 'audio/wav', 'audio/mp3'];
-
-  const inputRef = useRef();
-  const triggerFileSelectPopup = () => inputRef.current.click();
-
-  const onSelectFile = (event) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.onload = function () {
-        setAudio(new Blob([reader.result], { type: "audio/mp3" }));
-      };
-      reader.readAsArrayBuffer(event.target.files[0]);
     }
   };
 
@@ -171,7 +173,7 @@ const NewPost = ({ handleModalClose }) => {
           <button className='base-button' onClick={triggerFileSelectPopup} type='button'>
             Upload Song
           </button>
-          {/* <div> Add file preview </div> */}
+          <div className='grayed'> {file && file?.name}</div>
           <div className='field-info'>Accepts FLAC, .WAV, AIFF (and MP3 👎 ) </div>
         </div>
         <div className='form-row'>

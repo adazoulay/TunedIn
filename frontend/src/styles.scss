@@ -385,11 +385,13 @@ a {
 
     .tag-info {
       display: flex;
-      width: 95%;
-      height: 100%;
-      justify-content: flex-start;
+      flex-direction: row;
+      justify-content: space-around;
       align-items: center;
-      gap: 10%;
+      width: 100%;
+      height: 100%;
+      padding: 0 50px;
+      gap: 5.2%;
 
       .tag-relation {
         display: flex;
@@ -583,7 +585,7 @@ a {
   gap: 0.5em;
   flex-wrap: wrap;
   width: fit-content;
-  max-width: 345px;
+  max-width: 342px;
   max-height: 86px;
   border-radius: 5px;
   gap: 0.5em;
@@ -596,7 +598,7 @@ a {
   display: flex;
   gap: 0.5em;
   flex-wrap: wrap;
-  max-width: 350px;
+  max-width: 342px;
   max-height: 120px;
   border-radius: 5px;
   gap: 0.5em;
@@ -618,7 +620,7 @@ a {
     gap: 0.5em 0.8em;
     flex-wrap: wrap;
     min-width: 100px;
-    max-width: 280px;
+    max-width: 273px;
     max-height: 156px;
     border-radius: 5px;
     background-color: #262626;
@@ -769,6 +771,16 @@ a {
   width: 35px;
   height: 35px;
   background: #ffffff15;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 50px;
+}
+
+.main-button:disabled::after {
+  transform: translate(10px, 10px);
+  width: 35px;
+  height: 35px;
+  background: $accent;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 50px;

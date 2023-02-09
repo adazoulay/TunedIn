@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import { useGetTagsByPostIdQuery } from "../../tags/tagsApiSlice";
 import { useGetPostsQuery } from "../postsApiSlice";
 import { useGetUserByPostIdQuery } from "../../users/usersApiSlice";
@@ -8,9 +8,7 @@ import PostHeader from "./PostHeader";
 import PostFooter from "./PostFooter";
 import PostBody from "./PostBody";
 import "./post.scss";
-import { hr } from "date-fns/locale";
 
-//! Link icon to copy link
 //TODO Can react with emotes during song. Plays to other users like insta live emotes
 
 const Post = ({ postId, postArgs }) => {
@@ -23,8 +21,6 @@ const Post = ({ postId, postArgs }) => {
   const { data: tags, isSuccess: isSuccessTags } = useGetTagsByPostIdQuery(postId);
 
   const { data: userData, isSuccess: isSuccessUser } = useGetUserByPostIdQuery(postId);
-
-  //! Footer
 
   return (
     <article className='post-feed'>
@@ -65,6 +61,7 @@ const Post = ({ postId, postArgs }) => {
             postFooterData={{
               postId,
               desc: post?.desc,
+              fileName: post?.fileName,
               createdAt: post?.createdAt,
               likes: post?.likes,
               views: post?.views,

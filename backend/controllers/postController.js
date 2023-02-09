@@ -119,6 +119,20 @@ const getPosts = async (req, res, next) => {
   }
 };
 
+const getPost = async (req, res, next) => {
+  const postId = req.params.id;
+  console.log(postId);
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({ message: "Post not found" });
+    }
+    res.status(200).json(post);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getPostByUserId = async (req, res, next) => {
   const userId = req.params.id;
   try {
@@ -174,26 +188,14 @@ const getAllPosts = async (req, res, next) => {
   res.json(posts);
 };
 
-const getPost = async (req, res, next) => {
-  const id = req.params.id;
-  try {
-    const post = await Post.findById(id);
-    if (!post) {
-      return res.status(400).json({ message: "Post not found" });
-    }
-    const user = await User.findById(post.userId).lean().exec();
-    res.status(200).json(post);
-  } catch (err) {
-    next(err);
-  }
-};
-
 const createNewPost = async (req, res, next) => {
   const userId = req.user.id;
   if (!userId) {
     return res.status(400).json({ message: "Create an account to post" });
   }
-  const { title, desc, tags, audioUrl } = req.body;
+
+  const { title, desc, tags, audioUrl, fileName } = req.body;
+  console.log("AUDIO URL", audioUrl);
   if (!title || !desc) {
     return res.status(400).json({ message: "Title and description are required" });
   }
@@ -211,7 +213,12 @@ const createNewPost = async (req, res, next) => {
       post.audioUrl = audioUrl;
       await post.save();
     }
+    if (fileName) {
+      post.fileName = fileName;
+      await post.save();
+    }
     if (post) {
+      console.log("POST", post);
       await User.findByIdAndUpdate({ _id: userId }, { $addToSet: { posts: post.id } });
       return res.status(201).json({ message: "New post created" });
     } else {

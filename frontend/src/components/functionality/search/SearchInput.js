@@ -34,7 +34,8 @@ const SearchInput = ({ selectedFilter, getSearchResults }) => {
   useEffect(() => {
     if (searchResults) {
       getSearchResults(searchResults);
-    } else if (!searchText.length) {
+    }
+    if (!searchText.length) {
       getSearchResults({});
     }
   }, [isSuccess, searchText]);

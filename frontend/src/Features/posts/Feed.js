@@ -24,9 +24,12 @@ const Feed = ({ type, source }) => {
     error,
   } = useGetPostsQuery({ page, type, source }, { refetchOnMountOrArgChange: true });
 
+  //! Maybe useIntersectionObserver
   useEffect(() => {
+    console.log("setpage");
     function handleScroll() {
       if (feedRef?.current?.getBoundingClientRect().bottom <= window.innerHeight) {
+        console.log("setpage");
         setPage((page) => page + 1);
       }
     }

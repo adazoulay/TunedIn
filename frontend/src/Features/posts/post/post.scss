@@ -102,6 +102,10 @@ $accent: #f40035;
     border-radius: 20px;
     height: 100%;
 
+    .file {
+      padding: 5px;
+    }
+
     .description {
       display: flex;
       min-height: 22px;
