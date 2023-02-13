@@ -82,9 +82,9 @@ const PostBody = ({ title }) => {
         <MediaPlayer mediaRef={mediaRef} bodyIsCollapsed={isCollapsed}>
           <animated.div className='content-wrapper' style={panelContentAnimatedStyle}>
             {!isCollapseComments && (
-              <div className='body-comments'>
+              <animated.div className='body-comments'>
                 <CommentList comments={comments} />
-              </div>
+              </animated.div>
             )}
             <ContentWrapper mediaRef={mediaRef} sizeRef={sizeRef} isCollapsed={isCollapsed} />
           </animated.div>

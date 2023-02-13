@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "./authSlice";
 import usePersist from "../../hooks/usePersist";
+import AuthWithSpotify from "./AuthWithSpotify";
 
 const signup = () => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] = useSignupMutation();
@@ -48,6 +49,7 @@ const signup = () => {
 
   const content = (
     <div className='auth-section'>
+      <AuthWithSpotify />
       <h1>Sign Up</h1>
       <p>{error?.data?.message}</p>
       <form className='wrapper-form' onSubmit={onSaveUserClicked}>
