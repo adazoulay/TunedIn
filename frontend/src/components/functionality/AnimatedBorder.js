@@ -38,7 +38,8 @@ const AnimatedBorder = ({ children, colors, type }) => {
         borderTop: "0.5px solid",
         borderBottom: "0.5px solid",
 
-        borderImage: `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
+        borderImage:
+          isVisible && `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
         animation: isVisible && "15s rotate linear infinite",
       }}>
       {children}

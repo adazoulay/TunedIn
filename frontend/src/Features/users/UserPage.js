@@ -41,11 +41,7 @@ const UserPage = () => {
       <div className='content-header'>
         <div className='user-info'>
           <div className='user-left'>
-            <img
-              className='user-page-profile-pic'
-              src={user?.imageUrl}
-              alt='Profile Picture'
-            />
+            <img className='pic-large' src={user?.imageUrl} alt='Profile Picture' />
             <div className='user-header-col'>
               <div className='name-desc'>
                 <div className='username'>{user?.username}</div>

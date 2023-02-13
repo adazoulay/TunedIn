@@ -54,7 +54,7 @@ const Feed = ({ type, source }) => {
       <div ref={feedRef} className='feed'>
         {isSuccess && ids?.length ? (
           posts.ids.map((postId) => (
-            <Post key={postId} postId={postId} postArgs={{ page, type, source }} />
+            <Post key={postId} postId={postId} fetchArgs={{ page, type, source }} />
           ))
         ) : (
           <p>No posts here yet. Make one!</p>

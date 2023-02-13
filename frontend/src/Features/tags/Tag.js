@@ -29,7 +29,7 @@ const Tag = ({ tagInfo, tagId, size, type }) => {
       <div className={"tag"} style={smallBoxSize}>
         {name}
         {type === "remove" && (
-          <div className='x'>
+          <div className='x-tag'>
             <X size={11} strokeWidth='4' color='#cecece' />
           </div>
         )}

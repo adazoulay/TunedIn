@@ -24,7 +24,7 @@ const NewPost = ({ handleModalClose }) => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [file, setFile] = useState();
-  const [audio, setAudio] = useState("");
+  const [content, setContent] = useState("");
 
   const { userId } = useAuth();
 
@@ -40,9 +40,8 @@ const NewPost = ({ handleModalClose }) => {
   const triggerFileSelectPopup = () => inputRef.current.click();
 
   const upload = async () => {
-    if (audio) {
-      const url = await uploadFile(audio, audio.type);
-      console.log("UPLOAD", url);
+    if (content) {
+      const url = await uploadFile(content, content.type);
       return url;
     }
   };
@@ -52,8 +51,9 @@ const NewPost = ({ handleModalClose }) => {
     if (event.target.files && event.target.files.length > 0) {
       const reader = new FileReader();
       reader.onload = function () {
-        setAudio(new Blob([reader.result], { type: event.target.files[0].type }));
+        setContent(new Blob([reader.result], { type: event.target.files[0].type }));
       };
+
       reader.readAsArrayBuffer(event.target.files[0]);
     }
   };
@@ -65,13 +65,14 @@ const NewPost = ({ handleModalClose }) => {
     e.preventDefault();
     if (canSave) {
       try {
-        const audioUrl = await upload();
+        const contentUrl = await upload();
         handleModalClose();
         await addNewPost({
           title,
           desc,
           tags: selectedTags?.ids,
-          audioUrl,
+          contentUrl,
+          contentType: content?.type,
           fileName: file?.name,
         });
       } catch (err) {
@@ -164,17 +165,19 @@ const NewPost = ({ handleModalClose }) => {
           <input
             className='file-input'
             type='file'
-            accept='audio/*'
+            accept='audio/*, video/*'
             id='file'
             ref={inputRef}
             style={{ display: "none" }}
             onChange={onSelectFile}
           />
           <button className='base-button' onClick={triggerFileSelectPopup} type='button'>
-            Upload Song
+            Upload File
           </button>
           <div className='grayed'> {file && file?.name}</div>
-          <div className='field-info'>Accepts FLAC, .WAV, AIFF (and MP3 👎 ) </div>
+          <div className='field-info'>
+            Accepts .FLAC, .WAV, .AIFF, .MOV, .MP4 (and MP3 👎 ){" "}
+          </div>
         </div>
         <div className='form-row'>
           <label className='form-label' htmlFor='desc'>

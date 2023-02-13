@@ -1,12 +1,13 @@
-import { memo, useState } from "react";
+import { memo, useState, lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import SearchBar from "../functionality/search/SearchBar";
 import HeaderProfile from "./HeaderProfile";
 import Logo from "../../assets/Logo";
-import NewPost from "../../Features/posts/NewPost";
-import NewTag from "../../Features/tags/NewTag";
 import { useSpring, animated } from "@react-spring/web";
 import { X } from "react-feather";
+
+const NewPost = lazy(() => import("../../Features/posts/NewPost"));
+const NewTag = lazy(() => import("../../Features/tags/NewTag"));
 
 const Header = () => {
   const [modalType, setModalType] = useState("");
@@ -31,9 +32,17 @@ const Header = () => {
 
   let modalContent;
   if (modalType == "post") {
-    modalContent = <NewPost handleModalClose={handleModalClose} />;
+    modalContent = (
+      <Suspense>
+        <NewPost handleModalClose={handleModalClose} />
+      </Suspense>
+    );
   } else if (modalType === "tag") {
-    modalContent = <NewTag handleModalClose={handleModalClose} />;
+    modalContent = (
+      <Suspense>
+        <NewTag handleModalClose={handleModalClose} />
+      </Suspense>
+    );
   } else {
     modalContent = null;
   }

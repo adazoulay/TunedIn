@@ -15,16 +15,18 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    audioUrl: {
+
+    contentUrl: {
       type: String,
       default: "",
+    },
+    contentType: {
+      type: String,
+      defualt: "",
     },
     fileName: {
       type: String,
       default: "",
-    },
-    imgUrl: {
-      type: String,
     },
     views: {
       type: Number,

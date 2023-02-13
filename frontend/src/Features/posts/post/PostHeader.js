@@ -1,17 +1,17 @@
-import React, { memo } from "react";
+import React, { memo, useContext } from "react";
 import { Link } from "react-router-dom";
+import { PostContext } from "./Post";
 
-const PostHeader = ({ postHeaderData, userData }) => {
-  const { postId, userId, title } = postHeaderData;
-  const { imageUrl, username } = userData;
+const PostHeader = ({ title }) => {
+  const { postId, userId, userData } = useContext(PostContext);
 
-  let userContent = imageUrl ? (
+  let userContent = userData?.imageUrl ? (
     <div className='post-user'>
-      <img src={imageUrl} alt='profile-picture' className='pic-small' />
-      <h3 className='post-username'>{username}</h3>
+      <img src={userData?.imageUrl} alt='profile-picture' className='pic-small' />
+      <h3 className='post-username'>{userData?.username}</h3>
     </div>
   ) : (
-    <h3 className='post-username'>{username}</h3>
+    <h3 className='post-username'>{userData?.username}</h3>
   );
 
   return (

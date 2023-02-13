@@ -194,8 +194,8 @@ const createNewPost = async (req, res, next) => {
     return res.status(400).json({ message: "Create an account to post" });
   }
 
-  const { title, desc, tags, audioUrl, fileName } = req.body;
-  console.log("AUDIO URL", audioUrl);
+  const { title, desc, tags, contentUrl, contentType, fileName } = req.body;
+
   if (!title || !desc) {
     return res.status(400).json({ message: "Title and description are required" });
   }
@@ -209,16 +209,17 @@ const createNewPost = async (req, res, next) => {
       await post.updateOne({ $addToSet: { tags: { $each: tags } } });
       await Tag.updateMany({ _id: { $in: tags } }, { $addToSet: { posts: post._id } });
     }
-    if (audioUrl) {
-      post.audioUrl = audioUrl;
-      await post.save();
+    if (contentUrl) {
+      post.contentUrl = contentUrl;
+    }
+    if (contentType) {
+      post.contentType = contentType;
     }
     if (fileName) {
       post.fileName = fileName;
-      await post.save();
     }
+    await post.save();
     if (post) {
-      console.log("POST", post);
       await User.findByIdAndUpdate({ _id: userId }, { $addToSet: { posts: post.id } });
       return res.status(201).json({ message: "New post created" });
     } else {

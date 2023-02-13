@@ -4,23 +4,31 @@ import Layout from "./components/layout/Layout";
 import DashLayout from "./components/layout/DashLayout";
 import Feed from "./Features/posts/Feed";
 import PersistLogin from "./Features/Auth/PersistLogin";
-import Test from "./Features/Test";
+// import Test from "./Features/Test";
 
-//! Lazy
-import BroadcastPage from "./Features/comments/BroadcastPage";
-
+// Lazy
+const Public = lazy(() => import("./components/layout/publicPage/Public"));
 const UserPage = lazy(() => import("./Features/users/UserPage"));
 const EditUser = lazy(() => import("./Features/users/EditUser"));
 const TagPage = lazy(() => import("./Features/tags/TagPage"));
 const PostPage = lazy(() => import("./Features/posts/PostPage"));
-const Public = lazy(() => import("./components/layout/publicPage/Public"));
+const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 
-//!TODO
-//! Fix feed
+//TODO feed
+//TODO   Fix feed
+//TODO   Add tags to feed
 
-//!Video overlay post
-//! Add Img/Gif as tag background
+//! Song spotlight Spotify
+
 //! Broadcast page
+
+//? LATER
+//! Repost post
+//! Add Img/Gif as tag background
+//! Refactor
+//!   Comments 2.0
+//!   Search 2.0
+//! Can react with emotes during song. Plays to other users like insta live emotes
 
 function App() {
   return (
@@ -42,7 +50,7 @@ function App() {
             <Route path='saved' element={<Feed type='SAVED' />} />
           </Route>
           <Route path='test' element={<DashLayout />}>
-            <Route index element={<Test />} />
+            {/* <Route index element={<Test />} /> */}
           </Route>
           <Route path='user' element={<DashLayout />}>
             <Route

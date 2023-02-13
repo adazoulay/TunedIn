@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
-import AudioPlayer from "../functionality/audio/AudioPlayer";
+import React, { useState, useEffect, useRef } from "react";
+import MediaPlayer from "../functionality/audio/MediaPlayer";
 import { Link } from "react-router-dom";
-import { selectPlayerInfo } from "../functionality/audio/playerReducer";
-import { useSelector } from "react-redux";
-import { useSpring, animated } from "@react-spring/web";
-import { ChevronsLeft } from "react-feather";
-import useMeasure from "react-use-measure";
 import { useDispatch } from "react-redux";
-import { clearPlayerInfo } from "../functionality/audio/playerReducer";
+import { useSelector } from "react-redux";
+import { selectPlayerInfo, clearPlayerInfo } from "../functionality/audio/playerReducer";
+import { ChevronsLeft } from "react-feather";
+import { useSpring, useChain, animated } from "@react-spring/web";
 
 const Footer = () => {
+  const playerInfo = useSelector(selectPlayerInfo);
+  const dispatch = useDispatch();
+  const mediaRef = useRef();
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [ref, bounds] = useMeasure();
 
   const panelContentAnimatedStyle = useSpring({
-    transform: isCollapsed ? "scale(0, 1)" : "scale(1, 1)",
+    zIndex: isCollapsed ? 3 : 9,
+    transform: isCollapsed ? `translate3d(-100%,0,0)` : `translate3d(0%,0,0)`,
   });
 
   const handleClosePlayer = () => {
@@ -22,14 +23,11 @@ const Footer = () => {
     setTimeout(() => dispatch(clearPlayerInfo()), 500);
   };
 
-  const playerInfo = useSelector(selectPlayerInfo);
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    if (playerInfo?.audioUrl) {
+    if (playerInfo?.contentUrl) {
       setIsCollapsed(false);
     }
-  }, [playerInfo?.audioUrl]);
+  }, [playerInfo?.contentUrl]);
 
   const userContent = playerInfo?.userImg ? (
     <div className='post-user'>
@@ -40,17 +38,29 @@ const Footer = () => {
   );
 
   return (
-    <div className='footer' ref={ref}>
-      {playerInfo?.audioUrl && (
+    <div className='footer' style={{ zIndex: isCollapsed ? 0 : 9 }}>
+      {playerInfo?.contentUrl && (
         <animated.div className='footer-content' style={panelContentAnimatedStyle}>
           <div className='footer-player'>
-            {playerInfo?.audioUrl && <AudioPlayer audio={playerInfo.audioUrl} />}
+            {playerInfo?.contentUrl && (
+              <MediaPlayer mediaRef={mediaRef}>
+                <audio
+                  ref={mediaRef}
+                  src={playerInfo.contentUrl}
+                  crossOrigin='anonymous'
+                  controls={false}
+                  id={playerInfo.postId}
+                  // onError={(e) => console.log(e)}
+                  preload='metadata'
+                />
+              </MediaPlayer>
+            )}
           </div>
           <div className='footer-info'>
             <Link to={`/user/${playerInfo?.userId}`}>{userContent}</Link>
-            {/* <Link to={`/post/${playerInfo?.postId}`}> */}
-            <h4 className='post-username'>{playerInfo?.title}</h4>
-            {/* </Link> */}
+            <Link to={`/post/${playerInfo?.postId}`}>
+              <h4 className='post-username'>{playerInfo?.title}</h4>
+            </Link>
           </div>
           <div onClick={handleClosePlayer} className={"close-footer"}>
             <ChevronsLeft />

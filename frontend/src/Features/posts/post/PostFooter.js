@@ -1,12 +1,15 @@
-import React, { memo } from "react";
-import TimeAgo from "../../../components/functionality/audio/TimeAgo";
+import React, { memo, useContext } from "react";
+import { PostContext } from "./Post";
+import TimeAgo from "../../../components/functionality/TimeAgo";
 import CommentSection from "../../comments/CommentSection";
-import SavePostButton from "./buttons/SavePostButton";
 import LikePostButton from "./buttons/LikePostButton";
+import SavePostButton from "./buttons/SavePostButton";
 import CopyLinkButton from "../../../components/functionality/CopyLinkButton";
+import MediaInfoButton from "../../../components/functionality/audio/MediaInfoButton";
 
 const PostFooter = ({ postFooterData }) => {
   const { postId, desc, createdAt, likes, views, fileName } = postFooterData;
+  const { contentUrl } = useContext(PostContext);
 
   if (!postId || !postFooterData) {
     return <p>Loading...</p>;
@@ -14,8 +17,7 @@ const PostFooter = ({ postFooterData }) => {
 
   return (
     <>
-      {/* <hr className='divider' /> */}
-      <p className='grayed file'>{fileName}</p>
+      <MediaInfoButton fileName={fileName} contentUrl={contentUrl} />
       <div className='description'>
         <p>{desc && desc}</p>
       </div>

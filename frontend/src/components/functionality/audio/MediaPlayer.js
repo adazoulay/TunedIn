@@ -1,22 +1,42 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useAddViewMutation } from "../../../Features/posts/postsApiSlice";
 import { useSpring, animated } from "@react-spring/web";
+import { PostContext } from "../../../Features/posts/post/Post";
 import useMeasure from "react-use-measure";
-import "./audioPlayer.scss";
 import { Play, Pause, Volume2, VolumeX } from "react-feather";
+import "./mediaPlayer.scss";
 
-const AudioPlayer = ({ audio, postId, children, contentRef }) => {
+const MediaPlayer = ({ children, mediaRef, bodyIsCollapsed = true }) => {
+  const { postId, contentType } = useContext(PostContext);
+
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [viewAdded, setViewAdded] = useState(false);
 
-  const audioRef = useRef(null);
   const progressBarRef = useRef(null);
   const animationRef = useRef(null);
 
   const [addView] = useAddViewMutation();
+
+  useEffect(() => {
+    if (mediaRef?.current) {
+      const handleLoadedMetadata = () => {
+        const seconds = Math.floor(mediaRef?.current?.duration);
+        setDuration(seconds);
+        progressBarRef.current.max = seconds;
+      };
+      if (mediaRef?.current) {
+        mediaRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
+      }
+      return () => {
+        if (mediaRef?.current) {
+          mediaRef.current.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        }
+      };
+    }
+  }, [mediaRef?.current]);
 
   //! PLAY/PAUSE
   const handlePlayPause = () => {
@@ -27,29 +47,13 @@ const AudioPlayer = ({ audio, postId, children, contentRef }) => {
         addView({ id: postId });
         setViewAdded(true);
       }
-      audioRef.current.play();
+      mediaRef?.current.play();
       animationRef.current = requestAnimationFrame(whilePlaying);
     } else {
-      audioRef.current.pause();
+      mediaRef?.current.pause();
       cancelAnimationFrame(animationRef.current);
     }
   };
-
-  useEffect(() => {
-    const handleLoadedMetadata = () => {
-      const seconds = Math.floor(audioRef?.current?.duration);
-      setDuration(seconds);
-      progressBarRef.current.max = seconds;
-    };
-    if (audioRef.current) {
-      audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
-    }
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      }
-    };
-  }, []);
 
   const calculateTime = (secs) => {
     const minutes = Math.floor(secs / 60);
@@ -62,17 +66,17 @@ const AudioPlayer = ({ audio, postId, children, contentRef }) => {
   //! VOLUME
   const handleVolumeChange = (e) => {
     setVolume(e.target.value);
-    audioRef.current.volume = e.target.value;
+    mediaRef.current.volume = e.target.value;
   };
 
   const toggleVolume = () => {
-    if (audioRef) {
-      if (audioRef.current.volume) {
+    if (mediaRef) {
+      if (mediaRef.current.volume) {
         setVolume(0);
-        audioRef.current.volume = 0;
+        mediaRef.current.volume = 0;
       } else {
         setVolume(1);
-        audioRef.current.volume = 1;
+        mediaRef.current.volume = 1;
       }
     }
   };
@@ -97,46 +101,41 @@ const AudioPlayer = ({ audio, postId, children, contentRef }) => {
 
   //! TIME
   const whilePlaying = () => {
-    progressBarRef.current.value = Math.floor(audioRef.current.currentTime);
+    progressBarRef.current.value = Math.floor(mediaRef?.current.currentTime);
     changePlayerCurrentTime();
     animationRef.current = requestAnimationFrame(whilePlaying);
   };
 
   const changeRange = () => {
-    audioRef.current.currentTime = progressBarRef.current.value;
+    mediaRef.current.currentTime = progressBarRef.current.value;
     changePlayerCurrentTime();
   };
 
   const changePlayerCurrentTime = () => {
-    if (audioRef.current !== null) {
+    if (mediaRef.current !== null) {
       progressBarRef.current.style.setProperty(
         "--seek-before-width",
-        `${(audioRef.current.currentTime / duration) * 100}%`
+        `${(mediaRef?.current.currentTime / duration) * 100}%`
       );
-      setCurrentTime(audioRef.current.currentTime);
+      setCurrentTime(mediaRef?.current.currentTime);
     }
   };
 
   return (
-    <div className='audio-player' ref={contentRef}>
-      <audio
-        ref={audioRef}
-        src={audio}
-        crossOrigin='anonymous'
-        controls={false}
-        id={postId}
-        // onError={(e) => console.log(e)}
-        preload='metadata'
-      />
-      {/* SOUNDBAR */}
-      <div className='soundbar' onClick={handlePlayPause} id={postId}>
+    <div className='media-player'>
+      {/* ref={sizeRef} */}
+      <div className='content' onClick={handlePlayPause}>
         {children}
       </div>
-      <div className='media-wrapper'>
-        <button className='media-button' onClick={handlePlayPause}>
+      <div
+        className='controls-wrapper'
+        style={{
+          position:
+            contentType?.startsWith("video") && !bodyIsCollapsed ? "absolute" : "static",
+        }}>
+        <button className='controls-button' onClick={handlePlayPause}>
           {playing ? <Pause size={28} color='#ebebeb' /> : <Play size={28} color='#ebebeb' />}
         </button>
-
         {/* current time */}
         <div className='duration field-info'>{calculateTime(currentTime)}</div>
         {/* progress bar */}
@@ -156,7 +155,7 @@ const AudioPlayer = ({ audio, postId, children, contentRef }) => {
         {/* -------- volume --------- */}
         <div className='volume' onMouseEnter={handleShow} onMouseLeave={handleHide}>
           <div className='volume-btn'>
-            {audioRef?.current?.volume ? (
+            {mediaRef?.current?.volume ? (
               <Volume2 size={30} color='#ebebeb' onClick={toggleVolume} />
             ) : (
               <VolumeX size={30} color='#ebebeb' onClick={toggleVolume} />
@@ -187,4 +186,4 @@ const AudioPlayer = ({ audio, postId, children, contentRef }) => {
   );
 };
 
-export default AudioPlayer;
+export default MediaPlayer;
