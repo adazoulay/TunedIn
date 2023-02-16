@@ -7,6 +7,7 @@ import TagGroup from "../tags/TagGroup";
 import Feed from "../posts/Feed";
 import FollowButton from "../../components/functionality/FollowButton";
 import CopyLinkButton from "../../components/functionality/CopyLinkButton";
+import SpotifyAuth from "../spotify/SpotifyAuth";
 import { Edit } from "react-feather";
 
 const UserPage = () => {
@@ -24,6 +25,7 @@ const UserPage = () => {
   }
 
   let content;
+  let logIntoSpot;
   if (isSuccess) {
     if (userId === currentUser) {
       content = (
@@ -31,6 +33,7 @@ const UserPage = () => {
           <Edit size={36} />
         </Link>
       );
+      logIntoSpot = <SpotifyAuth userId={userId} />;
     } else {
       content = <FollowButton user={user} />;
     }
@@ -57,19 +60,19 @@ const UserPage = () => {
               </div>
             </div>
           </div>
-
-          <div className='social'>
-            <div className='follow'>
-              {user?.followers.length} <div className='grayed'>Followers</div>
+          <div className='user-right'>
+            <div className='social'>
+              <div className='follow'>
+                <div className='grayed'> {user?.followers.length} Followers</div>
+                <div className='grayed'> {user?.following.length} Following</div>
+              </div>
+              <div>{content}</div>
             </div>
-            <div className='follow'>
-              {user?.following.length} <div className='grayed'> Following</div>
-            </div>
+            {logIntoSpot}
           </div>
-          <div className='social'>
-            {content}
-            <CopyLinkButton type={"user"} id={userId} />
-          </div>
+        </div>
+        <div className='copy-link-user'>
+          <CopyLinkButton type={"user"} id={userId} />
         </div>
       </div>
       <Feed type='USER' source={userId} />

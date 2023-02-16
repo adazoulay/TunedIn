@@ -14,7 +14,7 @@ const Footer = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const panelContentAnimatedStyle = useSpring({
-    zIndex: isCollapsed ? 3 : 9,
+    // zIndex: isCollapsed ? 3 : 9,
     transform: isCollapsed ? `translate3d(-100%,0,0)` : `translate3d(0%,0,0)`,
   });
 

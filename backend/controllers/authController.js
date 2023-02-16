@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 
 const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -125,6 +126,95 @@ const signout = async (req, res, next) => {
   res.json({ message: "Cookie cleared" });
 };
 
-module.exports = { signup, signin, refresh, signout };
+//! SPOTIFY
+
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const REDIRECT_URI = "http://localhost:3500/auth/spotifyCallback";
+
+const generateRandomString = (length) => {
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
+
+// const stateKey = "spotify_auth_state";
+
+const spotifySignIn = (req, res) => {
+  console.log("IN LGOIN");
+  let state = generateRandomString(16);
+  // res.cookie(stateKey, state);
+
+  res.redirect(
+    "https://accounts.spotify.com/authorize?" +
+      new URLSearchParams({
+        response_type: "code",
+        client_id: CLIENT_ID,
+        scope: "user-read-private user-read-email",
+        redirect_uri: REDIRECT_URI,
+        state: state,
+      })
+  );
+};
+
+const spotifyCallback = async (req, res) => {
+  let code = req.query.code || null;
+  let state = req.query.state || null;
+  let storedState = req.cookies ? req.cookies[stateKey] : null;
+
+  if (state === null || state !== storedState) {
+    res.redirect(
+      "/#" +
+        new URLSearchParams({
+          error: "state_mismatch",
+        })
+    );
+  } else {
+    res.clearCookie(stateKey);
+    let authOptions = {
+      method: "post",
+      url: "https://accounts.spotify.com/api/token",
+      params: {
+        code: code,
+        redirect_uri: REDIRECT_URI,
+        grant_type: "authorization_code",
+      },
+      headers: {
+        Authorization:
+          "Basic " + new Buffer.from(CLIENT_ID + ":" + CLIENT_SECRET).toString("base64"),
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      json: true,
+    };
+    try {
+      const response = await axios(authOptions);
+      let access_token = response.data.access_token;
+      let refresh_token = response.data.refresh_token;
+      let expires_in = response.data.expires_in;
+
+      res.redirect(
+        "/user/" +
+          new URLSearchParams({
+            access_token: access_token,
+            refresh_token: refresh_token,
+            expires_in: expires_in,
+          })
+      );
+    } catch (error) {
+      res.redirect(
+        "/#" +
+          new URLSearchParams({
+            error: "invalid_token",
+          })
+      );
+    }
+  }
+};
+
+module.exports = { signup, signin, refresh, signout, spotifySignIn, spotifyCallback };
 
 //To generate ACCESS_TOKEN_SECRET: in backend: node -> require('crypto').randomBytes(64).toString('hex')

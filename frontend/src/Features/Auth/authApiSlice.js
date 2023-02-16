@@ -49,6 +49,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    connectToSpotify: builder.mutation({
+      query: () => ({
+        url: "/auth/spotifySignIn",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -57,4 +63,5 @@ export const {
   useSignupMutation,
   useSendLogoutMutation,
   useRefreshMutation,
+  useConnectToSpotifyMutation,
 } = authApiSlice;

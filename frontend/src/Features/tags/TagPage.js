@@ -25,7 +25,7 @@ const TagPage = () => {
       <div className='content-header'>
         <div className='tag-info'>
           {isSuccessTag && <Tag tagInfo={tag} tagId={tagId} size='large' />}
-          <div></div>
+
           {isSuccessTag && parents?.ids.length > 0 && (
             <div className='tag-relation'>
               <>
@@ -43,12 +43,13 @@ const TagPage = () => {
               </>
             </div>
           )}
+
           {isSuccessTag && (
             <div className='tag-social'>
               <FollowButton tag={tag} />
               <div className='tag-connect'>
                 <div className='follow'>
-                  {tag.followers?.length} <div className='grayed'>Followers</div>
+                  <div className='grayed'> {tag.followers?.length} Followers</div>
                 </div>
                 <CopyLinkButton type={"tag"} id={tagId} />
               </div>
