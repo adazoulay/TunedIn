@@ -247,6 +247,7 @@ const spotifyCallback = async (req, res) => {
 };
 
 const spotifyRefresh = async (req, res) => {
+  console.log("HEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEH");
   const cookies = req.cookies;
   if (!cookies?.spotifyRefreshToken) {
     return res.status(401).json({ message: "Spotfy no refresh: Unauthorized" });

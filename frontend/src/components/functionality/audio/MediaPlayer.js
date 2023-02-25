@@ -43,7 +43,7 @@ const MediaPlayer = ({ children, mediaRef, bodyIsCollapsed = true, isSpotify = f
     const prevValue = playing;
     setPlaying(!prevValue);
     if (!prevValue) {
-      if (!viewAdded) {
+      if (!viewAdded && !isSpotify) {
         addView({ id: postId });
         setViewAdded(true);
       }

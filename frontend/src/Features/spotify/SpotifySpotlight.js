@@ -11,14 +11,13 @@ const SpotifySpotlight = ({ spotifyTrackIds }) => {
 
   console.log("spotifyTrackIds", spotifyTrackIds);
 
-  const { spotifyId } = useAuth();
-
   return (
     <div className='song-spotlight'>
       <div className='spotlight-title'>Song Spotlight</div>
       <div className='song-list'>
         <img src={spotifyLogo} className='spotlight-logo' alt='' />
-        {data?.ids.length &&
+        {isSuccess &&
+          data?.ids.length &&
           data.ids.map((id) => {
             const track = data.entities[id];
             console.log(track);
