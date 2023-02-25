@@ -24,6 +24,7 @@ const Post = ({ postId, fetchArgs }) => {
       post: data?.entities[postId],
     }),
   });
+
   const { data: tags, isSuccess: isSuccessTags } = useGetTagsByPostIdQuery(postId);
   const { data: userData, isSuccess: isSuccessUser } = useGetUserByPostIdQuery(postId);
 

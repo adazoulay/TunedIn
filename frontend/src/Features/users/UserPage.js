@@ -7,25 +7,29 @@ import TagGroup from "../tags/TagGroup";
 import Feed from "../posts/Feed";
 import FollowButton from "../../components/functionality/FollowButton";
 import CopyLinkButton from "../../components/functionality/CopyLinkButton";
-import SpotifyAuth from "../spotify/SpotifyAuth";
+import SpotifyConnectButton from "../spotify/SpotifyConnectButton";
+import SpotifySpotlight from "../spotify/SpotifySpotlight";
+
 import { Edit } from "react-feather";
 
 const UserPage = () => {
   let { id: userId } = useParams();
-  const { userId: currentUser } = useAuth();
+  const { userId: currentUser, spotifyId } = useAuth();
 
   const { data: userData, isSuccess } = useGetUserQuery(userId);
   const { data: tags } = useGetTagsByUserIdQuery(userId);
 
   let user;
+  let tracks;
 
   if (isSuccess) {
     const { ids, entities } = userData;
     user = ids?.length ? entities[ids[0]] : null;
+    // tracks =
   }
 
   let content;
-  let logIntoSpot;
+  let spotifyContent;
   if (isSuccess) {
     if (userId === currentUser) {
       content = (
@@ -33,9 +37,21 @@ const UserPage = () => {
           <Edit size={36} />
         </Link>
       );
-      logIntoSpot = <SpotifyAuth userId={userId} />;
+      if (user.spotifyId) {
+        console.log(user.spotifyTrackIds);
+        spotifyContent = (
+          <>
+            <SpotifySpotlight spotifyTrackIds={user.spotifyTrackIds} />
+          </>
+        );
+      } else {
+        spotifyContent = <SpotifyConnectButton userId={userId} />;
+      }
     } else {
       content = <FollowButton user={user} />;
+      spotifyContent = user.spotifyId && (
+        <SpotifySpotlight userId={userId} spotifyTrackIds={user.spotifyTrackIds} />
+      );
     }
   }
 
@@ -44,20 +60,22 @@ const UserPage = () => {
       <div className='content-header'>
         <div className='user-info'>
           <div className='user-left'>
-            <img className='pic-large' src={user?.imageUrl} alt='Profile Picture' />
-            <div className='user-header-col'>
-              <div className='name-desc'>
-                <div className='username'>{user?.username}</div>
-                <div className='user-desc'>{user?.desc}</div>
+            <div className='base-user-info'>
+              <img className='pic-large' src={user?.imageUrl} alt='Profile Picture' />
+              <div className='user-header-col'>
+                <div className='name-desc'>
+                  <div className='username'>{user?.username}</div>
+                  <div className='user-desc'>{user?.desc}</div>
+                </div>
               </div>
-              <div className='tag-spotlight'>
-                {tags?.ids?.length > 1 && (
-                  <>
-                    <div>Tag spotlight:</div>
-                    <TagGroup tags={tags} type={"tags-user"} />
-                  </>
-                )}
-              </div>
+            </div>
+            <div className='tag-spotlight'>
+              {tags?.ids?.length > 1 && (
+                <>
+                  <div>Tag spotlight</div>
+                  <TagGroup tags={tags} type={"tags-user"} />
+                </>
+              )}
             </div>
           </div>
           <div className='user-right'>
@@ -68,7 +86,7 @@ const UserPage = () => {
               </div>
               <div>{content}</div>
             </div>
-            {logIntoSpot}
+            {spotifyContent}
           </div>
         </div>
         <div className='copy-link-user'>

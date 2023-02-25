@@ -76,8 +76,6 @@ $accent: #f40035;
       padding-left: 3px;
       padding-top: 1px;
       cursor: pointer;
-      // background-color: $base-color; // HEHEHEH
-      // background-color: rgb(19, 18, 18, 0.95); // HEHEHEH
       z-index: 5;
     }
 
@@ -163,6 +161,7 @@ $accent: #f40035;
     align-items: center;
     width: 100%;
     padding: 0 5px;
+    padding-bottom: 2px;
     z-index: 8;
 
     .progress-bar {
@@ -261,6 +260,7 @@ $accent: #f40035;
 
   .duration {
     width: 35px;
+    padding-bottom: 3px;
   }
 
   svg {

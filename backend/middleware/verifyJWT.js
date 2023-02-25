@@ -5,16 +5,16 @@ const verifyJWT = (req, res, next) => {
 
   if (!authHeader?.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Please login to continue" });
-    next();
   }
 
   const token = authHeader.split(" ")[1];
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) return res.status(403).json({ message: "Forbidden" });
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     req.user = decoded.userInfo;
     next();
-  });
+  } catch (err) {
+    res.status(403).json({ message: "Forbidden" });
+  }
 };
 
 module.exports = verifyJWT;

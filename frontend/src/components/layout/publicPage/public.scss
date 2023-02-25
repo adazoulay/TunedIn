@@ -58,6 +58,19 @@
     padding-top: 270px;
     width: 80%;
     display: flex;
+
+    .welcome-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7em;
+
+      h1 {
+        font-size: 57px;
+      }
+      h2 {
+        font-size: 30px;
+      }
+    }
   }
 
   .auth-menu {
@@ -107,8 +120,6 @@
         font-size: 0;
         width: 57%;
         height: auto;
-        // -webkit-filter: drop-shadow(0px 0px 2px white);
-        // filter: drop-shadow(0px 0px 2px white);
       }
       .desc-text {
         padding-top: 5%;
@@ -132,8 +143,6 @@
         width: 30%;
         max-width: 450px;
         height: auto;
-        // -webkit-filter: drop-shadow(0px 0px 1px white);
-        // filter: drop-shadow(0px 0px 1px white);
       }
 
       .desc-text {

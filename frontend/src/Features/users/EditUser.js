@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUpdateUserMutation } from "./usersApiSlice";
+import { useGetTagsByUserIdQuery } from "../tags/tagsApiSlice";
 import useAuth from "../../hooks/useAuth";
 import ImageCropper from "../../components/functionality/ImageCropper";
 import { uploadFile } from "../../util/uploadToS3";
@@ -39,6 +40,14 @@ const EditUser = () => {
   const onDescChanged = (e) => setDesc(e.target.value);
 
   //! Tags
+
+  const { data: tagData, isSuccess: isSuccessTags } = useGetTagsByUserIdQuery(userId);
+
+  useEffect(() => {
+    if (isSuccessTags) {
+      setSelectedTags(tagData);
+    }
+  }, [isSuccessTags]);
 
   const getSearchResults = (result) => {
     setSearchResults(result);

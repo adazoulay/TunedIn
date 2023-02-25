@@ -4,7 +4,6 @@ import Layout from "./components/layout/Layout";
 import DashLayout from "./components/layout/DashLayout";
 import Feed from "./Features/posts/Feed";
 import PersistLogin from "./Features/Auth/PersistLogin";
-// import Test from "./Features/Test";
 
 // Lazy
 const Public = lazy(() => import("./components/layout/publicPage/Public"));
@@ -24,10 +23,13 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 
 //? LATER
 //! Repost post
+//! Add Img/Cover to post
 //! Add Img/Gif as tag background
 //! Refactor
 //!   Comments 2.0
 //!   Search 2.0
+
+//! Maybe
 //! Can react with emotes during song. Plays to other users like insta live emotes
 
 function App() {
@@ -42,6 +44,7 @@ function App() {
             </Suspense>
           }
         />
+
         <Route element={<PersistLogin />}>
           <Route path='feed' element={<DashLayout />}>
             <Route index element={<Feed type='HOME' />} />

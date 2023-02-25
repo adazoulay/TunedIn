@@ -26,7 +26,7 @@ const Feed = ({ type, source }) => {
 
   //! Maybe useIntersectionObserver
   useEffect(() => {
-    console.log("setpage");
+    // console.log("setpage");
     function handleScroll() {
       if (feedRef?.current?.getBoundingClientRect().bottom <= window.innerHeight) {
         console.log("setpage");

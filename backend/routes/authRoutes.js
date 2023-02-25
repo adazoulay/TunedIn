@@ -1,6 +1,7 @@
 const express = require("express");
 const authController = require("../controllers/authController");
 const loginLimiter = require("../middleware/loginLimiter");
+const verifyJWT = require("../middleware/verifyJWT");
 
 const router = express.Router();
 
@@ -14,8 +15,10 @@ router.get("/refresh", authController.refresh);
 
 // Spotify
 
-router.get("/spotifySignIn", authController.spotifySignIn);
+router.get("/spotify/:jwtToken", authController.spotifySignIn);
 
 router.get("/spotifyCallback", authController.spotifyCallback);
+
+router.get("/spotifyRefresh", verifyJWT, authController.spotifyRefresh);
 
 module.exports = router;

@@ -7,9 +7,24 @@ const useAuth = () => {
 
   if (token) {
     const decoded = jwtDecode(token);
-    const { id: userId, username, imageUrl, saved } = decoded.userInfo;
-    return { userId, username, imageUrl, saved };
+    const {
+      id: userId,
+      username,
+      imageUrl,
+      saved,
+      spotifyId,
+      spotifyRefreshToken,
+    } = decoded.userInfo;
+
+    return { userId, username, imageUrl, saved, spotifyId, spotifyRefreshToken };
   }
-  return { userId: "", username: "", imageUrl: "", saved: [] };
+  return {
+    userId: "",
+    username: "",
+    imageUrl: "",
+    saved: [],
+    spotifyId: "",
+    spotifyRefreshToken: "",
+  };
 };
 export default useAuth;

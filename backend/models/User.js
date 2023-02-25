@@ -16,6 +16,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    spotifyId: {
+      type: String,
+    },
+    spotifyRefreshToken: {
+      type: String,
+    },
     imageUrl: {
       type: String,
     },
@@ -58,10 +64,11 @@ const UserSchema = new mongoose.Schema(
         ref: "Post",
       },
     ],
-    fromGoogle: {
-      type: Boolean,
-      default: false,
-    },
+    spotifyTrackIds: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );

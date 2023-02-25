@@ -80,7 +80,7 @@ const updateUser = async (req, res, next) => {
     if (desc && desc.length) {
       user.desc = desc;
     }
-    if (topTags) {
+    if (topTags.length) {
       user.topTags = topTags;
     }
     if (imageUrl) {
