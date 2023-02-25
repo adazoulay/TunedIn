@@ -173,7 +173,7 @@ const MediaPlayer = ({ children, mediaRef, bodyIsCollapsed = true, isSpotify = f
             <div
               className='volume-range-wrapper'
               ref={volumeRef}
-              style={isSpotify && { transform: "translate(-5px, 32px) scale(60%)" }}>
+              style={isSpotify ? { transform: "translate(-5px, 32px) scale(60%)" } : {}}>
               <animated.div className='volume-range' style={volumeSliderAnimation}>
                 <input
                   className='volume-bar'
