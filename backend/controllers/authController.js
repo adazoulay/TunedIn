@@ -228,7 +228,12 @@ const spotifyCallback = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res.redirect(`http://localhost:3000/user/${userId}/?${queryParams}`);
+      const redirectUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : "https://melonet.xyz";
+
+      res.redirect(`${redirectUrl}/user/${userId}/?${queryParams}`);
     } else {
       const queryParams = new URLSearchParams({
         error: "invalid_token",

@@ -13,7 +13,7 @@ const SpotifyAuth = () => {
   const fetchUrl =
     process.env.NODE_ENV === "development"
       ? `http://localhost:3500/auth/spotify/${jwtToken}`
-      : `https://melonet.onrender.com/auth/spotify`;
+      : `https://melonet.onrender.com/auth/spotify/${jwtToken}`;
 
   useEffect(() => {
     const queryString = window.location.search;

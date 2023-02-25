@@ -15,7 +15,6 @@ const CopyLinkButton = ({ type, id }) => {
 
   const copyLink = () => {
     setIsCollapsed(false);
-    //DEV
     const link = `https://melonet.xyz/${type}/${id}`;
     navigator.clipboard.writeText(link);
   };
