@@ -371,9 +371,6 @@ a {
 }
 
 .tag-selection {
-  ::-webkit-scrollbar {
-    -webkit-appearance: none;
-  }
   display: flex;
   flex-wrap: wrap;
   width: 185px;
@@ -422,8 +419,13 @@ a {
   align-items: center;
   justify-content: center;
 
-  ::-webkit-scrollbar {
-    -webkit-appearance: none;
+  ::-webkit-scrollbar-thumb {
+    display: none;
+  }
+
+  /* Show scrollbar track */
+  ::-webkit-scrollbar-track {
+    display: none;
   }
 
   .sidebar-group {

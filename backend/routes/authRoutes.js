@@ -21,4 +21,6 @@ router.get("/spotifyCallback", authController.spotifyCallback);
 
 router.get("/spotifyRefresh", verifyJWT, authController.spotifyRefresh);
 
+router.get("/spotifyTempAuth", verifyJWT, authController.spotifyTempAuth);
+
 module.exports = router;

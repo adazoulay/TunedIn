@@ -247,7 +247,6 @@ const spotifyCallback = async (req, res) => {
 };
 
 const spotifyRefresh = async (req, res) => {
-  console.log("HEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEHEH");
   const cookies = req.cookies;
   if (!cookies?.spotifyRefreshToken) {
     return res.status(401).json({ message: "Spotfy no refresh: Unauthorized" });
@@ -294,6 +293,33 @@ const spotifyRefresh = async (req, res) => {
   }
 };
 
+const spotifyTempAuth = async (req, res) => {
+  try {
+    const authOptions = {
+      url: "https://accounts.spotify.com/api/token",
+      headers: {
+        Authorization:
+          "Basic " + Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64"),
+      },
+      form: {
+        grant_type: "client_credentials",
+      },
+      json: true,
+    };
+
+    request.post(authOptions, function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        const token = body.access_token;
+        res.send(token);
+      } else {
+        res.status(response.statusCode).send(body);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   signup,
   signin,
@@ -302,6 +328,7 @@ module.exports = {
   spotifySignIn,
   spotifyCallback,
   spotifyRefresh,
+  spotifyTempAuth,
 };
 
 //To generate ACCESS_TOKEN_SECRET: in backend: node -> require('crypto').randomBytes(64).toString('hex')

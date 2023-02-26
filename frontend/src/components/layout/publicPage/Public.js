@@ -38,6 +38,7 @@ const Public = () => {
           <div className='welcome-text'>
             <h1 className='intro'> Welcome</h1>
             <h2>Please sign in or Sign up to continue</h2>
+            <h3>Only chrome is well supported for now</h3>
           </div>
           <AuthDropdown />
         </div>
