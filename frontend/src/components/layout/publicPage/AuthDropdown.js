@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Signin from "../../../Features/Auth/Signin";
 import Signup from "../../../Features/Auth/Signup";
 import AnimatedBorder from "../../functionality/AnimatedBorder";
 import { useSpring, animated } from "@react-spring/web";
 import useMeasure from "react-use-measure";
+import AuthWithSpotify from "./AuthWithSpotify";
 
 const AuthDropdown = () => {
   const [modalType, setModalType] = useState("");
@@ -32,6 +33,7 @@ const AuthDropdown = () => {
   return (
     <div className='auth-menu' ref={ref}>
       <div className='auth-buttons'>
+        <AuthWithSpotify />
         <div className='button-85' onClick={() => handleDropDownOpen("signIn")}>
           Sign In
         </div>

@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      // required: true,
     },
     spotifyId: {
       type: String,
@@ -64,6 +64,7 @@ const UserSchema = new mongoose.Schema(
         ref: "Post",
       },
     ],
+    authWithSpotify: { type: Boolean },
     spotifyTrackIds: [
       {
         type: String,

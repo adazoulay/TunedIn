@@ -13,9 +13,13 @@ router.post("/signout", authController.signout);
 
 router.get("/refresh", authController.refresh);
 
+router.get("/authWithSpotify", authController.authWithSpotify);
+
+router.get("/spotifyAuthCallback", authController.spotifyAuthCallback);
+
 // Spotify
 
-router.get("/spotify/:jwtToken", authController.spotifySignIn);
+router.get("/spotify/:jwtToken", authController.connectToSpotify);
 
 router.get("/spotifyCallback", authController.spotifyCallback);
 

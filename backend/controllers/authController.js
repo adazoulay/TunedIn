@@ -15,7 +15,7 @@ const signup = async (req, res, next) => {
     }
     const duplicateEmail = await User.findOne({ email }).lean().exec();
     if (duplicateEmail) {
-      return res.status(409).json({ message: "Duplicate email" });
+      return res.status(409).json({ message: "Account already registered with this email" });
     }
     const salt = bcrypt.genSaltSync(10);
     const hashedPwd = bcrypt.hashSync(req.body.password, salt);
@@ -147,6 +147,7 @@ const signout = async (req, res, next) => {
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
+const SPOTIFY_AUTH_REDIRECT_URI = process.env.SPOTIFY_AUTH_REDIRECT_URI;
 const stateKey = "spotify_auth_state";
 
 scopes = [
@@ -156,7 +157,153 @@ scopes = [
   "user-read-recently-played",
 ];
 
-const spotifySignIn = (req, res) => {
+//! AUTH WITH SPOT
+
+const authWithSpotify = async (req, res, next) => {
+  let state = "auth";
+  res.cookie(stateKey, state);
+  res.redirect(
+    "https://accounts.spotify.com/authorize?" +
+      new URLSearchParams({
+        response_type: "code",
+        client_id: CLIENT_ID,
+        scope: scopes.join(" "),
+        redirect_uri: SPOTIFY_AUTH_REDIRECT_URI,
+        state: state,
+      })
+  );
+};
+
+const spotifyAuthCallback = async (req, res) => {
+  const code = req.query.code || null;
+  const params = new URLSearchParams({
+    grant_type: "authorization_code",
+    code: code,
+    redirect_uri: SPOTIFY_AUTH_REDIRECT_URI,
+  });
+
+  try {
+    const response = await axios({
+      method: "post",
+      url: "https://accounts.spotify.com/api/token",
+      data: params.toString(),
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString(
+          "base64"
+        )}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const { access_token, refresh_token } = response.data;
+      const queryParams = new URLSearchParams({
+        access_token,
+        refresh_token,
+      }).toString();
+
+      const userInfo = await axios({
+        method: "get",
+        url: "https://api.spotify.com/v1/me",
+        headers: {
+          Authorization: "Bearer " + access_token,
+        },
+      });
+
+      newUserInfo = userInfo.data;
+      const { display_name: username, email, images } = newUserInfo;
+
+      let user = await User.findOne({ email }).lean().exec();
+
+      if (!user) {
+        const userObject = {
+          username,
+          email,
+          spotifyRefreshToken: refresh_token,
+          spotifyId: newUserInfo.id,
+          imageUrl: images[0].url,
+          authWithSpotify: true,
+        };
+
+        user = await User.create(userObject);
+      } else if (!user?.authWithSpotify) {
+        return res.status(400).json({
+          message:
+            "Please use email password login as account already registered with this email",
+        });
+      }
+
+      res.cookie("spotifyRefreshToken", refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      console.log("AFTER2");
+
+      // const accessToken = jwt.sign(
+      //   {
+      //     userInfo: {
+      //       id: user._id,
+      //       username: user.username,
+      //       imageUrl: user.imageUrl,
+      //       saved: user.saved,
+      //       spotifyId: user.spotifyId,
+      //       spotifyRefreshToken: user.spotifyRefreshToken,
+      //     },
+      //   },
+      //   process.env.ACCESS_TOKEN_SECRET,
+      //   { expiresIn: "15m" }
+      // );
+
+      const refreshToken = jwt.sign(
+        {
+          userInfo: {
+            id: user._id,
+            username: user.username,
+            imageUrl: user.imageUrl,
+            saved: user.saved,
+            spotifyId: user.spotifyId,
+            spotifyRefreshToken: user.spotifyRefreshToken,
+            authWithSpotify: true,
+          },
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      console.log("AFTER3");
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      const redirectUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : "https://melonet.xyz";
+
+      res.redirect(`${redirectUrl}/user/${user._id}/?${queryParams}`);
+    } else {
+      const queryParams = new URLSearchParams({
+        error: "invalid_token",
+      }).toString();
+
+      console.log("IN ELSE");
+      res.redirect(`/?${queryParams}`);
+    }
+  } catch (error) {
+    console.log("Err", error);
+    res.send(error);
+  }
+};
+
+//! CONNECT TO SPOT
+
+const connectToSpotify = (req, res) => {
   let state = req.params.jwtToken;
   res.cookie(stateKey, state);
   res.redirect(
@@ -175,17 +322,21 @@ const spotifyCallback = async (req, res) => {
   const code = req.query.code || null;
   const jwtToken = req.query.state || null;
   let decoded = null;
+
   if (jwtToken) {
     decoded = jwt.verify(jwtToken, process.env.ACCESS_TOKEN_SECRET);
   } else {
     return res.status(401).message("no JWT provided");
   }
+
   const { id: userId } = decoded?.userInfo;
+
   const params = new URLSearchParams({
     grant_type: "authorization_code",
     code: code,
     redirect_uri: REDIRECT_URI,
   });
+
   try {
     const response = await axios({
       method: "post",
@@ -198,6 +349,7 @@ const spotifyCallback = async (req, res) => {
         )}`,
       },
     });
+
     if (response.status === 200) {
       const { access_token, refresh_token } = response.data;
       const queryParams = new URLSearchParams({
@@ -232,6 +384,8 @@ const spotifyCallback = async (req, res) => {
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
           : "https://melonet.xyz";
+
+      console.log("REDIRECTURL REDIRECTURL REDIRECTURL", redirectUrl);
 
       res.redirect(`${redirectUrl}/user/${userId}/?${queryParams}`);
     } else {
@@ -324,7 +478,9 @@ module.exports = {
   signin,
   refresh,
   signout,
-  spotifySignIn,
+  authWithSpotify,
+  spotifyAuthCallback,
+  connectToSpotify,
   spotifyCallback,
   spotifyRefresh,
   spotifyTempAuth,
