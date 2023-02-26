@@ -9,8 +9,6 @@ import "./spotify.scss";
 const SpotifySpotlight = ({ spotifyTrackIds }) => {
   const { data, isSuccess } = useGetTracksQuery(spotifyTrackIds);
 
-  console.log("spotifyTrackIds", spotifyTrackIds);
-
   return (
     <div className='song-spotlight'>
       <div className='spotlight-title'>Bumping right now</div>
@@ -20,7 +18,6 @@ const SpotifySpotlight = ({ spotifyTrackIds }) => {
           data?.ids.length &&
           data.ids.map((id) => {
             const track = data.entities[id];
-            console.log(track);
             return (
               <SpotifySong
                 key={id}

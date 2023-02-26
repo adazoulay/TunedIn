@@ -301,20 +301,19 @@ const spotifyTempAuth = async (req, res) => {
         Authorization:
           "Basic " + Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64"),
       },
-      form: {
-        grant_type: "client_credentials",
-      },
-      json: true,
+      data: "grant_type=client_credentials",
     };
 
-    request.post(authOptions, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        const token = body.access_token;
-        res.send(token);
-      } else {
-        res.status(response.statusCode).send(body);
-      }
+    const response = await axios.post(authOptions.url, authOptions.data, {
+      headers: authOptions.headers,
     });
+
+    if (response.status === 200) {
+      const token = response.data;
+      res.send(token);
+    } else {
+      res.status(response.status).send(response.data);
+    }
   } catch (err) {
     console.log(err);
   }

@@ -38,7 +38,6 @@ const UserPage = () => {
         </Link>
       );
       if (user.spotifyId) {
-        console.log(user.spotifyTrackIds);
         spotifyContent = (
           <>
             <SpotifySpotlight spotifyTrackIds={user.spotifyTrackIds} />

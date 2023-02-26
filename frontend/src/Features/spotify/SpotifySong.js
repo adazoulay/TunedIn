@@ -4,8 +4,6 @@ import MediaPlayer from "../../components/functionality/audio/MediaPlayer";
 const SpotifySong = ({ id, title, audioUrl, imgUrl, artist, externalUrl }) => {
   const mediaRef = useRef();
 
-  console.log(externalUrl);
-
   return (
     <div className='spotify-song'>
       <a href={externalUrl} target='_blank' rel='noopener noreferrer' className='img-link'>
