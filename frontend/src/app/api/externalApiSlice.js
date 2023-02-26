@@ -24,18 +24,18 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       result = await baseQuery(args, api, extraOptions);
     } else {
       if (refreshResult?.error?.status === 403 || refreshResult?.error?.status === 401) {
-        const refreshResult = await internalBaseQuery(
+        const refreshResult_tempAuth = await internalBaseQuery(
           "/auth/spotifyTempAuth",
           api,
           extraOptions
         );
         console.log("IN SHITTY AUTH SPOTIFY");
-        console.log("REFRESHED RESULT", refreshResult);
+        console.log("refreshResult_tempAuth:", refreshResult_tempAuth);
 
-        api.dispatch(setSpotifyAccessToken({ token: refreshResult.data.access_token }));
+        api.dispatch(
+          setSpotifyAccessToken({ token: refreshResult_tempAuth.data.access_token })
+        );
         result = await baseQuery(args, api, extraOptions);
-
-        refreshResult.error.data.message = "Your login has expired.";
       }
       return refreshResult;
     }
