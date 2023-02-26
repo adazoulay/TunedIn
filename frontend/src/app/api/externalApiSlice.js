@@ -16,14 +16,20 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
+  console.log("1");
 
   if (result?.error?.status === 403 || result?.error?.status === 401) {
     const refreshResult = await internalBaseQuery("/auth/spotifyRefresh", api, extraOptions);
+    console.log("2");
+
     if (refreshResult?.data) {
+      console.log("3");
       api.dispatch(setSpotifyAccessToken({ token: refreshResult.data.access_token }));
       result = await baseQuery(args, api, extraOptions);
     } else {
+      console.log("4");
       if (refreshResult?.error?.status === 403 || refreshResult?.error?.status === 401) {
+        console.log("5");
         const refreshResult_tempAuth = await internalBaseQuery(
           "/auth/spotifyTempAuth",
           api,
@@ -31,15 +37,20 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
         );
         console.log("IN SHITTY AUTH SPOTIFY");
         console.log("refreshResult_tempAuth:", refreshResult_tempAuth);
-
-        api.dispatch(
-          setSpotifyAccessToken({ token: refreshResult_tempAuth.data.access_token })
-        );
-        result = await baseQuery(args, api, extraOptions);
+        if (refreshResult_tempAuth?.data) {
+          console.log("6");
+          api.dispatch(
+            setSpotifyAccessToken({ token: refreshResult_tempAuth.data.access_token })
+          );
+          result = await baseQuery(args, api, extraOptions);
+        } else {
+          console.log("7");
+          return refreshResult_tempAuth;
+        }
       }
-      return refreshResult;
     }
   }
+  console.log("8");
   return result;
 };
 
