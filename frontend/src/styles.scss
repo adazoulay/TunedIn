@@ -371,6 +371,9 @@ a {
 }
 
 .tag-selection {
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
   display: flex;
   flex-wrap: wrap;
   width: 185px;
@@ -395,6 +398,10 @@ a {
   background-color: #262626;
   padding: 15px;
   overflow: scroll;
+
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
 }
 
 .tags-inheritance {
@@ -414,6 +421,10 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
 
   .sidebar-group {
     display: flex;
