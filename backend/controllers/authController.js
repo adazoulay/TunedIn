@@ -197,6 +197,11 @@ const spotifyAuthCallback = async (req, res) => {
 
     if (response.status === 200) {
       const { access_token, refresh_token } = response.data;
+
+      console.log("USER INFO TEST TESTS TEST TEST");
+      console.log("ACCESS TOKEN", access_token);
+      console.log("REFRESH TOKEN", refresh_token);
+
       const queryParams = new URLSearchParams({
         access_token,
         refresh_token,
@@ -240,8 +245,6 @@ const spotifyAuthCallback = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      console.log("AFTER2");
-
       // const accessToken = jwt.sign(
       //   {
       //     userInfo: {
@@ -273,7 +276,6 @@ const spotifyAuthCallback = async (req, res) => {
         { expiresIn: "7d" }
       );
 
-      console.log("AFTER3");
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
         secure: true,
@@ -292,7 +294,6 @@ const spotifyAuthCallback = async (req, res) => {
         error: "invalid_token",
       }).toString();
 
-      console.log("IN ELSE");
       res.redirect(`/?${queryParams}`);
     }
   } catch (error) {
@@ -357,6 +358,10 @@ const spotifyCallback = async (req, res) => {
         refresh_token,
       }).toString();
 
+      console.log("USER INFO TEST TESTS TEST TEST");
+      console.log("ACCESS TOKEN", access_token);
+      console.log("REFRESH TOKEN", refresh_token);
+
       const userInfo = await axios({
         method: "get",
         url: "https://api.spotify.com/v1/me",
@@ -384,8 +389,6 @@ const spotifyCallback = async (req, res) => {
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
           : "https://melonet.xyz";
-
-      console.log("REDIRECTURL REDIRECTURL REDIRECTURL", redirectUrl);
 
       res.redirect(`${redirectUrl}/user/${userId}/?${queryParams}`);
     } else {
