@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const Tag = require("../models/Tag");
 const fuzzyset = require("fuzzyset.js");
+const { default: mongoose } = require("mongoose");
 
 //! Feed Types
 const LIMIT = 5;
@@ -360,6 +361,54 @@ const unSavePost = async (req, res, next) => {
   }
 };
 
+const repost = async (req, res, next) => {
+  const userId = req.user.id;
+  const postId = req.params.id;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({ message: "Post not found" });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    console.log("USER POSTS", user.posts);
+
+    let alreadyReposted = false;
+    for (let i = 0; i < user.posts.length; i++) {
+      const userPost = await Post.findById(user.posts[i]);
+      if (userPost.repost && userPost.repost.originalId) {
+        alreadyReposted = userPost.repost.originalId.equals(post._id);
+        if (alreadyReposted) break;
+      }
+    }
+
+    if (alreadyReposted) {
+      return res.status(400).json({ message: "You have already reposted this post" });
+    }
+
+    const now = new Date();
+    const repost = new Post({
+      ...post.toObject(),
+      repost: {
+        isRepost: true,
+        originalPoster: post.userId,
+        originalId: post._id,
+      },
+      _id: new mongoose.Types.ObjectId(),
+      userId: userId,
+      createdAt: now,
+      updatedAt: now,
+    });
+    await repost.save();
+    await User.findByIdAndUpdate(userId, { $addToSet: { posts: repost._id } });
+    res.status(200).json(`${repost.title} reposted by ${user.username}`);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getPosts,
   getPostByUserId,
@@ -375,4 +424,5 @@ module.exports = {
   unLikePost,
   savePost,
   unSavePost,
+  repost,
 };

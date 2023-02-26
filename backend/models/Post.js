@@ -15,7 +15,6 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     contentUrl: {
       type: String,
       default: "",
@@ -50,6 +49,19 @@ const postSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
+    repost: {
+      isRepost: {
+        type: Boolean,
+      },
+      originalPoster: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      originalId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    },
   },
   { timestamps: true }
 );

@@ -1,6 +1,5 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
-import { current } from "@reduxjs/toolkit";
 
 const postsAdapter = createEntityAdapter({
   selectId: (post) => post._id, // Extract the _id field as the unique identifier
@@ -177,6 +176,13 @@ export const postsApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
       }),
     }),
+    repostPost: builder.mutation({
+      query: (id) => ({
+        url: `/posts/repost/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "Post", id: "List" }], //! Check use to be arg.id
+    }),
   }),
 });
 
@@ -192,6 +198,7 @@ export const {
   useUnLikePostMutation,
   useSavePostMutation,
   useUnSavePostMutation,
+  useRepostPostMutation,
 } = postsApiSlice;
 
 export const selectPostsResult = postsApiSlice.endpoints.getPosts.select();

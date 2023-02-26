@@ -13,7 +13,7 @@ const SpotifySpotlight = ({ spotifyTrackIds }) => {
 
   return (
     <div className='song-spotlight'>
-      <div className='spotlight-title'>Song Spotlight</div>
+      <div className='spotlight-title'>Bumping right now</div>
       <div className='song-list'>
         <img src={spotifyLogo} className='spotlight-logo' alt='' />
         {isSuccess &&

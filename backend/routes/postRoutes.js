@@ -23,7 +23,9 @@ router.put("/like/:id", verifyJWT, postController.likePost);
 router.put("/unlike/:id", verifyJWT, postController.unLikePost);
 router.put("/save/:id", verifyJWT, postController.savePost);
 router.put("/unsave/:id", verifyJWT, postController.unSavePost);
+router.post("/repost/:id", verifyJWT, postController.repost);
 
+//! Util
 router.get("/getAllPosts", postController.getAllPosts);
 
 module.exports = router;

@@ -17,15 +17,22 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 //TODO   Fix feed
 //TODO   Add tags to feed
 
-//! Song spotlight Spotify
-
 //! Broadcast page
 
-//? LATER
 //! Repost post
 //! Add Img/Cover to post
-//! Add Img/Gif as tag background
+//    Figure out metadata, can extract from file:
+//    If in spotify: spotifyUrl, if in File: uploadToS3,  if not: manually upload
+
+//! Social links in profile page
+//! Post spotify songs/playlists/artists
+
+//? LATER
+
+//! Add tags like cover, remix, original, music video,
+
 //! Refactor
+//!   Add Img/Gif as tag background
 //!   Comments 2.0
 //!   Search 2.0
 
@@ -51,9 +58,6 @@ function App() {
             <Route path='trend' element={<Feed type='TREND' />} />
             <Route path='sub' element={<Feed type='SUB' />} />
             <Route path='saved' element={<Feed type='SAVED' />} />
-          </Route>
-          <Route path='test' element={<DashLayout />}>
-            {/* <Route index element={<Test />} /> */}
           </Route>
           <Route path='user' element={<DashLayout />}>
             <Route

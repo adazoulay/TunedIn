@@ -6,10 +6,13 @@ import LikePostButton from "./buttons/LikePostButton";
 import SavePostButton from "./buttons/SavePostButton";
 import CopyLinkButton from "../../../components/functionality/CopyLinkButton";
 import MediaInfoButton from "../../../components/functionality/audio/MediaInfoButton";
+import RepostButton from "../../../components/functionality/RepostButton";
+import useAuth from "../../../hooks/useAuth";
 
 const PostFooter = ({ postFooterData }) => {
   const { postId, desc, createdAt, likes, views, fileName } = postFooterData;
-  const { contentUrl } = useContext(PostContext);
+  const { contentUrl, userId } = useContext(PostContext);
+  const { userId: currentUser } = useAuth();
 
   if (!postId || !postFooterData) {
     return <p>Loading...</p>;
@@ -34,6 +37,11 @@ const PostFooter = ({ postFooterData }) => {
           <div className='bookmark'>
             <SavePostButton postId={postId} />
           </div>
+          {userId !== currentUser && (
+            <div className='repost'>
+              <RepostButton postId={postId} />
+            </div>
+          )}
           <div className='likes'>
             <LikePostButton postId={postId} likes={likes} />
           </div>

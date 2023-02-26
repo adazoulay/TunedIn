@@ -45,8 +45,27 @@ $accent: #f40035;
     justify-content: flex-start;
     gap: 2em;
 
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Show scrollbar when element is being scrolled */
+    ::-webkit-scrollbar-thumb {
+      display: none;
+    }
+
+    /* Show scrollbar track */
+    ::-webkit-scrollbar-track {
+      display: none;
+    }
+
+    /* Show scrollbar on hover */
+    ::-webkit-scrollbar:hover {
+      // display: none;
+    }
+
     .dropdown {
-      overflow: auto;
+      overflow: hidden;
       position: relative;
       display: flex;
       flex-direction: column;
