@@ -35,8 +35,8 @@ const AnimatedBorder = ({ children, colors, type }) => {
 
         borderLeft: type !== "post" && "0.5px solid",
         borderRight: type !== "post" && "0.5px solid",
-        borderTop: "none",
-        borderBottom: "none",
+        // borderTop: "1px rgba(255, 255, 255, 0.125) solid",
+        // borderBottom: "1px rgba(255, 255, 255, 0.125) solid",
         // borderTop: "0.5px solid",
         // borderBottom: "0.5px solid",
 

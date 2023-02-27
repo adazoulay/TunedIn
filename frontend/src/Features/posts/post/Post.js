@@ -3,6 +3,7 @@ import { useGetTagsByPostIdQuery } from "../../tags/tagsApiSlice";
 import { useGetPostsQuery } from "../postsApiSlice";
 import { useGetUserByPostIdQuery } from "../../users/usersApiSlice";
 import AnimatedBorder from "../../../components/functionality/AnimatedBorder";
+import AnimatedHeader from "../../../components/functionality/AnimatedHeader";
 import TagGroup from "../../tags/TagGroup";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
@@ -41,6 +42,7 @@ const Post = ({ postId, fetchArgs }) => {
         contentType: post?.contentType,
       }}>
       <article className='post-feed'>
+        <AnimatedHeader colors={tags?.ids?.map((id) => tags.entities[id].color)} />
         <div className='post-header'>
           {isSuccessTags && isSuccessUser && <PostHeader title={post?.title} />}
           <div className='post-tags'>

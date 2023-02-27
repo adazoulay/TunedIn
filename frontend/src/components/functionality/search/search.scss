@@ -33,13 +33,13 @@ input[type="search"]::-webkit-search-results-decoration {
   background: $section;
   display: flex;
   padding-left: 8px;
-  background-color: $secondary;
+  background-color: rgb(32, 32, 32);
 
   .search-input {
     flex: 1;
     font-size: 14px;
     background: none;
-    background-color: $secondary;
+    background-color: rgb(32, 32, 32);
     color: $section;
     border: none;
     appearance: none;

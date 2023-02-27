@@ -203,7 +203,8 @@ a {
     margin-bottom: 100px;
 
     .divider {
-      opacity: 10%;
+      // opacity: 10%;
+      opacity: 0%;
       background-color: $section;
       margin: 30px -50px;
     }
@@ -392,7 +393,7 @@ a {
   max-height: 86px;
   border-radius: 5px;
   gap: 0.5em;
-  background-color: #262626;
+  background-color: rgb(27, 27, 27);
   padding: 15px;
   overflow: scroll;
 
@@ -409,7 +410,7 @@ a {
   max-height: 120px;
   border-radius: 5px;
   gap: 0.5em;
-  background-color: #262626;
+  background-color: rgb(27, 27, 27);
   padding: 15px;
   overflow: scroll;
 }
@@ -439,7 +440,7 @@ a {
     max-width: 273px;
     max-height: 149px;
     border-radius: 5px;
-    background-color: #262626;
+    background-color: rgb(27, 27, 27);
     padding: 15px;
     margin: 0 6px;
     overflow: hidden;
@@ -730,8 +731,9 @@ a {
       bottom: 38px;
       left: 50%;
       transform: translateX(-48.5%);
-      background-color: rgb(18, 18, 18, 0.85);
-      backdrop-filter: blur(3px);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background-color: rgb(18, 18, 18, 0.8);
       border-radius: 10px;
       padding: 15px;
       width: max-content;

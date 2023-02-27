@@ -382,8 +382,7 @@ const spotifyCallback = async (req, res) => {
       console.log("1", spotifyId);
 
       const user = await User.findByIdAndUpdate(userId, {
-        $set: { spotifyId: spotifyId },
-        $set: { spotifyRefreshToken: refresh_token },
+        $set: { spotifyId: spotifyId, spotifyRefreshToken: refresh_token },
       });
 
       console.log("user", user.spotifyId);
