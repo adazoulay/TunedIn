@@ -376,16 +376,17 @@ const spotifyCallback = async (req, res) => {
 
       const spotifyId = userInfo.data.id;
 
-      console.log("1 spotifyId");
+      console.log("1", spotifyId);
 
-      await User.findByIdAndUpdate(userId, {
+      const user = await User.findByIdAndUpdate(userId, {
         $set: { spotifyId: spotifyId },
         $set: { spotifyRefreshToken: refresh_token },
       });
 
+      console.log("user", user.spotifyId);
+      console.log("user", user._id);
+
       console.log("1 1 1 1");
-      console.log("ACCESS TOKEN", access_token);
-      console.log("REFRESH TOKEN", refresh_token);
 
       res.cookie("spotifyRefreshToken", refresh_token, {
         httpOnly: true,
