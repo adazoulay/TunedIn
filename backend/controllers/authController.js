@@ -391,6 +391,8 @@ const spotifyCallback = async (req, res) => {
           ? "http://localhost:3000"
           : "https://melonet.xyz";
 
+      console.log("REDIRECT", redirectUrl);
+
       res.redirect(`${redirectUrl}/user/${userId}/?${queryParams}`);
     } else {
       const queryParams = new URLSearchParams({
