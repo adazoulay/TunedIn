@@ -434,6 +434,8 @@ const spotifyRefresh = async (req, res) => {
       $set: { spotifyTrackIds: topTracks },
     });
 
+    console.log("SETTING TRAKCS");
+
     res.send(response.data);
   } catch (error) {
     console.log(error);

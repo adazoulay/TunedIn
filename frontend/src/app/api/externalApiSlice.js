@@ -50,6 +50,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       }
     }
   }
+  console.log("RESULT", result);
   console.log("8");
   return result;
 };

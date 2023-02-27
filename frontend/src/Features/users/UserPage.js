@@ -51,6 +51,7 @@ const UserPage = () => {
       spotifyContent = user.spotifyId && (
         <SpotifySpotlight userId={userId} spotifyTrackIds={user.spotifyTrackIds} />
       );
+      // spotifyContent = <SpotifySpotlight spotifyTrackIds={user.spotifyTrackIds} />;
     }
   }
 
