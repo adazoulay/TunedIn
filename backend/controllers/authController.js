@@ -366,6 +366,18 @@ const spotifyCallback = async (req, res) => {
         refresh_token,
       }).toString();
 
+      const userInfo = await axios({
+        method: "get",
+        url: "https://api.spotify.com/v1/me",
+        headers: {
+          Authorization: "Bearer " + access_token,
+        },
+      });
+
+      const spotifyId = userInfo.data.id;
+
+      console.log("1 spotifyId");
+
       await User.findByIdAndUpdate(userId, {
         $set: { spotifyId: spotifyId },
         $set: { spotifyRefreshToken: refresh_token },
