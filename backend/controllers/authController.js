@@ -331,12 +331,15 @@ const spotifyCallback = async (req, res) => {
   const jwtToken = req.query.state || null;
   let decoded = null;
 
+  console.log("jwtToken", jwtToken);
+
   if (jwtToken) {
     decoded = jwt.verify(jwtToken, process.env.ACCESS_TOKEN_SECRET);
   } else {
     return res.status(401).message("no JWT provided");
   }
 
+  console.log("decoded", decoded);
   const { id: userId } = decoded?.userInfo;
 
   const params = new URLSearchParams({
