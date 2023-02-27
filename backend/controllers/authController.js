@@ -396,6 +396,8 @@ const spotifyCallback = async (req, res) => {
 
       res.redirect(`${redirectUrl}/user/${userId}/?${queryParams}`);
     } else {
+      console.log("INVALID TOKEN");
+
       const queryParams = new URLSearchParams({
         error: "invalid_token",
       }).toString();
@@ -403,6 +405,7 @@ const spotifyCallback = async (req, res) => {
       res.redirect(`/?${queryParams}`);
     }
   } catch (error) {
+    console.log("ERROR", error);
     res.send(error);
   }
 };
