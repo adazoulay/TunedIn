@@ -142,7 +142,15 @@ const signout = async (req, res, next) => {
   res.json({ message: "Cookie cleared" });
 };
 
-//! SPOTIFY
+//! ---------- SPOTIFY ----------
+const generateRandomString = (length) => {
+  let text = "";
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
 
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
@@ -160,7 +168,7 @@ scopes = [
 //! AUTH WITH SPOT
 
 const authWithSpotify = async (req, res, next) => {
-  let state = "auth";
+  const state = generateRandomString(16);
   res.cookie(stateKey, state);
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
@@ -198,14 +206,8 @@ const spotifyAuthCallback = async (req, res) => {
     if (response.status === 200) {
       const { access_token, refresh_token } = response.data;
 
-      console.log("USER INFO TEST TESTS TEST TEST");
-      console.log("ACCESS TOKEN", access_token);
-      console.log("REFRESH TOKEN", refresh_token);
-
-      const queryParams = new URLSearchParams({
-        access_token,
-        refresh_token,
-      }).toString();
+      console.log("AUTH: ACCESS TOKEN", access_token);
+      console.log("AUTH: REFRESH TOKEN", refresh_token);
 
       const userInfo = await axios({
         method: "get",
@@ -245,20 +247,20 @@ const spotifyAuthCallback = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      // const accessToken = jwt.sign(
-      //   {
-      //     userInfo: {
-      //       id: user._id,
-      //       username: user.username,
-      //       imageUrl: user.imageUrl,
-      //       saved: user.saved,
-      //       spotifyId: user.spotifyId,
-      //       spotifyRefreshToken: user.spotifyRefreshToken,
-      //     },
-      //   },
-      //   process.env.ACCESS_TOKEN_SECRET,
-      //   { expiresIn: "15m" }
-      // );
+      const accessToken = jwt.sign(
+        {
+          userInfo: {
+            id: user._id,
+            username: user.username,
+            imageUrl: user.imageUrl,
+            saved: user.saved,
+            spotifyId: user.spotifyId,
+            authWithSpotify: true,
+          },
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "15m" }
+      );
 
       const refreshToken = jwt.sign(
         {
@@ -268,7 +270,6 @@ const spotifyAuthCallback = async (req, res) => {
             imageUrl: user.imageUrl,
             saved: user.saved,
             spotifyId: user.spotifyId,
-            spotifyRefreshToken: user.spotifyRefreshToken,
             authWithSpotify: true,
           },
         },
@@ -282,6 +283,12 @@ const spotifyAuthCallback = async (req, res) => {
         sameSite: "None",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
+
+      const queryParams = new URLSearchParams({
+        access_token,
+        refresh_token,
+        accessToken,
+      }).toString();
 
       const redirectUrl =
         process.env.NODE_ENV === "development"
@@ -353,24 +360,30 @@ const spotifyCallback = async (req, res) => {
 
     if (response.status === 200) {
       const { access_token, refresh_token } = response.data;
+
+      console.log("CONNECT TEST TESTS TEST TEST");
+      console.log("ACCESS TOKEN", access_token);
+      console.log("REFRESH TOKEN", refresh_token);
+
       const queryParams = new URLSearchParams({
         access_token,
         refresh_token,
       }).toString();
-
-      res.cookie("spotifyRefreshToken", refresh_token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
 
       console.log("USER INFO TEST TESTS TEST TEST");
       console.log("ACCESS TOKEN", access_token);
       console.log("REFRESH TOKEN", refresh_token);
 
       await User.findByIdAndUpdate(userId, {
+        $set: { spotifyId: spotifyId },
         $set: { spotifyRefreshToken: refresh_token },
+      });
+
+      res.cookie("spotifyRefreshToken", refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
       const redirectUrl =
@@ -393,10 +406,14 @@ const spotifyCallback = async (req, res) => {
 
 const spotifyRefresh = async (req, res) => {
   const cookies = req.cookies;
+  const userId = req.user.id;
+
   if (!cookies?.spotifyRefreshToken) {
     return res.status(401).json({ message: "Spotfy no refresh: Unauthorized" });
   }
+
   const refresh_token = cookies.spotifyRefreshToken;
+
   try {
     const queryParams = new URLSearchParams({
       grant_type: "refresh_token",
@@ -415,14 +432,16 @@ const spotifyRefresh = async (req, res) => {
       },
     });
 
-    const userId = req.user.id;
+    const access_token = response.data.access_token;
+
+    console.log("ACCESS", access_token);
 
     console.log("REFRESH: TOP TRAKCS B4");
     const topTracksResponse = await axios({
       method: "get",
       url: "https://api.spotify.com/v1/me/top/tracks/?limit=3&time_range=short_term",
       headers: {
-        Authorization: "Bearer " + response.data.access_token,
+        Authorization: "Bearer " + access_token,
       },
     });
 
@@ -434,7 +453,7 @@ const spotifyRefresh = async (req, res) => {
       $set: { spotifyTrackIds: topTracks },
     });
 
-    console.log("SETTING TRAKCS");
+    console.log("END");
 
     res.send(response.data);
   } catch (error) {

@@ -3,6 +3,7 @@ import SpotifyLogo from "../../assets/SpotifyLogo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCurrentToken } from "../Auth/authSlice";
 import { setSpotifyAccessToken } from "./spotifySlice";
+import { setCredentials } from "../Auth/authSlice";
 
 import "./spotify.scss";
 
@@ -18,10 +19,14 @@ const SpotifyAuth = () => {
   useEffect(() => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const accessToken = urlParams.get("access_token");
+    const access_token = urlParams.get("access_token");
+    const accessToken = urlParams.get("accessToken");
     dispatch(
       setSpotifyAccessToken({
-        token: accessToken,
+        token: access_token,
+      }),
+      setCredentials({
+        accessToken,
       })
     );
   }, []);

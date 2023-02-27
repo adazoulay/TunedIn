@@ -9,6 +9,8 @@ const baseQuery = fetchBaseQuery({
     const token = getState().spotifyAuth.token;
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
+    } else {
+      console.log("NO TOKEN EXTERNAL API");
     }
     return headers;
   },
