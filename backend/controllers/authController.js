@@ -358,6 +358,13 @@ const spotifyCallback = async (req, res) => {
         refresh_token,
       }).toString();
 
+      res.cookie("spotifyRefreshToken", refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
       console.log("USER INFO TEST TESTS TEST TEST");
       console.log("ACCESS TOKEN", access_token);
       console.log("REFRESH TOKEN", refresh_token);
@@ -371,19 +378,15 @@ const spotifyCallback = async (req, res) => {
       });
 
       const spotifyId = userInfo?.data?.id ?? null;
+
+      console.log("TEST2 TEST2 TEST2 TEST2 TEST2");
+      console.log("spotifyId", spotifyId);
       if (spotifyId) {
         await User.findByIdAndUpdate(userId, {
           $set: { spotifyId: spotifyId },
           $set: { spotifyRefreshToken: refresh_token },
         });
       }
-
-      res.cookie("spotifyRefreshToken", refresh_token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
 
       const redirectUrl =
         process.env.NODE_ENV === "development"
