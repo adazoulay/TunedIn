@@ -369,24 +369,9 @@ const spotifyCallback = async (req, res) => {
       console.log("ACCESS TOKEN", access_token);
       console.log("REFRESH TOKEN", refresh_token);
 
-      const userInfo = await axios({
-        method: "get",
-        url: "https://api.spotify.com/v1/me",
-        headers: {
-          Authorization: "Bearer " + access_token,
-        },
+      await User.findByIdAndUpdate(userId, {
+        $set: { spotifyRefreshToken: refresh_token },
       });
-
-      const spotifyId = userInfo?.data?.id ?? null;
-
-      console.log("TEST2 TEST2 TEST2 TEST2 TEST2");
-      console.log("spotifyId", spotifyId);
-      if (spotifyId) {
-        await User.findByIdAndUpdate(userId, {
-          $set: { spotifyId: spotifyId },
-          $set: { spotifyRefreshToken: refresh_token },
-        });
-      }
 
       const redirectUrl =
         process.env.NODE_ENV === "development"
@@ -432,6 +417,7 @@ const spotifyRefresh = async (req, res) => {
 
     const userId = req.user.id;
 
+    console.log("REFRESH: TOP TRAKCS B4");
     const topTracksResponse = await axios({
       method: "get",
       url: "https://api.spotify.com/v1/me/top/tracks/?limit=3&time_range=short_term",
@@ -440,9 +426,11 @@ const spotifyRefresh = async (req, res) => {
       },
     });
 
+    console.log("REFRESH: TOP TRAKCS AFTER");
+
     const topTracks = topTracksResponse.data.items.map((track) => track.id);
 
-    const user = await User.findByIdAndUpdate(userId, {
+    await User.findByIdAndUpdate(userId, {
       $set: { spotifyTrackIds: topTracks },
     });
 

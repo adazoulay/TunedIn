@@ -135,9 +135,9 @@ const MediaPlayer = ({ children, mediaRef, bodyIsCollapsed = true, isSpotify = f
         }}>
         <button className='controls-button' onClick={handlePlayPause}>
           {playing ? (
-            <Pause size={isSpotify ? 15 : 28} color='#ebebeb' />
+            <Pause size={isSpotify ? 15 : 28} color='#ebebeb' opacity={0.9} />
           ) : (
-            <Play size={isSpotify ? 15 : 28} color='#ebebeb' />
+            <Play size={isSpotify ? 15 : 28} color='#ebebeb' opacity={0.9} />
           )}
         </button>
         {/* current time */}
@@ -164,9 +164,19 @@ const MediaPlayer = ({ children, mediaRef, bodyIsCollapsed = true, isSpotify = f
         <div className='volume' onMouseEnter={handleShow} onMouseLeave={handleHide}>
           <div className='volume-btn'>
             {mediaRef?.current?.volume ? (
-              <Volume2 size={isSpotify ? 18 : 30} color='#ebebeb' onClick={toggleVolume} />
+              <Volume2
+                size={isSpotify ? 18 : 30}
+                color='#ebebeb'
+                opacity={0.9}
+                onClick={toggleVolume}
+              />
             ) : (
-              <VolumeX size={isSpotify ? 18 : 30} color='#ebebeb' onClick={toggleVolume} />
+              <VolumeX
+                size={isSpotify ? 18 : 30}
+                color='#ebebeb'
+                opacity={0.9}
+                onClick={toggleVolume}
+              />
             )}
           </div>
           {!isCollapsed && (
