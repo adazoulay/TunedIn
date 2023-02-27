@@ -361,23 +361,19 @@ const spotifyCallback = async (req, res) => {
     if (response.status === 200) {
       const { access_token, refresh_token } = response.data;
 
-      console.log("CONNECT TEST TESTS TEST TEST");
-      console.log("ACCESS TOKEN", access_token);
-      console.log("REFRESH TOKEN", refresh_token);
-
       const queryParams = new URLSearchParams({
         access_token,
         refresh_token,
       }).toString();
 
-      console.log("USER INFO TEST TESTS TEST TEST");
-      console.log("ACCESS TOKEN", access_token);
-      console.log("REFRESH TOKEN", refresh_token);
-
       await User.findByIdAndUpdate(userId, {
         $set: { spotifyId: spotifyId },
         $set: { spotifyRefreshToken: refresh_token },
       });
+
+      console.log("1 1 1 1");
+      console.log("ACCESS TOKEN", access_token);
+      console.log("REFRESH TOKEN", refresh_token);
 
       res.cookie("spotifyRefreshToken", refresh_token, {
         httpOnly: true,
@@ -386,12 +382,17 @@ const spotifyCallback = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
+      console.log("2 2 2 2");
+
       const redirectUrl =
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
           : "https://melonet.xyz";
 
+      console.log("process.env.NODE_ENV", process.env.NODE_ENV);
       console.log("REDIRECT", redirectUrl);
+      console.log("userId", userId);
+      console.log("queryParams", queryParams);
 
       res.redirect(`${redirectUrl}/user/${userId}/?${queryParams}`);
     } else {
