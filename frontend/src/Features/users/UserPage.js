@@ -34,7 +34,10 @@ const UserPage = () => {
     if (userId === currentUser) {
       content = (
         <Link to='/user/edit'>
-          <Edit size={36} />
+          <div className='edit-profile'>
+            <Edit size={36} />
+            <div>Edit Profile</div>
+          </div>
         </Link>
       );
       if (user.spotifyId) {

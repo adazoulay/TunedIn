@@ -15,11 +15,8 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 
 //TODO feed
 //TODO   Fix feed
-//TODO   Add tags to feed
 
 //! Broadcast page
-
-//
 
 //! Repost post
 
@@ -33,7 +30,7 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 //! Post spotify songs/playlists/artists
 
 //! Add tags like cover, remix, original, music video,
-
+//! Add tags to feed
 //! Refactor
 //!   Add Img/Gif as tag background
 //!   Comments 2.0

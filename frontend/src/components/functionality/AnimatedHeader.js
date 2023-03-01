@@ -1,11 +1,11 @@
 import React, { memo, useMemo } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
-const AnimatedBorder = ({ children, colors, type }) => {
+const AnimatedHeader = ({ colors }) => {
   const [containerRef, isVisible] = useIntersectionObserver({
     root: null,
     rootMargin: "0px",
-    threshhold: 0,
+    threshold: 0,
   });
 
   const calculateColors = () => {
@@ -29,22 +29,17 @@ const AnimatedBorder = ({ children, colors, type }) => {
   return (
     <div
       ref={containerRef}
+      className='animated-header'
       style={{
-        "--angle": "0deg",
-        display: "inline-block",
-        width: "100%",
-        borderLeft: "none",
-        borderRight: "none",
-        borderTop: "none",
-        bordderBottom: "10px  solid red",
-        zIndex: 100,
-        borderImage:
-          isVisible && `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
-        animation: isVisible && "15s rotate linear infinite",
+        borderRadius: "5px",
+        background: `linear-gradient(to left , ${borderColor.join(", ")})`,
+        backgroundSize: "200%",
+        animation: isVisible && "15s moveGradient linear infinite",
+        animationName: isVisible && "moveGradient",
       }}></div>
   );
 };
 
-export default memo(AnimatedBorder, (prevPros, nextProps) => {
+export default memo(AnimatedHeader, (prevPros, nextProps) => {
   return JSON.stringify(prevPros.colors) === JSON.stringify(nextProps.colors);
 });

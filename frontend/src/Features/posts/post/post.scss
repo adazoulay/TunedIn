@@ -15,9 +15,19 @@ $accent: #f40035;
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(255, 255, 255, 0.125);
-
   background-color: rgb(15, 15, 15);
-  border-radius: 10px;
+  border-radius: 5px;
+
+  .animated-header {
+    position: absolute;
+    z-index: 3;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 7px;
+    width: calc(100% - 7px);
+    border-radius: 0;
+  }
 
   .post-header {
     display: flex;
@@ -25,6 +35,12 @@ $accent: #f40035;
     padding: 15px;
     justify-content: space-between;
     align-items: center;
+    backdrop-filter: blur(11px) saturate(250%);
+    -webkit-backdrop-filter: blur(11px) saturate(250%);
+    border-radius: 0 5px;
+
+    z-index: 5;
+    border-radius: 5px;
     .post-tags {
       display: flex;
     }
@@ -56,7 +72,7 @@ $accent: #f40035;
     height: fit-content;
     max-height: 700px;
     background-color: $base-color;
-    border-radius: 20px;
+    border-radius: 0 0 20px 20px;
     height: 100%;
 
     ::-webkit-scrollbar {
@@ -78,12 +94,6 @@ $accent: #f40035;
       font-size: 0.95em;
     }
   }
-
-  .divider-top {
-    // opacity: 10%;
-    opacity: 0%;
-    background-color: $section;
-  }
 }
 
 .post-body {
@@ -95,6 +105,8 @@ $accent: #f40035;
   width: 100%;
   min-height: 85px;
   height: min-content;
+  background-color: $base-color;
+  border-radius: 20px 20px 0px 0px;
 
   .content-wrapper {
     width: 100%;
@@ -130,8 +142,8 @@ $accent: #f40035;
     .activate-footer {
       z-index: 6;
       position: absolute;
-      right: 0;
-      top: 2px;
+      right: 10px;
+      top: 5px;
       cursor: pointer;
     }
   }
@@ -327,4 +339,13 @@ $accent: #f40035;
   right: 90px;
   top: 11px;
   cursor: pointer;
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: -200% 0%;
+  }
 }

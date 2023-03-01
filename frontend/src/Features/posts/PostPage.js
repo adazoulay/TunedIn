@@ -40,6 +40,7 @@ const PostPage = () => {
     <>
       {isSuccessTags && isSuccessUser && isSuccessPost && (
         <div className='content-header'>
+          {/* <AnimatedHeader colors={tags?.ids?.map((id) => tags.entities[id].color)} /> */}
           <div className='post-page-header'>
             <Link to={`/user/${post.userId}`}>{userContent}</Link>
             <Link to={`/post/${postId}`}>

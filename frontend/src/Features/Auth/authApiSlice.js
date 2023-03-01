@@ -49,6 +49,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    spotifyDisconnect: builder.mutation({
+      query: () => ({
+        url: "/auth/spotifyDisconnect",
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -57,4 +63,5 @@ export const {
   useSignupMutation,
   useSendLogoutMutation,
   useRefreshMutation,
+  useSpotifyDisconnectMutation,
 } = authApiSlice;

@@ -2,7 +2,6 @@ import React, { memo, createContext, useRef } from "react";
 import { useGetTagsByPostIdQuery } from "../../tags/tagsApiSlice";
 import { useGetPostsQuery } from "../postsApiSlice";
 import { useGetUserByPostIdQuery } from "../../users/usersApiSlice";
-import AnimatedBorder from "../../../components/functionality/AnimatedBorder";
 import AnimatedHeader from "../../../components/functionality/AnimatedHeader";
 import TagGroup from "../../tags/TagGroup";
 import PostHeader from "./PostHeader";
@@ -42,7 +41,11 @@ const Post = ({ postId, fetchArgs }) => {
         contentType: post?.contentType,
       }}>
       <article className='post-feed'>
-        <AnimatedHeader colors={tags?.ids?.map((id) => tags.entities[id].color)} />
+        {tags?.ids?.length ? (
+          <AnimatedHeader colors={tags?.ids?.map((id) => tags.entities[id].color)} />
+        ) : (
+          <></>
+        )}
         <div className='post-header'>
           {isSuccessTags && isSuccessUser && <PostHeader title={post?.title} />}
           <div className='post-tags'>
@@ -51,15 +54,11 @@ const Post = ({ postId, fetchArgs }) => {
         </div>
 
         {post?.contentUrl && isSuccessTags && isSuccessUser ? (
-          <AnimatedBorder
-            colors={tags?.ids?.map((id) => tags.entities[id].color)}
-            type={"post"}>
-            <div className='post-body'>
-              <PostBody title={post?.title} />
-            </div>
-          </AnimatedBorder>
+          <div className='post-body'>
+            <PostBody title={post?.title} />
+          </div>
         ) : (
-          <hr className='divider-top' />
+          <></>
         )}
         <div className='post-footer'>
           {isSuccessTags && (

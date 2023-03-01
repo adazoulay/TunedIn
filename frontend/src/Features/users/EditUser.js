@@ -3,16 +3,19 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUpdateUserMutation } from "./usersApiSlice";
 import { useGetTagsByUserIdQuery } from "../tags/tagsApiSlice";
+import { useSpotifyDisconnectMutation } from "../Auth/authApiSlice";
 import useAuth from "../../hooks/useAuth";
 import ImageCropper from "../../components/functionality/ImageCropper";
 import { uploadFile } from "../../util/uploadToS3";
 import SearchInput from "../../components/functionality/search/SearchInput";
 import TagGroup from "../tags/TagGroup";
+import SpotifyLogo from "../../assets/SpotifyLogo.png";
 
 import { Save } from "react-feather";
 
 const EditUser = () => {
   const [updateUser, { isSuccess, error }] = useUpdateUserMutation();
+  const [disconnectSpotify] = useSpotifyDisconnectMutation();
 
   const inputRef = useRef();
   const errRef = useRef();
@@ -122,6 +125,10 @@ const EditUser = () => {
       upload();
     }
   }, [image]);
+
+  const handleSpotifyDisconnect = () => {
+    disconnectSpotify();
+  };
 
   //! Display file popup
 
@@ -234,10 +241,18 @@ const EditUser = () => {
               )}
             </div>
           </div>
-          <div className='button-row'></div>
-          <button className='base-button' type='submit' form='edit-user-form' title='Save'>
-            <Save /> Save
-          </button>
+          <div className='button-row'>
+            <button className='base-button' type='submit' form='edit-user-form' title='Save'>
+              <Save /> Save
+            </button>
+            <button
+              className='spotify-disconnect-button'
+              type='submit'
+              onClick={handleSpotifyDisconnect}>
+              <img src={SpotifyLogo} alt='' className='spotify-logo' />
+              <div>disconnect</div>
+            </button>
+          </div>
         </div>
       </form>
     </div>

@@ -179,16 +179,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
-    addSpotifyId: builder.mutation({
-      query: () => ({
-        url: "/users",
-        method: "PATCH",
-        body: {
-          ...initialUserData,
-        },
-      }),
-      invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
-    }),
   }),
 });
 
@@ -204,7 +194,6 @@ export const {
   useUnFollowUserMutation,
   useFollowTagMutation,
   useUnFollowTagMutation,
-  useAddSpotifyIdMutation,
 } = usersApiSlice;
 
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select();

@@ -32,13 +32,7 @@ const AnimatedBorder = ({ children, colors, type }) => {
       style={{
         "--angle": "0deg",
         display: "inline-block",
-
-        borderLeft: type !== "post" && "0.5px solid",
-        borderRight: type !== "post" && "0.5px solid",
-        // borderTop: "1px rgba(255, 255, 255, 0.125) solid",
-        // borderBottom: "1px rgba(255, 255, 255, 0.125) solid",
-        // borderTop: "0.5px solid",
-        // borderBottom: "0.5px solid",
+        border: "0.5px solid",
 
         borderImage:
           isVisible && `conic-gradient(from var(--angle), ${borderColor.join(", ")}) 1`,
