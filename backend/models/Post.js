@@ -15,17 +15,9 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    contentUrl: {
-      type: String,
-      default: "",
-    },
-    contentType: {
-      type: String,
-      defualt: "",
-    },
-    fileName: {
-      type: String,
-      default: "",
+    content: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Content",
     },
     views: {
       type: Number,

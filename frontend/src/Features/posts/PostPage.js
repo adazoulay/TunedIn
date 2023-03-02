@@ -53,7 +53,7 @@ const PostPage = () => {
         </div>
       )}
 
-      {post?.contentType && post?.contentUrl && isSuccessTags && (
+      {post?.content?.contentType && post?.content?.contentUrl && isSuccessTags && (
         <AnimatedBorder colors={tags?.ids?.map((id) => tags.entities[id].color)} type={"post"}>
           <PostContext.Provider
             value={{
@@ -61,8 +61,8 @@ const PostPage = () => {
               userId: post?.userId,
               userData: userData?.entities[userData?.ids[0]],
               colors: tags?.ids?.map((id) => tags.entities[id].color),
-              contentUrl: post?.contentUrl,
-              contentType: post?.contentType,
+              contentUrl: post?.content?.contentUrl,
+              contentType: post?.content?.contentType,
             }}>
             <div className='post-body'>
               <PostBody title={post.title} />
@@ -71,7 +71,10 @@ const PostPage = () => {
         </AnimatedBorder>
       )}
       <div className='post-page-footer'>
-        <MediaInfoButton fileName={post?.fileName} contentUrl={post?.contentUrl} />
+        <MediaInfoButton
+          fileName={post?.content?.fileName}
+          contentUrl={post?.content?.contentUrl}
+        />
         <div className='description'>
           <p>{post?.desc}</p>
         </div>

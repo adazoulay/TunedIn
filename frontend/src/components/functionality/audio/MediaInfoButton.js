@@ -3,7 +3,7 @@ import MediaInfo from "./MediaInfo";
 import { useSpring, animated } from "@react-spring/web";
 import { Settings } from "react-feather";
 
-const MediaInfoButton = ({ fileName, contentUrl }) => {
+const MediaInfoButton = ({ fileName, metadata, contentType }) => {
   const mediaInfoRef = useRef();
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -37,7 +37,7 @@ const MediaInfoButton = ({ fileName, contentUrl }) => {
       <>
         <div className='modal-section'>
           <animated.div className='media-info-modal' style={modalFadeInAnimatedStyle}>
-            {!isCollapsed && <MediaInfo contentUrl={contentUrl} />}
+            {!isCollapsed && <MediaInfo metadata={metadata} contentType={contentType} />}
           </animated.div>
           <div className='media-info-button' onClick={handleModalOpen}>
             <Settings size={18} color={"#ebebeb"} />

@@ -1,8 +1,11 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
 const Tag = require("../models/Tag");
+const Content = require("../models/Content");
 const fuzzyset = require("fuzzyset.js");
 const { default: mongoose } = require("mongoose");
+// import getMetadata from "../metadata.js";
+const { getMetadata } = require("../metadata.js");
 
 //! Feed Types
 const LIMIT = 5;
@@ -13,7 +16,7 @@ const getPosts = async (req, res, next) => {
   let userId = null;
   let currUser = null;
 
-  console.log("page", page, "type", type);
+  // console.log("page", page, "type", type);
 
   try {
     let posts;
@@ -114,6 +117,12 @@ const getPosts = async (req, res, next) => {
       return res.status(200).json([]);
     }
 
+    await Promise.all(
+      posts.map(async (post) => {
+        await post.populate("content");
+      })
+    );
+
     res.json(posts);
   } catch (err) {
     next(err);
@@ -122,12 +131,13 @@ const getPosts = async (req, res, next) => {
 
 const getPost = async (req, res, next) => {
   const postId = req.params.id;
-  console.log(postId);
+
   try {
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(400).json({ message: "Post not found" });
     }
+    await post.populate("content");
     res.status(200).json(post);
   } catch (err) {
     next(err);
@@ -197,6 +207,21 @@ const createNewPost = async (req, res, next) => {
 
   const { title, desc, tags, contentUrl, contentType, fileName } = req.body;
 
+  let metadata;
+  if (contentUrl) {
+    fetchedMetadata = await getMetadata(contentUrl, contentType);
+    console.log("METADATA", fetchedMetadata);
+    metadata = {
+      title: fetchedMetadata?.common?.title,
+      artist: fetchedMetadata?.common?.artist,
+      lossless: fetchedMetadata?.format?.lossless,
+      bitrate: fetchedMetadata?.format?.bitrate,
+      sampleRate: fetchedMetadata?.format?.sampleRate,
+      container: fetchedMetadata?.format?.container,
+    };
+    console.log("METADATA", metadata);
+  }
+
   if (!title || !desc) {
     return res.status(400).json({ message: "Title and description are required" });
   }
@@ -205,20 +230,19 @@ const createNewPost = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({ message: "You must be logged in to post" });
     }
-    const post = await Post.create({ userId, title, desc });
+    const content = await Content.create({
+      contentUrl,
+      contentType,
+      fileName,
+      metadata: JSON.stringify(metadata),
+    });
+
+    const post = await Post.create({ userId, title, desc, content });
     if (tags && tags.length > 0) {
       await post.updateOne({ $addToSet: { tags: { $each: tags } } });
       await Tag.updateMany({ _id: { $in: tags } }, { $addToSet: { posts: post._id } });
     }
-    if (contentUrl) {
-      post.contentUrl = contentUrl;
-    }
-    if (contentType) {
-      post.contentType = contentType;
-    }
-    if (fileName) {
-      post.fileName = fileName;
-    }
+
     await post.save();
     if (post) {
       await User.findByIdAndUpdate({ _id: userId }, { $addToSet: { posts: post.id } });
@@ -309,7 +333,6 @@ const likePost = async (req, res, next) => {
     const post = await Post.findByIdAndUpdate(postId, {
       $addToSet: { likes: userId },
     });
-    console.log("Liked", post.likes);
   } catch (err) {
     next(err);
   }
@@ -325,7 +348,6 @@ const unLikePost = async (req, res, next) => {
     const post = await Post.findByIdAndUpdate(postId, {
       $pull: { likes: userId },
     });
-    console.log("Unliked", post.likes);
   } catch (err) {
     next(err);
   }

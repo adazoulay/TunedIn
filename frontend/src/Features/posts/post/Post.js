@@ -27,6 +27,8 @@ const Post = ({ postId, fetchArgs }) => {
     }),
   });
 
+  console.log(post);
+
   const { data: tags, isSuccess: isSuccessTags } = useGetTagsByPostIdQuery(postId);
   const { data: userData, isSuccess: isSuccessUser } = useGetUserByPostIdQuery(postId);
 
@@ -37,8 +39,8 @@ const Post = ({ postId, fetchArgs }) => {
         userId: post?.userId,
         userData: userData?.entities[userData?.ids[0]],
         colors: tags?.ids?.map((id) => tags.entities[id].color),
-        contentUrl: post?.contentUrl,
-        contentType: post?.contentType,
+        contentUrl: post?.content?.contentUrl,
+        contentType: post?.content?.contentType,
       }}>
       <article className='post-feed'>
         {tags?.ids?.length ? (
@@ -53,7 +55,7 @@ const Post = ({ postId, fetchArgs }) => {
           </div>
         </div>
 
-        {post?.contentUrl && isSuccessTags && isSuccessUser ? (
+        {post?.content?.contentUrl && isSuccessTags && isSuccessUser ? (
           <div className='post-body'>
             <PostBody title={post?.title} />
           </div>
@@ -66,7 +68,8 @@ const Post = ({ postId, fetchArgs }) => {
               postFooterData={{
                 postId,
                 desc: post?.desc,
-                fileName: post?.fileName,
+                fileName: post?.content?.fileName,
+                metadata: post?.content?.metadata,
                 createdAt: post?.createdAt,
                 likes: post?.likes,
                 views: post?.views,

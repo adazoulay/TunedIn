@@ -10,8 +10,8 @@ import RepostButton from "../../../components/functionality/RepostButton";
 import useAuth from "../../../hooks/useAuth";
 
 const PostFooter = ({ postFooterData }) => {
-  const { postId, desc, createdAt, likes, views, fileName } = postFooterData;
-  const { contentUrl, userId } = useContext(PostContext);
+  const { postId, desc, createdAt, likes, views, fileName, metadata } = postFooterData;
+  const { contentUrl, contentType, userId } = useContext(PostContext);
   const { userId: currentUser } = useAuth();
 
   if (!postId || !postFooterData) {
@@ -20,7 +20,7 @@ const PostFooter = ({ postFooterData }) => {
 
   return (
     <>
-      <MediaInfoButton fileName={fileName} contentUrl={contentUrl} />
+      <MediaInfoButton fileName={fileName} metadata={metadata} contentType={contentType} />
       <div className='description'>
         <p>{desc && desc}</p>
       </div>
