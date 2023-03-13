@@ -10,11 +10,14 @@ const Tag = ({ tagInfo, tagId, size, type }) => {
   const smallBoxSize = {
     backgroundColor: `${color}`,
     boxShadow: isHover && `0 0 10px 0px ${color}`,
+    fontSize: name.length >= 8 ? "0.83em" : "1em",
+    paddingLeft: name.length >= 11 ? "2px" : "4px",
   };
 
   const largeBoxSize = {
     backgroundColor: `${color}`,
     boxShadow: isHover && `0 0 15px 0 ${color}`,
+    paddingLeft: name.length >= 11 ? "4px" : "0px",
   };
 
   const handleMouseEnter = () => {

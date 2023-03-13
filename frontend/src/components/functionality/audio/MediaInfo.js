@@ -4,7 +4,6 @@ const MediaInfo = ({ metadata, contentType }) => {
   metadata = JSON.parse(metadata);
   const { title, artist, lossless, container, bitrate, sampleRate } = metadata;
 
-  console.log(metadata);
   return (
     <>
       <div className='metadata-title'>Media Info</div>

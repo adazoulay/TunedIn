@@ -21,13 +21,13 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 //! Repost post
 
 //! Add Img/Cover to post
-//    Figure out metadata, can extract from file:
 //    If in spotify: spotifyUrl, if in File: uploadToS3,  if not: manually upload
 
 //? LATER
 
 //! Social links in profile page
 //! Post spotify songs/playlists/artists
+//! Explore tags
 
 //! Add tags like cover, remix, original, music video,
 //! Add tags to feed

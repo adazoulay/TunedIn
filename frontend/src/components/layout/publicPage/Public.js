@@ -45,7 +45,9 @@ const Public = () => {
         </div>
         <div className='public-info'>
           <div className='post-preview'>
-            <img src={PostImg} className='post-img' alt='Post' />
+            <div className='post-img-wrapper'>
+              <img src={PostImg} className='post-img' alt='Post' />
+            </div>
             <div className='desc-text'>
               <h2>
                 Create posts and share your thoughts, opinions and experiences about the music

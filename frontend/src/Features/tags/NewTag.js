@@ -165,6 +165,21 @@ const NewTag = ({ handleModalClose }) => {
             <Tag tagInfo={{ color, name }} size='tag-large' />
           </div>
         </div>
+        <div>
+          <label className='form-label' htmlFor='color'>
+            Hex:
+          </label>
+          <input
+            className='form-input'
+            type='text'
+            id='color'
+            value={color || ""} //! FIX
+            onChange={setColor}
+            ref={nameRef}
+            autoComplete='off'
+            required
+          />
+        </div>
         <div className='tag-form'>
           <div className='tag-col'>
             <div className='selected-label'>Parent Tags:</div>

@@ -15,7 +15,7 @@ const Footer = () => {
 
   const panelContentAnimatedStyle = useSpring({
     // zIndex: isCollapsed ? 3 : 9,
-    transform: isCollapsed ? `translate3d(-100%,0,0)` : `translate3d(0%,0,0)`,
+    transform: isCollapsed ? `translate3d(0%,0,0)` : `translate3d(100%,0,0)`,
   });
 
   const handleClosePlayer = () => {
@@ -38,9 +38,10 @@ const Footer = () => {
   );
 
   return (
-    <div className='footer' style={{ zIndex: isCollapsed ? 0 : 9 }}>
+    <div className='footer'>
       {playerInfo?.contentUrl && (
         <animated.div className='footer-content' style={panelContentAnimatedStyle}>
+          <div className='fill'></div>
           <div className='footer-player'>
             {playerInfo?.contentUrl && (
               <MediaPlayer mediaRef={mediaRef}>

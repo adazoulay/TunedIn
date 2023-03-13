@@ -34,6 +34,7 @@ const AuthDropdown = () => {
     <div className='auth-menu' ref={ref}>
       <div className='auth-buttons'>
         <AuthWithSpotify />
+        <b>OR</b>
         <div className='button-85' onClick={() => handleDropDownOpen("signIn")}>
           Sign In
         </div>
@@ -44,14 +45,16 @@ const AuthDropdown = () => {
       <animated.div style={panelContentAnimatedStyle} className='public-forms-wrapper'>
         <div>
           {modalType === "signIn" && (
-            <AnimatedBorder colors={["purple", "red", "orange", "yellow", "pink"]}>
+            <AnimatedBorder
+              colors={["blue", "purple", "red", "orange", "yellow", "pink", "blue"]}>
               <Signin />
             </AnimatedBorder>
           )}
         </div>
         <div>
           {modalType === "signUp" && (
-            <AnimatedBorder colors={["purple", "red", "orange", "yellow", "pink"]}>
+            <AnimatedBorder
+              colors={["blue", "purple", "red", "orange", "yellow", "pink", "blue"]}>
               <Signup />
             </AnimatedBorder>
           )}

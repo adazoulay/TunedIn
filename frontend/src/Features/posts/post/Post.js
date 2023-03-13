@@ -27,8 +27,6 @@ const Post = ({ postId, fetchArgs }) => {
     }),
   });
 
-  console.log(post);
-
   const { data: tags, isSuccess: isSuccessTags } = useGetTagsByPostIdQuery(postId);
   const { data: userData, isSuccess: isSuccessUser } = useGetUserByPostIdQuery(postId);
 

@@ -237,7 +237,7 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 2em;
+  padding: 2em 30px;
   background-color: rgb(4, 4, 4, 0.7);
   height: 100%;
   min-width: 100%;
@@ -287,41 +287,41 @@ a {
   flex-direction: column;
   align-items: flex-start;
   gap: 0.5em;
+}
 
-  .form-label {
-    font-size: 17px;
-    font-weight: bold;
-    color: $section;
-    width: 250px;
-  }
+.form-label {
+  font-size: 17px;
+  font-weight: bold;
+  color: $section;
+  width: 250px;
+}
 
-  .form-input {
-    background: #dee1e2;
-    color: $base-color;
-    border: none;
-    outline: none;
-    border-radius: 3px;
-    font-size: 15px;
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
-  }
+.form-input {
+  background: #202020;
+  color: $section;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  font-size: 15px;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
 
-  .form-input:focus {
-    background: #d3d3d4; //Change
-  }
+.form-input:focus {
+  background: #302f2f; //Change
+}
 
-  .file-input {
-    display: inline-block;
-    box-sizing: border-box;
-  }
+.file-input {
+  display: inline-block;
+  box-sizing: border-box;
+}
 
-  .tag-preview {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1em;
-  }
+.tag-preview {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
 }
 
 .field-info {
@@ -457,7 +457,7 @@ a {
   font-weight: 500;
   width: 72px;
   // width: 75px;
-  height: 24px;
+  height: 25px;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -467,6 +467,7 @@ a {
   position: relative;
   transition: transform 0.25s;
   box-shadow: 0 0 0 0 transparent;
+  line-height: 0.9;
 
   .x-tag {
     width: 10px;
@@ -515,6 +516,7 @@ a {
   color: $base-color;
   transition: all 0.2s ease-in;
   transition: all 0.2s ease-out;
+  line-height: 0.9;
 }
 
 //! BUTTONS

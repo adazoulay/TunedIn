@@ -64,17 +64,17 @@ const PostBody = ({ title }) => {
       <div className='footer-controls'>
         {!isCollapsed && contentType.startsWith("video") && (
           <div className='toggle-comments' onClick={toggleComments}>
-            <MessageSquare color='#ebebeb' />
+            <MessageSquare color='#ebebeb' opacity={0.9} />
           </div>
         )}
         <animated.div
           className='toggle-soundbar'
           style={toggleWrapperAnimatedStyle}
           onClick={togglePanel}>
-          {<ChevronsUp color='#ebebeb' />}
+          {<ChevronsUp color='#ebebeb' opacity={0.9} />}
         </animated.div>
         <div className='activate-footer' onClick={activateFooter}>
-          <ChevronsRight color='#ebebeb' />
+          <ChevronsRight color='#ebebeb' opacity={0.9} />
         </div>
       </div>
 

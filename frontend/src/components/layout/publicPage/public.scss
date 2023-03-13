@@ -1,3 +1,10 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Oxygen", sans-serif;
+}
+
 .public-layout {
   color: #ebebeb;
 }
@@ -115,10 +122,14 @@
       display: flex;
       gap: 3em;
 
+      .post-img-wrapper {
+        width: 100%;
+        border-radius: 150px;
+      }
       .post-img {
         display: block;
         font-size: 0;
-        width: 57%;
+        width: 100%;
         height: auto;
       }
       .desc-text {

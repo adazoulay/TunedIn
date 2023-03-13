@@ -141,7 +141,7 @@ $accent: #f40035;
 .sidebar {
   position: fixed;
   top: 70px;
-  height: calc(100% - 70px);
+  height: calc(100% - 2 * 70px);
   min-width: 130px;
   width: 22%;
   // max-width: ;
@@ -227,24 +227,43 @@ $accent: #f40035;
 .footer {
   position: fixed;
   bottom: 0;
-  left: calc(22% - 1px);
+  right: 78%;
+  // border: 1px red solid;
   height: 70px;
-  width: 80%;
+  width: 100%;
+  background-color: #07080a;
+  border-right: 1px solid rgba(255, 255, 255, 0.125);
+  z-index: 10;
 
   .footer-content {
-    position: relative;
+    position: absolute;
+    right: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: calc(100% - 22%);
     height: 100%;
     transform-origin: bottom left;
     border-top: 1px solid rgba(255, 255, 255, 0.125);
+    // border: 1px solid purple;
 
     backdrop-filter: blur(8px) saturate(180%);
     -webkit-backdrop-filter: blur(8px) saturate(180%);
     background-color: rgba(17, 25, 40, 0.192);
+    z-index: 5;
 
+    .fill {
+      width: 10px;
+      height: 100%;
+      // border: 1px red solid;
+      background: linear-gradient(
+        to right,
+        #07080a,
+        rgba(17, 25, 40, 0),
+        rgba(17, 25, 40, 0.192)
+      );
+      transform: translateX(-2px);
+    }
     .footer-player {
       width: 80%;
       display: flex;
@@ -305,4 +324,13 @@ $accent: #f40035;
     background-color: rgb(18, 18, 18, 0.8);
     border-radius: 10px;
   }
+}
+
+.body-message {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding-top: 30px;
 }
