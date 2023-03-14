@@ -131,6 +131,21 @@ a {
     }
   }
 
+  .social-links-wrapper {
+    width: 100%;
+    padding-left: 7%;
+    margin-top: -2%;
+    .social-links {
+      display: flex;
+      flex-direction: row;
+      gap: 1.5em;
+
+      .social-link {
+        cursor: pointer;
+      }
+    }
+  }
+
   .copy-link-user {
     position: absolute;
     right: 77px;
@@ -251,6 +266,7 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-height: 50%;
 }
 
 .edit-user-form {
@@ -829,9 +845,14 @@ a {
   color: $section;
   font-weight: bold;
   border-radius: 7px;
-  width: 200;
+  max-width: 200px;
+  max-height: 200px;
   background-color: #191414;
   cursor: pointer;
+  .spotify-logo {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .edit-profile {

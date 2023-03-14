@@ -67,7 +67,7 @@ const SideBar = () => {
             </Link>
           </div>
           <div className='sidebar-row'>
-            <Link to=''>
+            <Link to='/broadcast'>
               <div className='row-content'>
                 <Volume2 size={26} />
                 Broadcast

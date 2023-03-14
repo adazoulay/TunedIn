@@ -13,11 +13,11 @@ router.post("/signout", authController.signout);
 
 router.get("/refresh", authController.refresh);
 
+// Spotify
+
 router.get("/authWithSpotify", authController.authWithSpotify);
 
 router.get("/spotifyAuthCallback", authController.spotifyAuthCallback);
-
-// Spotify
 
 router.get("/spotify/:jwtToken", authController.connectToSpotify);
 
@@ -26,5 +26,7 @@ router.get("/spotifyCallback", authController.spotifyCallback);
 router.get("/spotifyRefresh", verifyJWT, authController.spotifyRefresh);
 
 router.get("/spotifyTempAuth", verifyJWT, authController.spotifyTempAuth);
+
+router.post("/spotifyDisconnect", verifyJWT, authController.spotifyDisconnect);
 
 module.exports = router;

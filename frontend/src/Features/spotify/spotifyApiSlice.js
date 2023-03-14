@@ -43,7 +43,6 @@ export const spotifyApiSlice = externalApiSlice.injectEndpoints({
     getTracks: builder.query({
       query: (spotifyTrackIds) => `/tracks?ids=${spotifyTrackIds.join(",")}`,
       transformResponse: (responseData) => {
-        console.log("TRACKS", responseData.tracks);
         return spotifyAdapter.setAll(initialState, responseData.tracks);
       },
       providesTags: (result, error, arg) => {

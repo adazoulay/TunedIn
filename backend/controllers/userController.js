@@ -60,7 +60,16 @@ const getUser = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const { username, password, desc, imageUrl, topTags } = req.body;
+  const {
+    username,
+    password,
+    desc,
+    imageUrl,
+    topTags,
+    instagramUrl,
+    twitterUrl,
+    linkedinUrl,
+  } = req.body;
   const id = req.user.id;
   try {
     const user = await User.findById(id).exec();
@@ -86,6 +95,17 @@ const updateUser = async (req, res, next) => {
     if (imageUrl) {
       user.imageUrl = imageUrl;
     }
+
+    if (instagramUrl) {
+      user.instagramUrl = instagramUrl;
+    }
+    if (twitterUrl) {
+      user.twitterUrl = twitterUrl;
+    }
+    if (linkedinUrl) {
+      user.linkedinUrl = linkedinUrl;
+    }
+
     const updatedUser = await user.save();
     res.status(200).json({ message: `${updatedUser.username} updated` });
   } catch (err) {

@@ -298,6 +298,39 @@ $accent: #f40035;
   }
 }
 
+.broadcast {
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+
+  .broadcast-comments {
+    font-size: 1.2em !important;
+    overflow: hidden;
+    overflow-y: auto;
+    padding-bottom: 70px;
+
+    .broadcast-list {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 1em;
+
+      .broadcast-post {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  }
+
+  .broadcast-new-post {
+    width: 100%;
+    position: fixed;
+    bottom: 10px;
+    right: 2%;
+    width: calc(100% - 27%);
+  }
+}
+
 .modal {
   position: fixed;
   left: 45%;

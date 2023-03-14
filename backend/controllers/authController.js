@@ -163,6 +163,8 @@ scopes = [
   "user-read-email",
   "user-top-read",
   "user-read-recently-played",
+  "playlist-read-private",
+  "user-library-read",
 ];
 
 //! AUTH WITH SPOT
@@ -506,6 +508,27 @@ const spotifyTempAuth = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
+    res.send(error);
+  }
+};
+
+const spotifyDisconnect = async (req, res) => {
+  const userId = req.user.id;
+
+  console.log("USERIDUSERIDUSERIDUSERIDUSERIDUSERIDUSERID");
+  console.log("userId", userId);
+  try {
+    await User.findByIdAndUpdate(userId, {
+      $set: {
+        spotifyId: null,
+        spotifyRefreshToken: null,
+        spotifyTrackIds: [],
+      },
+    });
+    res.send("User Spotify data deleted successfully");
+  } catch (err) {
+    console.log(err);
+    res.send(error);
   }
 };
 
@@ -520,6 +543,7 @@ module.exports = {
   spotifyCallback,
   spotifyRefresh,
   spotifyTempAuth,
+  spotifyDisconnect,
 };
 
 //To generate ACCESS_TOKEN_SECRET: in backend: node -> require('crypto').randomBytes(64).toString('hex')

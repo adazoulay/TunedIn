@@ -230,7 +230,6 @@ $accent: #f40035;
     .new-comment-input {
       position: relative;
       padding: 10px;
-      min-width: 100%;
       flex: 1;
       border: none;
       outline: none;
@@ -238,14 +237,22 @@ $accent: #f40035;
       color: $section;
       border-radius: 3px;
       font-size: 15px;
+
+      min-height: 40px;
+      height: 40px;
+      max-height: 200px;
+      resize: vertical;
+      min-width: 100%;
+      max-width: 100%;
     }
 
     .send-comment {
-      position: relative;
+      position: absolute;
       display: flex;
       align-items: center;
       justify-content: center;
-      right: 40px;
+      right: 5px;
+      top: 0px;
       height: 40px;
       width: 40px;
       border: none;

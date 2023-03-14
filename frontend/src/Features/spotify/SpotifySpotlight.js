@@ -1,19 +1,24 @@
 import React, { memo } from "react";
 import { useGetTracksQuery } from "./spotifyApiSlice";
 import SpotifySong from "./SpotifySong";
-import useAuth from "../../hooks/useAuth";
 
 import spotifyLogo from "../../assets/SpotifyLogo.png";
 import "./spotify.scss";
 
-const SpotifySpotlight = ({ spotifyTrackIds }) => {
+const SpotifySpotlight = ({ spotifyId, spotifyTrackIds }) => {
   const { data, isSuccess } = useGetTracksQuery(spotifyTrackIds);
 
   return (
     <div className='song-spotlight'>
       <div className='spotlight-title'>Bumping right now</div>
       <div className='song-list'>
-        <img src={spotifyLogo} className='spotlight-logo' alt='' />
+        <a
+          href={`https://open.spotify.com/user/${spotifyId}`}
+          target='_blank'
+          rel='noopener noreferrer'
+          style={{ display: "contents" }}>
+          <img src={spotifyLogo} className='spotlight-logo' alt='' />
+        </a>
         {isSuccess &&
           data?.ids.length &&
           data.ids.map((id) => {

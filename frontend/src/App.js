@@ -16,27 +16,26 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 //TODO feed
 //TODO   Fix feed
 
-//! Broadcast page
-
 //! Repost post
 
 //! Add Img/Cover to post
 //    If in spotify: spotifyUrl, if in File: uploadToS3,  if not: manually upload
 
-//? LATER
+//? ------ LATER ------
 
-//! Social links in profile page
 //! Post spotify songs/playlists/artists
 //! Explore tags
 
-//! Add tags like cover, remix, original, music video,
 //! Add tags to feed
+
 //! Refactor
 //!   Add Img/Gif as tag background
 //!   Comments 2.0
 //!   Search 2.0
 
-//! Maybe
+//? ----- Maybe -----
+//! Thread system for Broadcast page
+//! Add tags like cover, remix, original, music video,
 //! Can react with emotes during song. Plays to other users like insta live emotes
 
 function App() {

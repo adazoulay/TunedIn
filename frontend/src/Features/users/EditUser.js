@@ -32,6 +32,9 @@ const EditUser = () => {
     ids: [],
     entities: {},
   });
+  const [instagramUrl, setInstagramUrl] = useState("");
+  const [twitterUrl, setTwitterUrl] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
 
   //! Input fields
 
@@ -41,6 +44,10 @@ const EditUser = () => {
   const onUsernameChanged = (e) => setUsername(e.target.value);
   const onPasswordChanged = (e) => setPassword(e.target.value);
   const onDescChanged = (e) => setDesc(e.target.value);
+
+  const onInstagramUrlChanged = (e) => setInstagramUrl(e.target.value);
+  const onTwitterUrlChanged = (e) => setTwitterUrl(e.target.value);
+  const onLinkedinUrlChanged = (e) => setLinkedinUrl(e.target.value);
 
   //! Tags
 
@@ -89,7 +96,16 @@ const EditUser = () => {
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
     try {
-      await updateUser({ username, password, desc, imageUrl, topTags: selectedTags?.ids });
+      await updateUser({
+        username,
+        password,
+        desc,
+        imageUrl,
+        topTags: selectedTags?.ids,
+        instagramUrl,
+        twitterUrl,
+        linkedinUrl,
+      });
     } catch (err) {
       if (!err.status) {
         setErrMsg("No Server Response");
@@ -240,6 +256,49 @@ const EditUser = () => {
                 />
               )}
             </div>
+          </div>
+          {/* Social URL */}
+          <div className='form-row'>
+            <label className='form-label' htmlFor='editInstagramUrl'>
+              Instagram Url:
+            </label>
+            <input
+              className='form-input'
+              id='editInstagramUrl'
+              name='instagramUrl'
+              type='text'
+              autoComplete='off'
+              value={instagramUrl}
+              onChange={onInstagramUrlChanged}
+            />
+          </div>
+          <div className='form-row'>
+            <label className='form-label' htmlFor='editTwitterUrl'>
+              Twitter Url:
+            </label>
+            <input
+              className='form-input'
+              id='editTwitterUrl'
+              name='twitterUrl'
+              type='text'
+              autoComplete='off'
+              value={twitterUrl}
+              onChange={onTwitterUrlChanged}
+            />
+          </div>
+          <div className='form-row'>
+            <label className='form-label' htmlFor='editLinkedinUrl'>
+              Linkedin Url:
+            </label>
+            <input
+              className='form-input'
+              id='editLinkedinUrl'
+              name='linkedinUrl'
+              type='text'
+              autoComplete='off'
+              value={linkedinUrl}
+              onChange={onLinkedinUrlChanged}
+            />
           </div>
           <div className='button-row'>
             <button className='base-button' type='submit' form='edit-user-form' title='Save'>

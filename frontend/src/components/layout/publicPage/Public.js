@@ -1,7 +1,9 @@
+import AuthDropdown from "./AuthDropdown";
+
 import Logo from "../../../assets/Logo";
 import PostImg from "./publicPageAssets/post.png";
-import createTagImg from "./publicPageAssets/createTag.png";
-import AuthDropdown from "./AuthDropdown";
+import CreateTagImg from "./publicPageAssets/createTag.png";
+import ProfleImg from "./publicPageAssets/profile.png";
 import "./public.scss";
 
 // import createPostImg from "./publicPageAssets/createPost.png";
@@ -61,7 +63,7 @@ const Public = () => {
             </div>
           </div>
           <div className='create-tag-preview'>
-            <img src={createTagImg} className='tag-img' alt='Create Tag' />
+            <img src={CreateTagImg} className='tag-img' alt='Create Tag' />
             <div className='desc-text'>
               <h2>
                 The &quot;tag&quot; system, allows you to join and contribute to small
@@ -78,6 +80,19 @@ const Public = () => {
                 metal, there&apos;s a tag for you. If not, create one!
               </h2>
             </div>
+          </div>
+
+          <div className='profile-preview'>
+            <div className='desc-text'>
+              <h2>
+                MeloNet leverages the power of Spotify&apos;s API to allow you to easily
+                display your Spotify account&apos;s content such as songs, artists, playlists
+                and share it with friends and followers. Whether you&apos;re a music enthusiast
+                or an aspiring artist, our app makes it easy to connect with like-minded
+                individuals and build your own community.
+              </h2>
+            </div>
+            <img src={ProfleImg} className='profile-img' alt='Create Tag' />
           </div>
         </div>
       </div>

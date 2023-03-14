@@ -9,6 +9,7 @@ import FollowButton from "../../components/functionality/FollowButton";
 import CopyLinkButton from "../../components/functionality/CopyLinkButton";
 import SpotifyConnectButton from "../spotify/SpotifyConnectButton";
 import SpotifySpotlight from "../spotify/SpotifySpotlight";
+import SocialLinks from "./SocialLinks";
 
 import { Edit } from "react-feather";
 
@@ -20,7 +21,6 @@ const UserPage = () => {
   const { data: tags } = useGetTagsByUserIdQuery(userId);
 
   let user;
-  let tracks;
 
   if (isSuccess) {
     const { ids, entities } = userData;
@@ -43,7 +43,10 @@ const UserPage = () => {
       if (user.spotifyId) {
         spotifyContent = (
           <>
-            <SpotifySpotlight spotifyTrackIds={user.spotifyTrackIds} />
+            <SpotifySpotlight
+              spotifyId={user.spotifyId}
+              spotifyTrackIds={user.spotifyTrackIds}
+            />
           </>
         );
       } else {
@@ -52,9 +55,8 @@ const UserPage = () => {
     } else {
       content = <FollowButton user={user} />;
       spotifyContent = user.spotifyId && (
-        <SpotifySpotlight userId={userId} spotifyTrackIds={user.spotifyTrackIds} />
+        <SpotifySpotlight spotifyId={user.spotifyId} spotifyTrackIds={user.spotifyTrackIds} />
       );
-      // spotifyContent = <SpotifySpotlight spotifyTrackIds={user.spotifyTrackIds} />;
     }
   }
 
@@ -79,6 +81,13 @@ const UserPage = () => {
                   <TagGroup tags={tags} type={"tags-user"} />
                 </>
               )}
+            </div>
+            <div className='social-links-wrapper'>
+              <SocialLinks
+                instagramUrl={user?.instagramUrl}
+                twitterUrl={user?.twitterUrl}
+                linkedinUrl={user?.linkedinUrl}
+              />
             </div>
           </div>
           <div className='user-right'>

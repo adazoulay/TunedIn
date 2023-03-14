@@ -12,6 +12,14 @@ const NewComment = ({ postId }) => {
     setDesc(e.target.value);
   };
 
+  const handleKeyDown = (e) => {
+    if (!e.shiftKey && e.key === "Enter") {
+      handleSubmit(e);
+    } else if (e.shiftKey && e.key === "Enter") {
+      setDesc((prevDesc) => prevDesc + "\n");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (desc && username) {
@@ -33,11 +41,12 @@ const NewComment = ({ postId }) => {
   return (
     <div className='new-comment-wrapper'>
       <form className='comment-form' onSubmit={handleSubmit}>
-        <input
+        <textarea
           className='new-comment-input'
-          type='text'
           value={desc}
           onChange={handleDescChange}
+          onKeyDown={handleKeyDown}
+          placeholder='Comment...'
         />
         <button className='send-comment'>
           <Send color='white' />
