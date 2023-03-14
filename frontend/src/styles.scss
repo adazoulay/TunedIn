@@ -810,8 +810,9 @@ a {
 .pic-large {
   width: 160px;
   height: 160px;
-  background-color: $tertiary;
+  background-color: $secondary;
   border-radius: 20%;
+  text-align: center;
 }
 
 .header-username {

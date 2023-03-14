@@ -39,6 +39,7 @@ const Post = ({ postId, fetchArgs }) => {
         colors: tags?.ids?.map((id) => tags.entities[id].color),
         contentUrl: post?.content?.contentUrl,
         contentType: post?.content?.contentType,
+        postImgUrl: post?.imageUrl,
       }}>
       <article className='post-feed'>
         {tags?.ids?.length ? (

@@ -11,7 +11,7 @@ import useAuth from "../../../hooks/useAuth";
 
 const PostFooter = ({ postFooterData }) => {
   const { postId, desc, createdAt, likes, views, fileName, metadata } = postFooterData;
-  const { contentUrl, contentType, userId } = useContext(PostContext);
+  const { contentType, userId, postImgUrl } = useContext(PostContext);
   const { userId: currentUser } = useAuth();
 
   if (!postId || !postFooterData) {
@@ -46,6 +46,11 @@ const PostFooter = ({ postFooterData }) => {
             <LikePostButton postId={postId} likes={likes} />
           </div>
         </div>
+        {postImgUrl && (
+          <div className='post-cover-wrapper'>
+            <img src={postImgUrl} alt='Teehee' className='post-cover' />
+          </div>
+        )}
         <div className='footer-stats'>
           {views > 0 && <div className='views'>{views} views</div>}
           <TimeAgo timestamp={createdAt} />

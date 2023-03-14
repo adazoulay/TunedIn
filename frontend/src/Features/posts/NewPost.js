@@ -25,6 +25,7 @@ const NewPost = ({ handleModalClose }) => {
   const [desc, setDesc] = useState("");
   const [file, setFile] = useState();
   const [content, setContent] = useState("");
+  const [imageFile, setImageFile] = useState();
 
   const { userId } = useAuth();
 
@@ -36,15 +37,16 @@ const NewPost = ({ handleModalClose }) => {
   const onDescChanged = (e) => setDesc(e.target.value);
 
   //! File
-  const inputRef = useRef();
-  const triggerFileSelectPopup = () => inputRef.current.click();
 
-  const upload = async () => {
+  const upload = async (content) => {
     if (content) {
       const url = await uploadFile(content, content.type);
       return url;
     }
   };
+
+  const inputRef = useRef();
+  const triggerFileSelectPopup = () => inputRef.current.click();
 
   const onSelectFile = (event) => {
     setFile(event.target.files[0]);
@@ -58,6 +60,14 @@ const NewPost = ({ handleModalClose }) => {
     }
   };
 
+  //! Img
+  const imageInputRef = useRef();
+  const triggerImageFileSelectPopup = () => imageInputRef.current.click();
+
+  const onSelectImageFile = (event) => {
+    setImageFile(event.target.files[0]);
+  };
+
   //! Submit
   const canSave = [title, desc].every(Boolean) && !isLoading;
 
@@ -65,7 +75,9 @@ const NewPost = ({ handleModalClose }) => {
     e.preventDefault();
     if (canSave) {
       try {
-        const contentUrl = await upload();
+        const contentUrl = await upload(content);
+        const imageContentUrl = await upload(imageFile);
+        console.log("imageContentUrl", imageContentUrl);
         handleModalClose();
         await addNewPost({
           title,
@@ -74,6 +86,7 @@ const NewPost = ({ handleModalClose }) => {
           contentUrl,
           contentType: content?.type,
           fileName: file?.name,
+          imageUrl: imageContentUrl,
         });
       } catch (err) {
         if (!err.status) {
@@ -160,7 +173,7 @@ const NewPost = ({ handleModalClose }) => {
         </div>
         <div className='form-row'>
           <label className='form-label' htmlFor='file'>
-            File:
+            Content:
           </label>
           <input
             className='file-input'
@@ -179,6 +192,25 @@ const NewPost = ({ handleModalClose }) => {
             Accepts .FLAC, .WAV, .AIFF, .MOV, .MP4 (and MP3 👎 ){" "}
           </div>
         </div>
+        {/* IMG IMG IMG */}
+        <div className='form-row'>
+          <label className='form-label' htmlFor='image'>
+            Cover:
+          </label>
+          <input
+            className='file-input'
+            type='file'
+            accept='.jpeg,.png,'
+            id='image'
+            ref={imageInputRef}
+            style={{ display: "none" }}
+            onChange={onSelectImageFile}
+          />
+          <button className='base-button' onClick={triggerImageFileSelectPopup} type='button'>
+            Upload Image
+          </button>
+          <div className='grayed'> {imageFile && imageFile?.name}</div>
+        </div>
         <div className='form-row'>
           <label className='form-label' htmlFor='desc'>
             Description:
@@ -193,6 +225,7 @@ const NewPost = ({ handleModalClose }) => {
             required
           />
         </div>
+
         <div className='tag-form'>
           <div className='tag-col'>
             <SearchInput selectedFilter={"type-tag"} getSearchResults={getSearchResults} />

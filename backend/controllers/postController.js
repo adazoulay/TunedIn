@@ -205,12 +205,11 @@ const createNewPost = async (req, res, next) => {
     return res.status(400).json({ message: "Create an account to post" });
   }
 
-  const { title, desc, tags, contentUrl, contentType, fileName } = req.body;
+  const { title, desc, tags, contentUrl, contentType, fileName, imageUrl } = req.body;
 
   let metadata;
   if (contentUrl) {
     fetchedMetadata = await getMetadata(contentUrl, contentType);
-    console.log("METADATA", fetchedMetadata);
     metadata = {
       title: fetchedMetadata?.common?.title,
       artist: fetchedMetadata?.common?.artist,
@@ -219,7 +218,6 @@ const createNewPost = async (req, res, next) => {
       sampleRate: fetchedMetadata?.format?.sampleRate,
       container: fetchedMetadata?.format?.container,
     };
-    console.log("METADATA", metadata);
   }
 
   if (!title || !desc) {
@@ -242,6 +240,8 @@ const createNewPost = async (req, res, next) => {
       await post.updateOne({ $addToSet: { tags: { $each: tags } } });
       await Tag.updateMany({ _id: { $in: tags } }, { $addToSet: { posts: post._id } });
     }
+
+    post.imageUrl = imageUrl;
 
     await post.save();
     if (post) {
