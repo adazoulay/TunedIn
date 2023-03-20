@@ -15,18 +15,14 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 
 //TODO feed
 //TODO   Fix feed
+//! Add tags to feed
 
-//! Repost post
-
-//! Add Img/Cover to post
-//    If in spotify: spotifyUrl, if in File: uploadToS3,  if not: manually upload
+//! Tags 2.0: Limit size, shorthand / full name, add background img,
 
 //? ------ LATER ------
 
 //! Post spotify songs/playlists/artists
-//! Explore tags
-
-//! Add tags to feed
+//! Explore tags, users
 
 //! Refactor
 //!   Add Img/Gif as tag background

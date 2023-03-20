@@ -44,10 +44,11 @@ const postSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
+    isRepost: {
+      type: Boolean,
+      default: false,
+    },
     repost: {
-      isRepost: {
-        type: Boolean,
-      },
       originalPoster: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

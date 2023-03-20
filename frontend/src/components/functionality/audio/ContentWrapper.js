@@ -6,7 +6,7 @@ import AudioSpectrum from "react-audio-spectrum";
 
 //! UseIntersection Observer
 const ContentWrapper = ({ mediaRef, sizeRef, isCollapsed }) => {
-  const { postId, contentUrl, contentType, colors } = useContext(PostContext);
+  const { postId, repostId, contentUrl, contentType, colors } = useContext(PostContext);
 
   const [meterCount, setMeterCount] = useState(512);
 
@@ -43,7 +43,7 @@ const ContentWrapper = ({ mediaRef, sizeRef, isCollapsed }) => {
           src={contentUrl}
           crossOrigin='anonymous'
           controls={false}
-          id={postId}
+          id={repostId || postId}
           // onError={(e) => console.log(e)}
           preload='metadata'
         />
@@ -51,7 +51,7 @@ const ContentWrapper = ({ mediaRef, sizeRef, isCollapsed }) => {
           <AudioSpectrum
             height={170}
             width={600}
-            audioId={postId}
+            audioId={repostId || postId}
             capColor={colors?.length ? colors[0] : "red"}
             capHeight={2}
             meterWidth={2}
@@ -70,7 +70,7 @@ const ContentWrapper = ({ mediaRef, sizeRef, isCollapsed }) => {
           src={contentUrl}
           crossOrigin='anonymous'
           controls={false}
-          id={postId}
+          id={repostId || postId}
           // onError={(e) => console.log(e)}
           style={{ display: isCollapsed ? "none" : "flex" }}
           preload='metadata'

@@ -185,6 +185,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetUsersQuery,
   useGetUserQuery,
+  useLazyGetUserQuery,
   useGetUserByPostIdQuery,
   useSearchUserQuery,
   useAddNewUserMutation,

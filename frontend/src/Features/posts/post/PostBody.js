@@ -39,7 +39,9 @@ const PostBody = ({ title }) => {
   });
 
   const panelContentAnimatedStyle = useSpring({
-    height: isCollapsed ? 0 : bounds.height,
+    maxHeight: isCollapsed ? 0 : bounds.height,
+    // height: isCollapsed ? 0 : bounds.height,
+    // willChange: "height",
     config: {
       mass: 0.09,
     },

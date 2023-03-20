@@ -395,7 +395,6 @@ const repost = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    console.log("USER POSTS", user.posts);
 
     let alreadyReposted = false;
     for (let i = 0; i < user.posts.length; i++) {
@@ -413,8 +412,8 @@ const repost = async (req, res, next) => {
     const now = new Date();
     const repost = new Post({
       ...post.toObject(),
+      isRepost: true,
       repost: {
-        isRepost: true,
         originalPoster: post.userId,
         originalId: post._id,
       },

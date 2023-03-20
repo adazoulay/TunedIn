@@ -10,7 +10,7 @@ const Tag = ({ tagInfo, tagId, size, type }) => {
   const smallBoxSize = {
     backgroundColor: `${color}`,
     boxShadow: isHover && `0 0 10px 0px ${color}`,
-    fontSize: name.length >= 8 ? "0.83em" : "1em",
+    fontSize: name.length >= 9 ? "0.79em" : name.length >= 8 ? "0.86em" : "1em",
     paddingLeft: name.length >= 11 ? "2px" : "4px",
   };
 

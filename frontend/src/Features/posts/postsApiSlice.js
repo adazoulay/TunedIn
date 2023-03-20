@@ -114,12 +114,12 @@ export const postsApiSlice = apiSlice.injectEndpoints({
 
     //! Like Dislike
     likePost: builder.mutation({
-      query: ({ id, userId }) => ({
+      query: ({ id, userId, repostId }) => ({
         //! LIKE
         url: `/posts/like/${id}`,
         method: "PUT",
       }),
-      async onQueryStarted({ id, userId }, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted({ id, userId, repostId }, { dispatch, queryFulfilled, getState }) {
         for (const { endpointName, originalArgs } of postsApiSlice.util.selectInvalidatedBy(
           getState(),
           [{ type: "Post", id }]
@@ -133,11 +133,21 @@ export const postsApiSlice = apiSlice.injectEndpoints({
               if (post) {
                 post.likes = [...post.likes, userId];
               }
+              // if (repostId) {
+              //   console.log("in if", repostId);
+              //   const repost = draft.entities[repostId];
+
+              //   if (repost) {
+              //     repost.likes = [...repost.likes, userId];
+              //     console.log("in if repost", repost.likes.length);
+              //   }
+              // }
             })
           );
           try {
             await queryFulfilled;
           } catch {
+            console.log("undo");
             patchResult.undo();
           }
         }

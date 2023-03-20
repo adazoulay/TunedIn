@@ -15,7 +15,7 @@ import { Edit } from "react-feather";
 
 const UserPage = () => {
   let { id: userId } = useParams();
-  const { userId: currentUser, spotifyId } = useAuth();
+  const { userId: currentUser } = useAuth();
 
   const { data: userData, isSuccess } = useGetUserQuery(userId);
   const { data: tags } = useGetTagsByUserIdQuery(userId);

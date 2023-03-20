@@ -6,11 +6,24 @@ $secondary: #383838;
 $tertiary: #808080;
 $accent: #f40035;
 
+.repost-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 85%;
+  margin-bottom: -25px;
+  .repost {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+}
+
 //! POST
 .post-feed {
   position: relative;
   height: fit-content;
-  width: 87%;
+  width: 90%;
   min-width: 500px;
   display: flex;
   flex-direction: column;
@@ -43,17 +56,6 @@ $accent: #f40035;
     border-radius: 5px;
     .post-tags {
       display: flex;
-    }
-    .post-user {
-      width: calc(56px + 70%);
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      gap: 0.4em;
-    }
-    .post-username {
-      display: flex;
-      align-items: flex-end;
     }
 
     .post-title {
@@ -147,6 +149,18 @@ $accent: #f40035;
       cursor: pointer;
     }
   }
+}
+
+.post-user {
+  width: calc(56px + 70%);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 0.4em;
+}
+.post-username {
+  display: flex;
+  align-items: flex-end;
 }
 
 .description {
@@ -267,10 +281,12 @@ $accent: #f40035;
 
 .post-cover-wrapper {
   position: absolute;
-  right: 100px;
-  top: 0;
+  right: 177px;
+  top: 0px;
+  // right: 15px;
+  // top: 30px;
   .post-cover {
-    width: 150px;
+    width: 177px;
   }
 }
 
@@ -346,7 +362,7 @@ $accent: #f40035;
   top: 11px;
 }
 
-.repost {
+.repost-button {
   position: absolute;
   display: flex;
   flex-direction: column;

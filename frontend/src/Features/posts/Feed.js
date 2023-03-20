@@ -1,7 +1,8 @@
 import { useGetPostsQuery } from "./postsApiSlice";
-import React, { useEffect, useState, useRef, memo } from "react";
+import React, { useEffect, useState, useRef, memo, CSSProperties } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
-import Post from "./post/Post";
+import PostWrapper from "./post/PostWrapper";
 
 const Feed = ({ type, source }) => {
   const [page, setPage] = useState(1);
@@ -64,12 +65,18 @@ const Feed = ({ type, source }) => {
     return <p className='errmsg'>{error?.data?.message}</p>;
   }
 
+  const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "red",
+  };
+
   return (
     <>
       <div ref={feedRef} className='feed'>
         {isSuccess && ids?.length
           ? posts.ids.map((postId) => (
-              <Post key={postId} postId={postId} fetchArgs={{ page, type, source }} />
+              <PostWrapper key={postId} postId={postId} fetchArgs={{ page, type, source }} />
             ))
           : !isFetching && (
               <div className='body-message'>
@@ -78,6 +85,14 @@ const Feed = ({ type, source }) => {
               </div>
             )}
       </div>
+      <ClipLoader
+        color={"red"}
+        loading={isLoading}
+        cssOverride={override}
+        size={150}
+        aria-label='Loading Spinner'
+        data-testid='loader'
+      />
     </>
   );
 };

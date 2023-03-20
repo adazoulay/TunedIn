@@ -10,8 +10,8 @@ import RepostButton from "../../../components/functionality/RepostButton";
 import useAuth from "../../../hooks/useAuth";
 
 const PostFooter = ({ postFooterData }) => {
-  const { postId, desc, createdAt, likes, views, fileName, metadata } = postFooterData;
-  const { contentType, userId, postImgUrl } = useContext(PostContext);
+  const { desc, createdAt, likes, views, fileName, metadata } = postFooterData;
+  const { postId, repostId, contentType, userId, postImgUrl } = useContext(PostContext);
   const { userId: currentUser } = useAuth();
 
   if (!postId || !postFooterData) {
@@ -38,12 +38,12 @@ const PostFooter = ({ postFooterData }) => {
             <SavePostButton postId={postId} />
           </div>
           {userId !== currentUser && (
-            <div className='repost'>
+            <div className='repost-button'>
               <RepostButton postId={postId} />
             </div>
           )}
           <div className='likes'>
-            <LikePostButton postId={postId} likes={likes} />
+            <LikePostButton postId={postId} repostId={repostId} likes={likes} />
           </div>
         </div>
         {postImgUrl && (
