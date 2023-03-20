@@ -18,6 +18,7 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 //! Add tags to feed
 
 //! Tags 2.0: Limit size, shorthand / full name, add background img,
+//! Fix like optimistic update repost
 
 //? ------ LATER ------
 
