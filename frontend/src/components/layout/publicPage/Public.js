@@ -4,6 +4,7 @@ import Logo from "../../../assets/Logo";
 import PostImg from "./publicPageAssets/post.png";
 import CreateTagImg from "./publicPageAssets/createTag.png";
 import ProfleImg from "./publicPageAssets/profile.png";
+import TagsGraph from "./publicPageAssets/tags-graph.png";
 import "./public.scss";
 
 // import createPostImg from "./publicPageAssets/createPost.png";
@@ -69,6 +70,7 @@ const Public = () => {
                 The &quot;tag&quot; system, allows you to join and contribute to small
                 communities that represent specific music genres or niches.
               </h2>
+              <img src={TagsGraph} className='tags-graph-img' alt='Post' />
               <h2>
                 Tags have a hierarchical structure, allowing for easy discovery based on
                 musical influences and related genres. Explore and connect with others who
@@ -87,9 +89,11 @@ const Public = () => {
               <h2>
                 MeloNet leverages the power of Spotify&apos;s API to allow you to easily
                 display your Spotify account&apos;s content such as songs, artists, playlists
-                and share it with friends and followers. Whether you&apos;re a music enthusiast
-                or an aspiring artist, our app makes it easy to connect with like-minded
-                individuals and build your own community.
+                and share it with friends and followers.
+              </h2>
+              <h2>
+                Whether you&apos;re a music enthusiast or an aspiring artist, our app makes it
+                easy to connect with like-minded individuals and build your own community.
               </h2>
             </div>
             <img src={ProfleImg} className='profile-img' alt='Create Tag' />

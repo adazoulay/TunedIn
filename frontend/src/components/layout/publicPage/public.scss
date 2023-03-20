@@ -136,6 +136,7 @@
         width: 100%;
         height: auto;
       }
+
       .desc-text {
         padding-top: 2%;
         max-width: 40%;
@@ -152,14 +153,19 @@
       justify-content: space-evenly;
 
       .tag-img {
+        object-fit: contain;
         width: 30%;
-        max-width: 450px;
         height: auto;
+      }
+
+      .tags-graph-img {
+        width: 80%;
+        align-self: center;
       }
 
       .desc-text {
         padding-top: 5%;
-        max-width: 50%;
+        max-width: 40%;
         display: flex;
         flex-direction: column;
         gap: 2em;
@@ -174,6 +180,7 @@
       gap: 3em;
 
       .profile-img {
+        object-fit: contain;
         width: 50%;
         height: auto;
       }
