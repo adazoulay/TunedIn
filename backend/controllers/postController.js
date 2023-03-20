@@ -333,6 +333,11 @@ const likePost = async (req, res, next) => {
     const post = await Post.findByIdAndUpdate(postId, {
       $addToSet: { likes: userId },
     });
+    if (post.isRepost) {
+      const originalPost = await Post.findByIdAndUpdate(post?.repost?.originalId, {
+        $addToSet: { likes: userId },
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -348,6 +353,11 @@ const unLikePost = async (req, res, next) => {
     const post = await Post.findByIdAndUpdate(postId, {
       $pull: { likes: userId },
     });
+    if (post.isRepost) {
+      const originalPost = await Post.findByIdAndUpdate(post?.repost?.originalId, {
+        $pull: { likes: userId },
+      });
+    }
   } catch (err) {
     next(err);
   }

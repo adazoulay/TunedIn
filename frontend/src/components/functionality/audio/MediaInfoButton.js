@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import MediaInfo from "./MediaInfo";
 import { useSpring, animated } from "@react-spring/web";
-import { Settings } from "react-feather";
+import { Settings, Video, Speaker } from "react-feather";
 
 const MediaInfoButton = ({ fileName, metadata, contentType }) => {
   const mediaInfoRef = useRef();
@@ -33,6 +33,9 @@ const MediaInfoButton = ({ fileName, metadata, contentType }) => {
 
   return (
     <div className='media-info-section' ref={mediaInfoRef}>
+      <div className='contentType-icon'>
+        {contentType.startsWith("audio") ? <Speaker /> : <Video />}
+      </div>
       <p className='grayed file'>{fileName}</p>
       <>
         <div className='modal-section'>

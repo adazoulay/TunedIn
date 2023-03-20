@@ -10,31 +10,28 @@ const LikePostButton = ({ likes, postId, repostId }) => {
   const [unLikePost] = useUnLikePostMutation();
 
   const [likedStatus, setLikedStatus] = useState(false);
-  const [likesNumber, setLikesNumber] = useState(likes.length);
 
   useEffect(() => {
     if (likes && likes.includes(currentUser) && !likedStatus) setLikedStatus(true);
-    setLikesNumber(likes.length);
-  }, [likes, likes.length]);
+  }, [likes]);
 
   const handleLikeClicked = async () => {
     if (!likedStatus) {
-      likePost({ id: postId, userId: currentUser, repostId });
+      likePost({ id: postId, userId: currentUser });
       setLikedStatus(() => true);
     } else {
       const newLikes = likes.filter((id) => id !== currentUser);
-      unLikePost({ id: postId, newLikes, repostId }); //! Pick one, newlikes userids
+      unLikePost({ id: postId, newLikes }); //! Pick one, newlikes userids
       setLikedStatus(() => false);
     }
   };
 
-  console.log(likesNumber);
   return (
     <>
       <div className='like-icon' onClick={handleLikeClicked}>
         <Music size={29} color={likedStatus ? "#f40035" : "white"} />
       </div>
-      {likesNumber}
+      {likes?.length}
     </>
   );
 };

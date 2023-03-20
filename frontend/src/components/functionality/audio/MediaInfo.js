@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 const MediaInfo = ({ metadata, contentType }) => {
   metadata = JSON.parse(metadata);
@@ -12,7 +12,7 @@ const MediaInfo = ({ metadata, contentType }) => {
         {artist && <div>artist: {artist} </div>}
         <div>lossless: {lossless.toString()} </div>
         {container && <div>container: {container} </div>}
-        {bitrate && <div>bitrate: {bitrate} </div>}
+        {bitrate && <div>bitrate: {Math.round(bitrate)} </div>}
         {sampleRate && <div>sample rate: {sampleRate} </div>}
       </div>
     </>

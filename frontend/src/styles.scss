@@ -735,6 +735,10 @@ a {
   align-items: center;
   max-width: fit-content;
 
+  .contentType-icon {
+    padding-right: 5px;
+  }
+
   .metadata-title {
     font-weight: bold;
     font-size: 1.1em;

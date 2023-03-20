@@ -114,12 +114,12 @@ export const postsApiSlice = apiSlice.injectEndpoints({
 
     //! Like Dislike
     likePost: builder.mutation({
-      query: ({ id, userId, repostId }) => ({
+      query: ({ id, userId }) => ({
         //! LIKE
         url: `/posts/like/${id}`,
         method: "PUT",
       }),
-      async onQueryStarted({ id, userId, repostId }, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted({ id, userId }, { dispatch, queryFulfilled, getState }) {
         for (const { endpointName, originalArgs } of postsApiSlice.util.selectInvalidatedBy(
           getState(),
           [{ type: "Post", id }]
@@ -129,26 +129,20 @@ export const postsApiSlice = apiSlice.injectEndpoints({
           const patchResult = dispatch(
             postsApiSlice.util.updateQueryData(endpointName, originalArgs, (draft) => {
               const post = draft.entities[id];
-
+              console.log("IN updateQuery");
               if (post) {
+                console.log("IN IF");
                 post.likes = [...post.likes, userId];
+                console.log("post.likes", post.likes.length);
               }
-              // if (repostId) {
-              //   console.log("in if", repostId);
-              //   const repost = draft.entities[repostId];
-
-              //   if (repost) {
-              //     repost.likes = [...repost.likes, userId];
-              //     console.log("in if repost", repost.likes.length);
-              //   }
-              // }
             })
           );
           try {
             await queryFulfilled;
+            console.log("queryFulfilled");
           } catch {
-            console.log("undo");
             patchResult.undo();
+            console.log("undo");
           }
         }
       },

@@ -5,8 +5,6 @@ import TimeAgo from "../../components/functionality/TimeAgo";
 const BroadCastList = ({ comments }) => {
   const { ids, entities } = comments;
 
-  console.log(entities[ids[0]]);
-
   return (
     <div className='broadcast-list'>
       {ids?.length

@@ -26,7 +26,6 @@ const BroadcastPage = lazy(() => import("./Features/comments/BroadcastPage"));
 //! Explore tags, users
 
 //! Refactor
-//!   Add Img/Gif as tag background
 //!   Comments 2.0
 //!   Search 2.0
 
